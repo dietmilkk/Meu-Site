@@ -1,36 +1,19 @@
 Fazer deploy no Vercel** com a variável de ambiente `FEED_SECRET` definida (ex: uma senha tipo `"admin123"`)
-2. **Colocar imagens reais** no lugar de `assets/feed/placeholder.jpg` (ou mudar o caminho no `feed-data.js`)
-3. Só isso — o front-end já gerencia autenticação, armazena token no `localStorage` e só renderiza se a API responder 200
 
+[@feed-data.js](file:///home/user/Downloads/Meu-Site/apps/feed/feed-data.js) faz oque? ela tem a ver com algo da encriptaçao? como esta sendo feita exatamente essa encriptaçao? o codigo nao pode ser vuneravel se alguem ver o codigo o conteudo ainda deve continua protegido
 
+ajuste o css da galeria para ter uma aparencia 3d antigo, que nem do sistema
+
+o menu do widget do sound cloud esta saindo da tela, ancore ele a lateral direita da tela e a parte superior da barra, isso serve pra o menu de calendario tambem.
+
+refine e melhore o sistema de animaçoes, capriche no conceito de sons e animaçóes que lembrem de sistemas antigos, e pricipalmente de coisas mecanicas.
 
 crie um bloco de texto editavel comunitario, que NIMGUEM pode apagar, utilizando algum serviço de terceiro como Padlet
-
-conecte a esse repositório github e remova completamente qualquer conecçao com o antigo:
-    Quick setup — if you’ve done this kind of thing before
-    …or create a new repository on the command line
-    echo "# Meu-Site" >> README.md
-    git init
-    git add README.md
-    git commit -m "first commit"
-    git branch -M main
-    git remote add origin https://github.com/dietmilkk/Meu-Site.git
-    git push -u origin main
-    …or push an existing repository from the command line
-    git remote add origin https://github.com/dietmilkk/Meu-Site.git
-    git branch -M main
-    git push -u origin main
-
-
-
 
 
 ==Novas funçoes:
 
 integrar chat de bate-papo com alternativa ja pre pronta
-
-
-sistema de armazenamento de dados permanente
 
 Crie uma extensão Manifest V3 para o Chrome que remova os cabeçalhos 'X-Frame-Options' e 'Content-Security-Policy' do Discord e do YouTube usando declarativeNetRequest, Adicione um script que injete um iframe flutuante, arrastável e com o visual das janela DENTRO do site para carregar esses sites de forma integrada, a ideia é criar um tipo de browser interno dentro do site que consiga fazer de tudo, foque no simples porém funcional, integrar com o ublock origen para bloqueio de ads e melhorar a experiência do usuário
 

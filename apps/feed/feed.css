@@ -1,0 +1,114 @@
+#feedBody {
+  padding: 0;
+  background: #1a1a2e;
+}
+
+.feed-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #888;
+  font-family: var(--ff-mono);
+  font-size: 14px;
+}
+
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.feed-post {
+  background: #16213e;
+  border: 1px solid #0f3460;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.feed-post-header {
+  padding: 10px 14px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: #8899aa;
+  border-bottom: 1px solid #0f3460;
+}
+
+.feed-post-img {
+  width: 100%;
+  display: block;
+  background: #0f3460;
+}
+
+.feed-post-text {
+  padding: 14px;
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+/* Auth screen */
+.feed-auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 20px;
+}
+
+.feed-auth-box {
+  background: #16213e;
+  border: 1px solid #0f3460;
+  border-radius: 8px;
+  padding: 32px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+}
+
+.feed-auth-box h3 {
+  color: #e0e0e0;
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.feed-auth-box p {
+  color: #8899aa;
+  font-size: 13px;
+  margin: 0 0 20px;
+  line-height: 1.4;
+}
+
+.feed-auth-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #0f3460;
+  border-radius: 4px;
+  background: #0f3460;
+  color: #e0e0e0;
+  font-size: 14px;
+  font-family: var(--ff-mono);
+  box-sizing: border-box;
+  outline: none;
+}
+
+.feed-auth-input:focus {
+  border-color: #1a5276;
+}
+
+.feed-auth-btn {
+  margin-top: 16px;
+  padding: 8px 24px;
+  font-size: 14px;
+}
+
+.feed-auth-error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 12px;
+}

@@ -1,0 +1,21 @@
+/* ===========================================================
+   WINDOWS 2000 PORTFOLIO — Style sheet
+   Component files imported below for modularity.
+   =========================================================== */
+
+@import url("base.css");
+@import url("animations.css");
+@import url("ambient.css");
+@import url("boot.css");
+@import url("desktop.css");
+@import url("windows.css");
+@import url("projects.css");
+@import url("chat.css");
+@import url("../../apps/terminal/terminal.css");
+@import url("../../apps/soundcloud/soundcloud.css");
+@import url("../../apps/gallery/gallery.css");
+@import url("../../apps/games/games.css");
+@import url("../../apps/feed/feed.css");
+@import url("../../apps/settings/settings.css");
+@import url("../../apps/welcome/welcome.css");
+@import url("tray.css");

@@ -1,0 +1,16 @@
+{
+  "builds": [
+    { "src": "system/api/gallery.js", "use": "@vercel/node" },
+    { "src": "system/api/feed.js", "use": "@vercel/node" },
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "apps/**", "use": "@vercel/static" },
+    { "src": "assets/**", "use": "@vercel/static" },
+    { "src": "diretorio/**", "use": "@vercel/static" },
+    { "src": "system/js/**", "use": "@vercel/static" },
+    { "src": "system/css/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/gallery", "dest": "system/api/gallery.js" },
+    { "src": "/api/feed", "dest": "system/api/feed.js" }
+  ]
+}

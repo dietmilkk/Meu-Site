@@ -1,0 +1,150 @@
+/* ===========================================================
+   Ambient overlay — moody, dark, "lolita" aesthetic
+   Estourado, mais escuro, um pouco sombrio.
+   =========================================================== */
+
+/* ── CRT Scanline overlay com ruído suave ── */
+#scanline {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999999;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.035) 2px,
+            rgba(0, 0, 0, 0.035) 4px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 0, 0, 0.006) 3px,
+            rgba(0, 0, 0, 0.006) 5px
+        ),
+        radial-gradient(
+            ellipse at center,
+            transparent 50%,
+            rgba(0, 0, 0, 0.15) 100%
+        );
+    animation: scanlines 0.3s steps(3) infinite;
+    will-change: background-position;
+}
+#scanline::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.008;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: flicker 3s steps(5) infinite;
+}
+
+/* ── LAYER 1: Dark moody wash (magenta escuro + violeta) ── */
+#ambientOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999990;
+    pointer-events: none;
+    background:
+        radial-gradient(
+            ellipse 100% 60% at 50% 10%,
+            rgba(100, 35, 75, 0.30) 0%,
+            transparent 70%
+        ),
+        radial-gradient(
+            ellipse 80% 50% at 50% 100%,
+            rgba(35, 15, 55, 0.35) 0%,
+            transparent 60%
+        ),
+        radial-gradient(
+            ellipse 50% 35% at 50% 45%,
+            rgba(15, 8, 25, 0.18) 0%,
+            transparent 100%
+        );
+    mix-blend-mode: soft-light;
+    animation: ambientDrift 16s ease-in-out infinite;
+}
+
+/* ── LAYER 2: Dark vignette (bordas mais escuras) ── */
+#ambientOverlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow:
+        inset 0 0 120px rgba(60, 30, 70, 0.25),
+        inset 0 0 300px rgba(20, 10, 35, 0.20);
+    animation: vignettePulse 8s ease-in-out infinite;
+}
+
+/* ── LAYER 3: Fine grain texturizer ── */
+#ambientOverlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.10) 2px,
+            rgba(255, 255, 255, 0.10) 3px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 0, 0, 0.03) 3px,
+            rgba(0, 0, 0, 0.03) 5px
+        );
+    background-blend-mode: overlay;
+    animation: grainShift 12s steps(4) infinite;
+}
+
+/* ── CRT low-resolution filter on screen ── */
+#screen {
+    filter:
+        saturate(0.78)
+        brightness(0.90)
+        contrast(1.10)
+        blur(0.3px);
+    animation: screenDrift 20s ease-in-out infinite;
+    will-change: filter;
+}
+@keyframes screenDrift {
+    0%, 100% { filter: saturate(0.78) brightness(0.90) contrast(1.10) blur(0.3px); }
+    25% { filter: saturate(0.80) brightness(0.89) contrast(1.09) blur(0.3px); }
+    50% { filter: saturate(0.76) brightness(0.91) contrast(1.11) blur(0.3px); }
+    75% { filter: saturate(0.79) brightness(0.88) contrast(1.10) blur(0.3px); }
+}
+
+/* ── Ambient overlay drift ── */
+@keyframes ambientDrift {
+    0%, 100% { background-position: 0% 0%; }
+    25% { background-position: 2% 1%; }
+    50% { background-position: -1% -0.5%; }
+    75% { background-position: 1% -1%; }
+}
+
+/* ── Vignette gentle pulse ── */
+@keyframes vignettePulse {
+    0%, 100% { box-shadow: inset 0 0 120px rgba(60, 30, 70, 0.25), inset 0 0 300px rgba(20, 10, 35, 0.20); }
+    50% { box-shadow: inset 0 0 130px rgba(60, 30, 70, 0.28), inset 0 0 310px rgba(20, 10, 35, 0.22); }
+}
+
+/* ── Grain subtle shift ── */
+@keyframes grainShift {
+    0% { background-position: 0 0; }
+    25% { background-position: 3px 2px; }
+    50% { background-position: -2px 4px; }
+    75% { background-position: 1px -3px; }
+}
+
+
+

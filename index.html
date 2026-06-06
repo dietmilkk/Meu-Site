@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=1200" />
+        <title>Site de ky</title>
+        <link rel="icon" href="assets/system/icons/tango2kde/32x32/apps/web-browser.png" />
+        <link rel="stylesheet" href="system/css/style.css" />
+        <script>
+            window.createWindowButtons = function (p) {
+                p = p || "";
+                var b = p ? p + "Btn" : "btn";
+                return (
+                    '<span class="title-bar-buttons"><span class="win-btn" id="' +
+                    b +
+                    'Minimize" data-wbtn="minimize"><svg viewBox="0 0 16 16" width="14" height="14"><rect x="2" y="11" width="12" height="2" fill="currentColor"/></svg></span><span class="win-btn" id="' +
+                    b +
+                    'Maximize" data-wbtn="maximize"><svg viewBox="0 0 16 16" width="14" height="14"><rect x="2" y="2" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span><span class="win-btn" id="' +
+                    b +
+                    'Close" data-wbtn="close"><svg viewBox="0 0 16 16" width="14" height="14"><line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="13" y1="3" x2="3" y2="13" stroke="currentColor" stroke-width="1.5"/></svg></span></span>'
+                );
+            };
+        </script>
+    </head>
+    <body>
+        <div id="ambientOverlay"></div>
+        <div id="bootScreen">
+            <div class="boot-center" id="bootCenter">
+                <div class="boot-bottom" id="bootBottom">
+                    <div class="boot-msg" id="bootMsg" data-i18n="boot.msg">
+                        Iniciando...
+                    </div>
+                    <div class="boot-bar">
+                        <div class="boot-bar-fill" id="bootBarFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== WELCOME (inside boot, after boot bar completes) ===== -->
+            <div class="boot-welcome" id="bootWelcome" style="display: none">
+                <div class="welcome-layout">
+                    <div class="welcome-top">
+                        <div class="welcome-avatar">
+                            <img
+                                src="assets/system/icons/tango2kde/48x48/apps/dolphin.png"
+                                alt=""
+                                width="48"
+                                height="48"
+                            />
+                        </div>
+                        <div class="welcome-intro">
+                            <h2
+                                class="welcome-greeting"
+                                id="welcomeGreeting"
+                                data-i18n="welcome.greeting"
+                            >
+                                Oi! Sou o win2000
+                            </h2>
+                            <p
+                                class="welcome-desc"
+                                id="welcomeDesc"
+                                data-i18n="welcome.desc"
+                            >
+                                Um desktop retrô montado à mão com HTML, CSS e
+                                JavaScript puro. Sem frameworks, sem
+                                dependências — só código raiz.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="welcome-divider"></div>
+
+                    <div class="welcome-section">
+                        <label
+                            class="welcome-label"
+                            id="welcomeLangLabel"
+                            data-i18n="welcome.langLabel"
+                            >Idioma</label
+                        >
+                        <div class="welcome-lang-toggle">
+                            <button
+                                class="welcome-lang-btn active"
+                                data-lang="pt"
+                                id="welcomeLangPt"
+                            >
+                                PT-BR
+                            </button>
+                            <button
+                                class="welcome-lang-btn"
+                                data-lang="en"
+                                id="welcomeLangEn"
+                            >
+                                EN
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="welcome-divider"></div>
+
+                    <div class="welcome-footer">
+                        <label class="welcome-check-label">
+                            <input type="checkbox" id="welcomeDontShow" />
+                            <span
+                                id="welcomeDontShowText"
+                                data-i18n="welcome.dontShow"
+                                >Não mostrar na inicialização</span
+                            >
+                        </label>
+                        <button class="welcome-start-btn" id="welcomeStartBtn">
+                            <span
+                                id="welcomeStartText"
+                                data-i18n="welcome.startBtn"
+                                >Começar</span
+                            >
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="screen">
+            <div class="desktop">
+                <!-- ===== DESKTOP ICONS ===== -->
+                <div class="desktop-icons">
+                    <div class="desk-icon" data-action="games">
+                        <span class="di-icon">
+                            <img
+                                src="assets/system/icons/tango2kde/48x48/categories/applications-games.png"
+                                alt=""
+                                width="36"
+                                height="36"
+                            />
+                        </span>
+                        <span class="di-label" data-i18n="desktop.games"
+                            >Jogos</span
+                        >
+                    </div>
+
+                    <div class="desk-icon" data-action="soundcloud">
+                        <span class="di-icon">
+                            <img
+                                src="assets/system/icons/tango2kde/48x48/apps/kaudiocreator.png"
+                                alt=""
+                                width="36"
+                                height="36"
+                            />
+                        </span>
+                        <span class="di-label" data-i18n="desktop.soundcloud"
+                            >SoundCloud</span
+                        >
+                    </div>
+
+                    <div class="desk-icon" data-action="settings">
+                        <span class="di-icon">
+                            <img
+                                src="assets/system/icons/tango2kde/48x48/categories/redhat-system_tools.png"
+                                alt=""
+                                width="36"
+                                height="36"
+                            />
+                        </span>
+                        <span class="di-label" data-i18n="desktop.settings"
+                            >Config</span
+                        >
+                    </div>
+                </div>
+
+                <!-- ===== PROGRAM MANAGER WINDOW ===== -->
+                <div class="window" id="mainWindow">
+                    <div class="title-bar" id="dragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="assets/system/icons/tango2kde/16x16/apps/dolphin.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="programs.title">Repositório</span>
+                        </span>
+                        <script>
+                            document.write(createWindowButtons(""));
+                        </script>
+                    </div>
+
+                    <div class="window-body">
+                        <div class="content-area">
+                            <p
+                                data-i18n="programs.desc"
+                                style="
+                                    margin: 0 0 16px;
+                                    line-height: 1.5;
+                                    font-size: 13px;
+                                    color: #111;
+                                "
+                            >
+                                Cada projeto aqui foi construído do zero —
+                                alguns são cópias fiéis de serviços reais,
+                                outros são ferramentas autorais. Todos estão
+                                guardados por algum motivo aparente da vida:
+                                registrar o caminho, o que foi aprendido, e o
+                                que pode virar algo maior.
+                            </p>
+                            <div class="projects-grid">
+                                <div
+                                    class="project-card"
+                                    onclick="
+                                        window.open(
+                                            'diretorio/clique-seguro/index.html',
+                                            '_blank',
+                                        )
+                                    "
+                                    style="cursor: pointer"
+                                >
+                                    <div class="project-img">
+                                        <img
+                                            src="diretorio/img/clique-seguro.png"
+                                            alt="Clique Seguro"
+                                            data-i18n-alt="programs.proj1.title"
+                                        />
+                                    </div>
+                                    <div class="project-body">
+                                        <h3 data-i18n="programs.proj1.title">
+                                            Clique Seguro
+                                        </h3>
+                                        <p data-i18n="programs.proj1.desc">
+                                            Ferramenta de segurança que verifica
+                                            links suspeitos para proteger contra
+                                            golpes online.
+                                        </p>
+                                        <div class="project-tags">
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj1.tag1"
+                                                >JavaScript</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj1.tag2"
+                                                >HTML</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj1.tag3"
+                                                >CSS</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj1.tag4"
+                                                >Segurança</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="project-card"
+                                    onclick="
+                                        window.open(
+                                            'diretorio/amazon/index.html',
+                                            '_blank',
+                                        )
+                                    "
+                                    style="cursor: pointer"
+                                >
+                                    <div class="project-img">
+                                        <img
+                                            src="diretorio/img/amazon.png"
+                                            alt="Amazon Clone"
+                                            data-i18n-alt="programs.proj2.title"
+                                        />
+                                    </div>
+                                    <div class="project-body">
+                                        <h3 data-i18n="programs.proj2.title">
+                                            Amazon Clone
+                                        </h3>
+                                        <p data-i18n="programs.proj2.desc">
+                                            Réplica pixel-perfect da página
+                                            inicial de um grande e-commerce.
+                                        </p>
+                                        <div class="project-tags">
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj2.tag1"
+                                                >Python</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj2.tag2"
+                                                >Flask</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj2.tag3"
+                                                >JavaScript</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj2.tag4"
+                                                >HTML</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj2.tag5"
+                                                >CSS</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="project-card"
+                                    onclick="window.location.href = '/'"
+                                    style="cursor: pointer"
+                                >
+                                    <div
+                                        class="project-body"
+                                        style="border-left: 4px solid #000080"
+                                    >
+                                        <h3 data-i18n="programs.proj3.title">
+                                            Windows 2000 Desktop
+                                        </h3>
+                                        <p data-i18n="programs.proj3.desc">
+                                            Desktop Windows 2000 completo
+                                            recriado no navegador — janelas
+                                            arrastáveis, barra de tarefas, menu
+                                            iniciar, terminal, chat IA, efeitos
+                                            CRT retrô. HTML/CSS/JS puro, zero
+                                            frameworks.
+                                        </p>
+                                        <div class="project-tags">
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj3.tag1"
+                                                >HTML</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj3.tag2"
+                                                >CSS</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj3.tag3"
+                                                >JavaScript</span
+                                            >
+                                            <span
+                                                class="project-tag"
+                                                data-i18n="programs.proj3.tag4"
+                                                >AI</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== GAMES WINDOW ===== -->
+                <div class="window" id="gamesWindow" style="display: none">
+                    <div class="title-bar" id="gamesDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="assets/system/icons/tango2kde/16x16/categories/applications-games.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="games.title">Jogos</span>
+                        </span>
+                        <script>
+                            document.write(createWindowButtons("games"));
+                        </script>
+                    </div>
+                    <div class="window-body" id="gamesBody"></div>
+                </div>
+
+                <!-- ===== SETTINGS WINDOW ===== -->
+                <div class="window" id="settingsWindow" style="display: none">
+                    <div class="title-bar" id="settingsDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="assets/system/icons/tango2kde/16x16/categories/redhat-system_tools.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="settings.title"
+                                >Configurações</span
+                            >
+                        </span>
+                        <script>
+                            document.write(createWindowButtons("settings"));
+                        </script>
+                    </div>
+                    <div class="window-body">
+                        <div class="settings-layout">
+                            <div class="settings-sidebar">
+                                <div
+                                    class="settings-category active"
+                                    data-category="appearance"
+                                >
+                                    <img
+                                        src="assets/system/icons/tango2kde/16x16/categories/redhat-system_tools.png"
+                                        alt=""
+                                        width="14"
+                                        height="14"
+                                    />
+                                    <span data-i18n="settings.appearance"
+                                        >Aparência</span
+                                    >
+                                </div>
+                                <div
+                                    class="settings-category"
+                                    data-category="system"
+                                >
+                                    <img
+                                        src="assets/system/icons/tango2kde/16x16/devices/computer.png"
+                                        alt=""
+                                        width="14"
+                                        height="14"
+                                    />
+                                    <span data-i18n="settings.system"
+                                        >Sistema</span
+                                    >
+                                </div>
+                                <div
+                                    class="settings-category"
+                                    data-category="shortcuts"
+                                >
+                                    <img
+                                        src="assets/system/icons/tango2kde/16x16/actions/configure_shortcuts.png"
+                                        alt=""
+                                        width="14"
+                                        height="14"
+                                    />
+                                    <span data-i18n="settings.shortcuts"
+                                        >Atalhos</span
+                                    >
+                                </div>
+                                <div
+                                    class="settings-category"
+                                    data-category="about"
+                                >
+                                    <img
+                                        src="assets/system/icons/tango2kde/16x16/actions/help.png"
+                                        alt=""
+                                        width="14"
+                                        height="14"
+                                    />
+                                    <span data-i18n="settings.about"
+                                        >Sobre</span
+                                    >
+                                </div>
+                            </div>
+                            <div class="settings-content">
+                                <div
+                                    class="settings-panel active"
+                                    data-category="appearance"
+                                >
+                                    <div
+                                        class="settings-panel-header"
+                                        data-i18n="settings.wallpaper"
+                                    >
+                                        Wallpaper
+                                    </div>
+                                    <p
+                                        class="settings-desc"
+                                        data-i18n="settings.wallpaperDesc"
+                                    >
+                                        Escolha uma imagem do seu computador
+                                        para usar como papel de parede.
+                                    </p>
+                                    <div
+                                        class="settings-wallpaper-preview"
+                                        id="wallpaperPreview"
+                                    >
+                                        <span
+                                            class="settings-no-wallpaper"
+                                            data-i18n="settings.noWallpaper"
+                                            >Nenhum wallpaper
+                                            personalizado</span
+                                        >
+                                    </div>
+                                    <div class="settings-file-row">
+                                        <input
+                                            type="file"
+                                            id="wallpaperInput"
+                                            accept="image/*"
+                                            class="settings-file-input"
+                                        />
+                                        <label
+                                            for="wallpaperInput"
+                                            class="settings-file-btn"
+                                            data-i18n="settings.selectImage"
+                                            >Selecionar Imagem</label
+                                        >
+                                        <span
+                                            class="settings-file-name"
+                                            id="wallpaperFileName"
+                                            data-i18n="settings.noFile"
+                                            >Nenhum arquivo selecionado</span
+                                        >
+                                    </div>
+                                    <div class="settings-panel-footer">
+                                        <button
+                                            class="settings-btn"
+                                            id="settingsApplyBtn"
+                                            data-i18n="settings.apply"
+                                        >
+                                            Aplicar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="settings-panel"
+                                    data-category="system"
+                                >
+                                    <div
+                                        class="settings-panel-header"
+                                        data-i18n="settings.system"
+                                    >
+                                        Sistema
+                                    </div>
+                                    <div
+                                        class="settings-desc"
+                                        id="systemInfoContent"
+                                        style="
+                                            line-height: 1.8;
+                                            font-family: var(--ff-mono);
+                                            font-size: 16px;
+                                        "
+                                    ></div>
+                                </div>
+                                <div
+                                    class="settings-panel"
+                                    data-category="shortcuts"
+                                >
+                                    <div
+                                        class="settings-panel-header"
+                                        data-i18n="settings.shortcuts"
+                                    >
+                                        Atalhos de Teclado
+                                    </div>
+                                    <div
+                                        class="settings-desc"
+                                        style="line-height: 2"
+                                    >
+                                        <kbd>Alt + 1</kbd> &mdash;
+                                        <span data-i18n="settings.shortcutClose"
+                                            >Fechar janela ativa</span
+                                        ><br />
+                                        <kbd>Win</kbd> &mdash;
+                                        <span data-i18n="settings.shortcutStart"
+                                            >Abrir menu iniciar</span
+                                        ><br />
+                                        <kbd>F11</kbd> &mdash;
+                                        <span
+                                            data-i18n="settings.shortcutFullscreen"
+                                            >Alternar tela cheia</span
+                                        >
+                                    </div>
+                                    <style>
+                                        .settings-panel[data-category="shortcuts"]
+                                            kbd {
+                                            display: inline-block;
+                                            padding: 2px 6px;
+                                            font-family: var(--ff-mono);
+                                            font-size: 13px;
+                                            background: var(--win-gray);
+                                            border: 1px solid var(--win-border);
+                                            border-radius: 3px;
+                                            box-shadow: inset 0 1px 0
+                                                rgba(255, 255, 255, 0.5);
+                                            min-width: 24px;
+                                            text-align: center;
+                                        }
+                                    </style>
+                                </div>
+                                <div
+                                    class="settings-panel"
+                                    data-category="about"
+                                >
+                                    <div
+                                        class="settings-panel-header"
+                                        data-i18n="settings.aboutHeader"
+                                    >
+                                        Sobre
+                                    </div>
+                                    <p
+                                        class="settings-desc"
+                                        style="line-height: 1.8"
+                                        data-i18n-html="settings.aboutContent"
+                                    >
+                                        <b>Win2K Desktop</b><br />
+                                        Um desktop funcional feito por um maluco
+                                        com HTML/CSS/JS<br /><br />
+                                        O intuito deste espaço é ser um espaço
+                                        pessoal onde eu possa me expor, tipo um
+                                        instagram, mas melhor porque não é
+                                        controlado por uma bigtech, e é
+                                        totalmente feito e customizado por mim,
+                                        com base completamente em meus gostos e
+                                        preferências<br />
+                                        Sendo meu espaço de paz em meio a um
+                                        mundo frenético onde todos estão
+                                        competindo por algo<br />
+
+                                        <br /><br />
+
+                                        <b>Sobre o Autor</b><br /><br />
+                                        Podem me chamar de sillky ou ky pros
+                                        mais intimos, sou uma pessoa não
+                                        binária, pode me chamar com qualquer
+                                        pronome, tambem sou uma entusiasta de
+                                        tecnologia e amante de coisas antigas e
+                                        de culturas alternativas como hacker e
+                                        grunge
+                                        <br /><br />
+                                        só isso. se divirta explorando :)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TERMINAL WINDOW ===== -->
+                <div class="window" id="termWindow" style="display: none">
+                    <div class="title-bar" id="termDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="assets/system/icons/tango2kde/16x16/apps/terminal.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="terminal.title"
+                                >C:\WINDOWS\system32\cmd.exe</span
+                            >
+                        </span>
+                        <script>
+                            document.write(createWindowButtons("term"));
+                        </script>
+                    </div>
+                    <div class="window-body" id="termBody">
+                        <div class="term-container" id="termContainer">
+                            <div class="term-output" id="termOutput"></div>
+                            <div class="term-input-line">
+                                <span
+                                    class="term-prompt"
+                                    data-i18n="terminal.prompt"
+                                    >C:\&gt;</span
+                                >
+                                <input
+                                    type="text"
+                                    id="termInput"
+                                    class="term-input"
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SOUNDCLOUD PLAYER ===== -->
+                <div class="window" id="scWindow" style="display: none">
+                    <div class="title-bar" id="scDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="assets/system/icons/tango2kde/16x16/apps/kaudiocreator.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="soundcloud.title"
+                                >SoundCloud Player</span
+                            >
+                        </span>
+                        <script>
+                            document.write(createWindowButtons("sc"));
+                        </script>
+                    </div>
+                    <div class="window-body" id="scBody">
+                        <div class="sc-player" id="scPlayer">
+                            <div class="sc-top-row">
+                                <div class="sc-playlist-bar" id="scPlaylistBar">
+                                    <div
+                                        class="sc-playlist-title"
+                                        data-i18n="soundcloud.playlistTitle"
+                                    >
+                                        Playlists
+                                    </div>
+                                    <div id="scPlaylistItems"></div>
+                                </div>
+                                <div class="sc-artwork" id="scArtwork">
+                                    <img src="" alt="" id="scArtImg" />
+                                    <div
+                                        class="sc-artwork-overlay"
+                                        id="scArtOverlay"
+                                    ></div>
+                                </div>
+                            </div>
+                            <div class="sc-info">
+                                <div
+                                    class="sc-track-name"
+                                    id="scTrackName"
+                                    data-i18n="soundcloud.defaultTrack"
+                                >
+                                    Nenhuma faixa
+                                </div>
+                                <div
+                                    class="sc-artist-name"
+                                    id="scArtistName"
+                                    data-i18n="soundcloud.defaultArtist"
+                                >
+                                    SoundCloud
+                                </div>
+                            </div>
+                            <div class="sc-progress-container">
+                                <div class="sc-progress-bar" id="scProgressBar">
+                                    <div
+                                        class="sc-progress-fill"
+                                        id="scProgressFill"
+                                    ></div>
+                                    <div
+                                        class="sc-progress-thumb"
+                                        id="scProgressThumb"
+                                    ></div>
+                                </div>
+                                <div class="sc-time">
+                                    <span id="scTimeCurrent">0:00</span>
+                                    <span id="scTimeTotal">0:00</span>
+                                </div>
+                            </div>
+                            <div class="sc-controls-row">
+                                <button
+                                    class="sc-btn sc-btn-sm"
+                                    id="scBtnShuffle"
+                                >
+                                    <svg
+                                        viewBox="0 0 16 16"
+                                        width="12"
+                                        height="12"
+                                    >
+                                        <path
+                                            d="M10,3 L14,7 L10,11 M6,3 L2,7 L6,11"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.5"
+                                        />
+                                    </svg>
+                                </button>
+                                <button class="sc-btn sc-btn-sm" id="scBtnPrev">
+                                    <svg
+                                        viewBox="0 0 16 16"
+                                        width="11"
+                                        height="11"
+                                    >
+                                        <polygon
+                                            points="3,8 13,2 13,14"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                </button>
+                                <button
+                                    class="sc-btn sc-btn-play"
+                                    id="scBtnPlay"
+                                >
+                                    <svg
+                                        viewBox="0 0 16 16"
+                                        width="13"
+                                        height="13"
+                                        id="scPlayIcon"
+                                    >
+                                        <polygon
+                                            points="4,2 14,8 4,14"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                    <svg
+                                        viewBox="0 0 16 16"
+                                        width="13"
+                                        height="13"
+                                        id="scPauseIcon"
+                                        style="display: none"
+                                    >
+                                        <rect
+                                            x="3"
+                                            y="2"
+                                            width="4"
+                                            height="12"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="9"
+                                            y="2"
+                                            width="4"
+                                            height="12"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                </button>
+                                <button class="sc-btn sc-btn-sm" id="scBtnNext">
+                                    <svg
+                                        viewBox="0 0 16 16"
+                                        width="11"
+                                        height="11"
+                                    >
+                                        <polygon
+                                            points="13,8 3,2 3,14"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                </button>
+                                <span
+                                    class="sc-track-counter"
+                                    id="scTrackCounter"
+                                    >- / -</span
+                                >
+                            </div>
+                            <div class="sc-track-list-wrap">
+                                <div class="sc-track-list" id="scTrackList">
+                                    <div class="sc-status" id="scStatus"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            id="scIframeWrap"
+                            style="
+                                position: fixed;
+                                left: -9999px;
+                                top: 0;
+                                width: 400px;
+                                height: 166px;
+                                z-index: -1;
+                                overflow: hidden;
+                            "
+                        ></div>
+                    </div>
+                </div>
+
+                <!-- ===== FEED DE FOTOS ===== -->
+                <div class="window" id="feedWindow" style="display: none">
+                    <div class="title-bar" id="feedDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="assets/system/icons/tango2kde/16x16/apps/gwenview.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="feed.title">Feed de Fotos</span>
+                        </span>
+                        <script>
+                            document.write(createWindowButtons("feed"));
+                        </script>
+                    </div>
+                    <div class="window-body" id="feedBody">
+                        <div class="feed-empty">
+                            <p data-i18n="feed.loading">Carregando...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TASKBAR ===== -->
+                <div class="taskbar">
+                    <div class="start-btn" id="startBtn">
+                        <span class="start-text" data-i18n="start.label"
+                            >Start</span
+                        >
+                    </div>
+                    <div class="quick-launch">
+                        <span
+                            class="ql-icon"
+                            id="qlShowDesktop"
+                            data-i18n-title="ctx.showdesktop"
+                            title="Mostrar Área de Trabalho"
+                        >
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/filesystems/desktop.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                        </span>
+                    </div>
+                    <div class="taskbar-items"></div>
+                    <div class="taskbar-tray" id="taskbarTray">
+                        <div class="sc-now-playing" id="scNowPlaying"></div>
+                        <span class="tray-icon" id="trayVolume">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/apps/kwin.png"
+                                alt=""
+                                width="18"
+                                height="18"
+                            />
+                        </span>
+                        <span class="tray-clock" id="taskbarClock">00:00</span>
+                    </div>
+                </div>
+
+                <!-- ===== START MENU ===== -->
+                <div class="start-menu" id="startMenu">
+                    <div class="start-menu-header">
+                        <span data-i18n="start.header">win2000</span>
+                    </div>
+                    <div class="start-menu-body" id="startMenuBody">
+                        <div
+                            class="start-menu-group-title"
+                            data-i18n="start.frequent"
+                        >
+                            Usados frequentemente
+                        </div>
+                        <div class="start-menu-item" data-action="games">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/categories/applications-games.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.games">Jogos</span>
+                        </div>
+                        <div class="start-menu-item" data-action="randomgif">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/apps/gwenview.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.gallery"
+                                >Coleção de imgs</span
+                            >
+                        </div>
+                        <div class="start-menu-item" data-action="programs">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/apps/dolphin.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.programs">Repositório</span>
+                        </div>
+                        <div class="start-menu-item" data-action="feed">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/apps/gwenview.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.feed">Feed de Fotos</span>
+                        </div>
+                        <div class="start-menu-item" data-action="settings">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/categories/redhat-system_tools.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.settings"
+                                >Configurações</span
+                            >
+                        </div>
+                        <div class="start-menu-item" data-action="soundcloud">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/apps/kaudiocreator.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.soundcloud">SoundCloud</span>
+                        </div>
+                        <div class="start-menu-separator"></div>
+                        <div
+                            class="start-menu-group-title"
+                            data-i18n="start.system"
+                        >
+                            Sistema
+                        </div>
+                        <div class="start-menu-item" data-action="terminal">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/apps/terminal.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.terminal">Terminal</span>
+                        </div>
+                        <div class="start-menu-item" data-action="fullscreen">
+                            <img
+                                src="assets/system/icons/tango2kde/16x16/actions/view-fullscreen.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.fullscreen">Tela Cheia</span>
+                        </div>
+                        <div class="start-menu-item" data-action="shutdown">
+                            <span data-i18n="start.shutdown">Desligar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== CONTEXT MENU ===== -->
+                <div class="ctx-menu" id="ctxMenu" style="display: none">
+                    <div
+                        class="ctx-menu-item"
+                        data-action="arrange"
+                        data-i18n="ctx.arrange"
+                    >
+                        Organizar Ícones
+                    </div>
+                    <div
+                        class="ctx-menu-item"
+                        data-action="refresh"
+                        data-i18n="ctx.refresh"
+                    >
+                        Atualizar
+                    </div>
+                    <div class="ctx-menu-separator"></div>
+                    <div
+                        class="ctx-menu-item"
+                        data-action="showdesktop"
+                        data-i18n="ctx.showdesktop"
+                    >
+                        Mostrar Área de Trabalho
+                    </div>
+                    <div class="ctx-menu-separator"></div>
+                    <div
+                        class="ctx-menu-item"
+                        data-action="properties"
+                        data-i18n="ctx.properties"
+                    >
+                        Propriedades
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="scanline"></div>
+
+        <script src="system/js/config.js"></script>
+        <script src="system/js/i18n.js"></script>
+        <script src="system/js/geo.js"></script>
+        <script src="system/js/dialogs.js"></script>
+        <script src="system/js/tray.js"></script>
+        <script src="assets/gallery/gallery.js"></script>
+        <script src="system/js/cursor.js"></script>
+        <script src="system/js/window-manager.js"></script>
+        <script src="apps/gallery/gallery.js"></script>
+        <script src="apps/terminal/terminal.js"></script>
+        <script src="apps/games/games.js"></script>
+
+        <script src="apps/soundcloud/soundcloud.js"></script>
+        <script src="apps/feed/feed-data.js"></script>
+        <script src="apps/feed/feed.js"></script>
+
+        <script src="system/js/main.js"></script>
+        <script src="apps/welcome/welcome.js"></script>
+        <script src="apps/settings/settings.js"></script>
+        <script>
+            document.addEventListener(
+                "click",
+                function fullscreenClick() {
+                    if (!document.fullscreenElement && !window._fsAttempted) {
+                        window._fsAttempted = true;
+                        document.documentElement
+                            .requestFullscreen()
+                            .catch(function () {});
+                    }
+                },
+                { once: true },
+            );
+            document.addEventListener(
+                "touchstart",
+                function fullscreenTouch() {
+                    if (!document.fullscreenElement && !window._fsAttempted) {
+                        window._fsAttempted = true;
+                        document.documentElement
+                            .requestFullscreen()
+                            .catch(function () {});
+                    }
+                },
+                { once: true },
+            );
+        </script>
+    </body>
+</html>

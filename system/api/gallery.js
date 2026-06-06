@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = (req, res) => {
-  const dir = path.join(process.cwd(), "assets", "gallery");
+  const dir = path.join(process.cwd(), "apps", "gallery", "media");
   try {
     const files = fs.readdirSync(dir)
       .filter(function (f) {

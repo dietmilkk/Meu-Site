@@ -1,13 +1,13 @@
 @font-face {
     font-family: "IBM VGA 8x16";
-    src: url("../../assets/system/fonts/ttf - Ac (aspect-corrected)/Ac437_IBM_VGA_8x16.ttf")
+    src: url("../assets/fonts/ttf - Ac (aspect-corrected)/Ac437_IBM_VGA_8x16.ttf")
         format("truetype");
     font-display: swap;
 }
 
 @font-face {
     font-family: "IBM VGA 9x16";
-    src: url("../../assets/system/fonts/ttf - Ac (aspect-corrected)/Ac437_IBM_VGA_9x16.ttf")
+    src: url("../assets/fonts/ttf - Ac (aspect-corrected)/Ac437_IBM_VGA_9x16.ttf")
         format("truetype");
     font-display: swap;
 }

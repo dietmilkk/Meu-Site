@@ -276,7 +276,7 @@
   function showAddDialog() {
     xpDialog({
       title: __('soundcloud.addTitle'),
-      icon: '<img src="assets/system/icons/tango2kde/32x32/filesystems/folder_sound_blue.png" alt="" width="32" height="32">',
+      icon: '<img src="system/assets/icons/tango2kde/32x32/filesystems/folder_sound_blue.png" alt="" width="32" height="32">',
       type: "prompt",
       message: __('soundcloud.addMsg'),
       defaultValue: "",
@@ -1227,7 +1227,7 @@
     minW: 460,
     minH: 500,
     taskbarIcon:
-      '<img src="assets/system/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="14" height="14" style="flex-shrink:0;">',
+      '<img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __('soundcloud.title'),
     taskbarAction: 'soundcloud',
     onShow: function () {

@@ -110,7 +110,7 @@
     minW: 520,
     minH: 400,
     taskbarIcon:
-      '<img src="assets/system/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="14" height="14" style="flex-shrink:0;">',
+      '<img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __("games.title"),
     taskbarAction: 'games',
     onShow: function () {

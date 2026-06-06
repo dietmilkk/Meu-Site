@@ -131,7 +131,7 @@
     minW: 420,
     minH: 500,
     taskbarIcon:
-      '<img src="assets/system/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="14" height="14" style="flex-shrink:0;">',
+      '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __('feed.title'),
     taskbarAction: 'feed',
     onShow: function () {

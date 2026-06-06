@@ -1,17 +1,1 @@
-window._feedData = [
-  {
-    date: "2025-12-25",
-    image: "assets/feed/placeholder.jpg",
-    text: "Natal! 🎄 Tempo de celebrar com quem amamos.",
-  },
-  {
-    date: "2025-12-20",
-    image: "assets/feed/placeholder.jpg",
-    text: "Mais um dia de coding. O setup tá ficando lindo ✨",
-  },
-  {
-    date: "2025-11-15",
-    image: "assets/feed/placeholder.jpg",
-    text: "Final de semana de jogos retrô e nostalgia.",
-  },
-];
+module.exports = "Px5EBRQYEQ9cR1dUH15ISB8fAgcWSEcPDBQLEQ9cRwQUXRhKH0hXVB1ZAQEPAFocGEwFAA0LQQ8ACwNYQFUWSEcSBA0YVhdEKwQQTAdEWd2tvrYUMAALERpMEEhGBgAISAkXGF8SU11ZRBQTBBhMFUAHCAoXA0kYVVYQVFNAAUdcQ0dcRhhLVFdJH1tHVQ9bXVNTAUdcQxQcBF5JAwABSUQIHElbUR1ECAQFBB0DGEkDF0sOXQxHVQ9GVUpARl9ELBQFBw0TCEUARApFHUgSU11QDQsBT1UjVF4DERAUDR+m2A1UWVFVCgEJQRkFGkkJRYf4hUkYVVYQVFNAAUdcQ0dcRhhLVFRJHF5HVQ9bXVNTAUdcQxQcBF5JAwABSUQIHElbUR1ECAQFBB0DGEkDF0sOXQxHVQ9GVUpARl9EJxwCFUFGAQBEXg4IGENTEFZRRA8JBhofVF8DERenmUsAWUNdQ0ZVCAIPAFtOCXA=";

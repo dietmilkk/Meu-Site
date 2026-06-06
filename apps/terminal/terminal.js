@@ -250,7 +250,7 @@
       minW: 500,
       minH: 300,
       taskbarIcon:
-        '<img src="assets/system/icons/tango2kde/16x16/apps/terminal.png" alt="" width="14" height="14" style="flex-shrink:0;">',
+        '<img src="system/assets/icons/tango2kde/16x16/apps/terminal.png" alt="" width="14" height="14" style="flex-shrink:0;">',
       taskbarLabel: __('desktop.terminal'),
       taskbarAction: 'terminal',
       onShow: function () {

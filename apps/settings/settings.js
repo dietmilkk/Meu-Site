@@ -86,7 +86,7 @@
     minW: 520,
     minH: 380,
     taskbarIcon:
-      '<img src="assets/system/icons/tango2kde/16x16/categories/redhat-system_tools.png" alt="" width="14" height="14" style="flex-shrink:0;">',
+      '<img src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __('settings.title'),
     taskbarAction: 'settings',
     onShow: function () {

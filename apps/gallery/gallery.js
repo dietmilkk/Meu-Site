@@ -6,6 +6,17 @@
   var _shuffled = [];
   var _shufflePos = 0;
 
+  var _galleryFallback = [
+    "seila1.jpg", "seila2.jpg", "seila3.jpg", "seila4.jpg", "seila5.jpg",
+    "seila6.webp", "seila7.webp", "seila8.jpg", "seila9.gif", "seila10.jpg",
+    "seila11.gif", "seila12.jpg", "seila13.gif", "seila14.gif", "seila15.gif",
+    "seila16.gif", "seila17.gif", "seila18.jpg", "seila19.jpg", "seila20.jpg",
+    "seila21.gif", "seila22.jpg", "seila23.jpg", "seila25.jpg", "seila26.jpg",
+    "seila27.jpg", "seila28.jpg", "seila29.jpg", "seila30.jpg", "seila31.jpg",
+    "seila32.jpg", "seila33.gif", "seila34.jpg", "seila35.jpg", "seila36.gif",
+    "seila37.gif", "seila38.jpg", "seila39.webp", "seila40.gif", "seila41.jpg"
+  ];
+
   function _reshuffle() {
     _shuffled = _galleryList.slice();
     for (var i = _shuffled.length - 1; i > 0; i--) {
@@ -27,8 +38,8 @@
         _reshuffle();
       })
       .catch(function () {
-        if (window._galleryData && window._galleryData.length) {
-          _galleryList = window._galleryData;
+        if (_galleryFallback.length) {
+          _galleryList = _galleryFallback;
           _reshuffle();
         } else {
           _galleryList = [];
@@ -53,7 +64,7 @@
 
     var img = document.createElement("img");
     img.classList.add("gallery-img");
-    img.src = "assets/gallery/" + encodeURIComponent(name);
+    img.src = "apps/gallery/media/" + encodeURIComponent(name);
     overlay.appendChild(img);
 
     var info = document.createElement("div");
@@ -66,7 +77,7 @@
     overlay.focus();
 
     function preload(n) {
-      var src = "assets/gallery/" + encodeURIComponent(n);
+      var src = "apps/gallery/media/" + encodeURIComponent(n);
       if (!_galleryCache[src]) {
         _galleryCache[src] = new Image();
         _galleryCache[src].src = src;
@@ -85,7 +96,7 @@
     preloadAhead(10);
 
     function update() {
-      img.src = "assets/gallery/" + encodeURIComponent(name);
+      img.src = "apps/gallery/media/" + encodeURIComponent(name);
       info.textContent = __("gallery.info") + (pos + 1) + "/" + total + __("gallery.infoEnd");
       preload(name);
       preloadAhead(10);

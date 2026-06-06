@@ -27,7 +27,7 @@
     minH: 500,
     startVisible: false,
     taskbarIcon:
-      '<img src="assets/system/icons/tango2kde/16x16/apps/dolphin.png" alt="" width="14" height="14" style="flex-shrink:0;">',
+      '<img src="system/assets/icons/tango2kde/16x16/apps/dolphin.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __('programs.title'),
     taskbarAction: 'programs',
     onInit: function (controls) {
@@ -47,9 +47,9 @@
   var _fsIcon = _fsItem ? _fsItem.querySelector("img") : null;
   var _fsLabel = _fsItem ? _fsItem.querySelector("span") : null;
   var _fsEnterIcon =
-    "assets/system/icons/tango2kde/16x16/actions/view-fullscreen.png";
+    "system/assets/icons/tango2kde/16x16/actions/view-fullscreen.png";
   var _fsExitIcon =
-    "assets/system/icons/tango2kde/16x16/actions/window_nofullscreen.png";
+    "system/assets/icons/tango2kde/16x16/actions/window_nofullscreen.png";
 
   onLanguageChange(function(lang) {
     if (_fsLabel) {

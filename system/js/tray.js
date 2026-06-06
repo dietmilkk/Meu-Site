@@ -238,13 +238,13 @@
 
     p.innerHTML =
       '<div class="volume-header">' +
-      '<img src="assets/system/icons/tango2kde/16x16/apps/kmix.png" alt="" width="14" height="14">' +
+      '<img src="system/assets/icons/tango2kde/16x16/apps/kmix.png" alt="" width="14" height="14">' +
       '<span class="volume-header-label">' + __('tray.volume') + '</span>' +
       "</div>" +
       '<div class="volume-body">' +
       '<div class="volume-row">' +
       '<span class="volume-mute-btn" id="volMuteBtn">' +
-      '<img src="assets/system/icons/tango2kde/16x16/apps/kmix.png" alt="" width="12" height="12">' +
+      '<img src="system/assets/icons/tango2kde/16x16/apps/kmix.png" alt="" width="12" height="12">' +
       "</span>" +
       '<div class="volume-slider-wrap" id="volSliderWrap">' +
       '<div class="volume-track">' +
@@ -253,7 +253,7 @@
       '<div class="volume-thumb" id="volThumb"></div>' +
       "</div>" +
       '<span class="volume-max-btn" id="volMaxBtn" title="' + __('tray.maxTitle') + '">' +
-      '<img src="assets/system/icons/tango2kde/16x16/apps/kmix.png" alt="" width="14" height="14">' +
+      '<img src="system/assets/icons/tango2kde/16x16/apps/kmix.png" alt="" width="14" height="14">' +
       "</span>" +
       "</div>" +
       '<div class="volume-gauge" id="volGauge">100%</div>' +
@@ -352,7 +352,7 @@
     if (!volIcon) return;
     volIcon.innerHTML = "";
     var img = document.createElement("img");
-    img.src = "assets/system/icons/tango2kde/22x22/apps/kmix.png";
+    img.src = "system/assets/icons/tango2kde/22x22/apps/kmix.png";
     img.alt = "";
     img.width = 18;
     img.height = 18;

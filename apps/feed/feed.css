@@ -1,114 +1,433 @@
 #feedBody {
   padding: 0;
-  background: #1a1a2e;
+  background: #ece9e0;
+  overflow-y: auto;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 70%);
 }
 
-.feed-empty {
+/* ===== Profile Header ===== */
+.feed-profile {
+  display: flex;
+  gap: 18px;
+  padding: 24px 24px 20px;
+  background: linear-gradient(180deg, #d8d4ca, #d0ccc2);
+  border-bottom: 2px solid #b0aca4;
+  border-top: 2px solid #f0ece2;
+  align-items: flex-start;
+  position: relative;
+}
+.feed-profile::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #fff;
+  opacity: 0.3;
+}
+.feed-avatar {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #000080, #0000a0);
+  border: 3px solid;
+  border-color: #fff #8a8a8a #8a8a8a #fff;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 200px;
-  color: #888;
-  font-family: var(--ff-mono);
-  font-size: 14px;
+  font-size: 32px;
+  color: #fff;
+  font-weight: 700;
+  overflow: hidden;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.12);
+}
+.feed-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.feed-profile-info {
+  flex: 1;
+  min-width: 0;
+  padding-top: 4px;
+}
+.feed-username {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
+}
+.feed-bio {
+  font-size: 13px;
+  color: #555;
+  margin: 0 0 12px;
+  line-height: 1.5;
+  padding-right: 8px;
+}
+.feed-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+  color: #777;
+}
+.feed-stats span {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.feed-stats span::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b0aca4;
+  flex-shrink: 0;
+}
+.feed-stats strong {
+  color: #000;
+  font-weight: 700;
 }
 
+/* ===== Feed List ===== */
 .feed-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-  max-width: 600px;
+  gap: 10px;
+  padding: 12px 14px 20px;
+  max-width: 640px;
   margin: 0 auto;
 }
-
 .feed-post {
-  background: #16213e;
-  border: 1px solid #0f3460;
-  border-radius: 8px;
+  background: #e8e4da;
+  border-top: 2px solid #f6f2e8;
+  border-left: 2px solid #f0ece2;
+  border-right: 2px solid #b0aca4;
+  border-bottom: 2px solid #a8a49c;
+  position: relative;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
-
+.feed-post:hover {
+  border-right-color: #9a968e;
+  border-bottom-color: #928e86;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
 .feed-post-header {
-  padding: 10px 14px;
-  font-family: var(--ff-mono);
+  padding: 6px 12px;
   font-size: 12px;
-  color: #8899aa;
-  border-bottom: 1px solid #0f3460;
+  color: #000;
+  background: linear-gradient(180deg, #1a1a90, #000080);
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.3px;
+  user-select: none;
 }
-
-.feed-post-img {
+.feed-post-badge {
+  font-size: 10px;
+  background: #b00;
+  color: #fff;
+  padding: 2px 8px;
+  font-weight: 700;
+  border: 1px solid #d22;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.feed-post-img-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #b8b4ac;
+  line-height: 0;
+  min-height: 60px;
+}
+.feed-post-img-wrap img {
   width: 100%;
   display: block;
-  background: #0f3460;
 }
 
+/* ===== Restricted / Censored ===== */
+.feed-post.restricted .feed-post-img-wrap {
+  filter: blur(12px);
+  -webkit-filter: blur(12px);
+  transform: scale(1.03);
+  user-select: none;
+  pointer-events: none;
+}
+.feed-post-censor {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 2;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.feed-post-censor:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+.feed-post-censor-br {
+  cursor: default;
+}
+.feed-post-censor-br:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+.feed-post-censor-icon {
+  font-size: 32px;
+  color: #ff5555;
+  margin-bottom: 10px;
+  opacity: 0.85;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.feed-post-censor-label {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+}
+.feed-post-censor-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 6px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
 .feed-post-text {
-  padding: 14px;
+  padding: 14px 14px 16px;
   font-size: 14px;
-  color: #ccc;
-  line-height: 1.6;
+  color: #1a1a1a;
+  line-height: 1.65;
   word-wrap: break-word;
+  white-space: pre-line;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+.feed-post.restricted .feed-post-text {
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  user-select: none;
+  pointer-events: none;
 }
 
-/* Auth screen */
+/* ===== Age Check Dialog (Win2K style) ===== */
+.feed-age-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.feed-age-box {
+  background: #d4d0c8;
+  border-top: 3px solid #fff;
+  border-left: 3px solid #fff;
+  border-right: 3px solid #505050;
+  border-bottom: 3px solid #505050;
+  box-shadow: 6px 6px 24px rgba(0,0,0,0.3);
+  width: 400px;
+  max-width: 90vw;
+}
+.feed-age-title {
+  background: linear-gradient(180deg, #1a1a90, #000080);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.feed-age-title-icon {
+  font-size: 18px;
+}
+.feed-age-body {
+  padding: 24px 28px;
+  text-align: center;
+}
+.feed-age-body p {
+  font-size: 14px;
+  color: #000;
+  margin: 0 0 18px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+.feed-age-body .feed-age-sub {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+.feed-age-btn-row {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+.feed-age-btn {
+  padding: 6px 28px;
+  font-size: 14px;
+  font-family: var(--ff-ui);
+  background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #5a5a5a;
+  border-bottom: 2px solid #5a5a5a;
+  cursor: pointer;
+  color: #000;
+  min-width: 90px;
+  outline: none;
+  transition:
+    background 0.18s cubic-bezier(0.34, 1.8, 0.64, 1),
+    border-color 0.12s ease,
+    transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
+}
+.feed-age-btn:hover {
+  transform: scale(1.02);
+}
+.feed-age-btn:active {
+  border-top: 2px solid #5a5a5a;
+  border-left: 2px solid #5a5a5a;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  background: linear-gradient(180deg, #c8c4bc, #d4d0c8);
+}
+.feed-age-btn:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: 2px;
+}
+.feed-age-btn-primary {
+  background: linear-gradient(180deg, #0000b0, #000080);
+  color: #fff;
+  border-top-color: #4444cc;
+  border-left-color: #4444cc;
+  border-right-color: #000040;
+  border-bottom-color: #000040;
+}
+.feed-age-btn-primary:hover {
+  transform: scale(1.02);
+}
+.feed-age-btn-primary:active {
+  border-top: 2px solid #000040;
+  border-left: 2px solid #000040;
+  border-right: 2px solid #4444cc;
+  border-bottom: 2px solid #4444cc;
+  background: linear-gradient(180deg, #000060, #000050);
+}
+
+/* ===== Empty / Error states ===== */
+.feed-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  color: #999;
+  font-size: 15px;
+  background: #ece9e0;
+  padding: 40px 20px;
+  text-align: center;
+}
+.feed-empty p {
+  margin: 8px 0 0;
+}
+.feed-empty-icon {
+  font-size: 48px;
+  opacity: 0.5;
+  margin-bottom: 8px;
+}
+
+/* ===== Auth (legacy — keep for API fallback) ===== */
 .feed-auth {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
+  min-height: 320px;
   padding: 20px;
+  background: #ece9e0;
 }
-
 .feed-auth-box {
-  background: #16213e;
-  border: 1px solid #0f3460;
-  border-radius: 8px;
-  padding: 32px;
+  background: #d4d0c8;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #5a5a5a;
+  border-bottom: 2px solid #5a5a5a;
+  padding: 28px 32px;
   max-width: 340px;
   width: 100%;
   text-align: center;
+  box-shadow: 3px 3px 12px rgba(0,0,0,0.1);
 }
-
 .feed-auth-box h3 {
-  color: #e0e0e0;
-  margin: 0 0 8px;
-  font-size: 16px;
+  color: #000;
+  margin: 0 0 6px;
+  font-size: 18px;
   font-weight: 600;
 }
-
 .feed-auth-box p {
-  color: #8899aa;
-  font-size: 13px;
-  margin: 0 0 20px;
-  line-height: 1.4;
+  color: #555;
+  font-size: 14px;
+  margin: 0 0 22px;
+  line-height: 1.5;
 }
-
 .feed-auth-input {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #0f3460;
-  border-radius: 4px;
-  background: #0f3460;
-  color: #e0e0e0;
-  font-size: 14px;
-  font-family: var(--ff-mono);
+  padding: 5px 8px;
+  font-size: 16px;
+  font-family: var(--ff-ui);
+  background: #fff;
+  border-top: 2px solid #5a5a5a;
+  border-left: 2px solid #5a5a5a;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  color: #000;
   box-sizing: border-box;
   outline: none;
 }
-
 .feed-auth-input:focus {
-  border-color: #1a5276;
+  background: #faf8f4;
 }
-
 .feed-auth-btn {
-  margin-top: 16px;
-  padding: 8px 24px;
-  font-size: 14px;
+  margin-top: 18px;
+  padding: 5px 28px;
+  font-size: 15px;
+  font-family: var(--ff-ui);
+  background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #5a5a5a;
+  border-bottom: 2px solid #5a5a5a;
+  cursor: pointer;
+  color: #000;
+  min-width: 80px;
+  transition:
+    background 0.18s cubic-bezier(0.34, 1.8, 0.64, 1),
+    border-color 0.12s ease,
+    transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
 }
-
+.feed-auth-btn:hover {
+  transform: scale(1.02);
+}
+.feed-auth-btn:active {
+  border-top: 2px solid #5a5a5a;
+  border-left: 2px solid #5a5a5a;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  background: linear-gradient(180deg, #c8c4bc, #d4d0c8);
+}
 .feed-auth-error {
-  color: #e74c3c;
-  font-size: 12px;
-  margin-top: 12px;
+  color: #c00;
+  font-size: 13px;
+  margin-top: 14px;
 }

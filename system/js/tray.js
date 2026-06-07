@@ -20,6 +20,33 @@
   updateClocks();
   setInterval(updateClocks, 1000);
 
+  /* ===== Helper: close other tray menus ===== */
+
+  function closeNpMenu() {
+    var m = document.getElementById("scNpMenu");
+    if (m) m.classList.remove("visible");
+  }
+  function closeCalPanel() {
+    if (calPanel && calPanel.style.display !== "none") {
+      calPanel.classList.remove("cal-in");
+      calPanel.classList.add("cal-out");
+      setTimeout(function () {
+        calPanel.style.display = "none";
+        calPanel.classList.remove("cal-out");
+      }, 240);
+    }
+  }
+  function closeVolPanel() {
+    if (volPanel && volPanel.style.display !== "none") {
+      volPanel.classList.remove("vol-in");
+      volPanel.classList.add("vol-out");
+      setTimeout(function () {
+        volPanel.style.display = "none";
+        volPanel.classList.remove("vol-out");
+      }, 220);
+    }
+  }
+
   /* ===== Calendar ===== */
 
   var clockEl = document.getElementById("taskbarClock");
@@ -121,8 +148,8 @@
         calPanel = buildCalendar();
         calDate = new Date();
       }
-      var vp = document.getElementById("volumePanel");
-      if (vp) vp.style.display = "none";
+      closeVolPanel();
+      closeNpMenu();
 
       /* cancel pending hide timer if any */
       if (calPanel._hideTimer) {
@@ -395,7 +422,8 @@
     volPanel = buildVolumePanel();
     volIcon.addEventListener("click", function (e) {
       e.stopPropagation();
-      if (calPanel) calPanel.style.display = "none";
+      closeCalPanel();
+      closeNpMenu();
       if (volPanel.style.display === "none" || !volPanel.style.display) {
         volPanel.classList.remove("vol-out");
         volPanel.style.display = "block";
@@ -426,22 +454,9 @@
           e.target.closest("#trayVolume"))
       )
         return;
-      if (volPanel && volPanel.style.display !== "none") {
-        volPanel.classList.remove("vol-in");
-        volPanel.classList.add("vol-out");
-        setTimeout(function () {
-          volPanel.style.display = "none";
-          volPanel.classList.remove("vol-out");
-        }, 220);
-      }
-      if (calPanel && calPanel.style.display !== "none") {
-        calPanel.classList.remove("cal-in");
-        calPanel.classList.add("cal-out");
-        setTimeout(function () {
-          calPanel.style.display = "none";
-          calPanel.classList.remove("cal-out");
-        }, 240);
-      }
+      closeVolPanel();
+      closeCalPanel();
+      closeNpMenu();
     },
     true,
   );

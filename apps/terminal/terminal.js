@@ -253,6 +253,7 @@
         '<img src="system/assets/icons/tango2kde/16x16/apps/terminal.png" alt="" width="14" height="14" style="flex-shrink:0;">',
       taskbarLabel: __('desktop.terminal'),
       taskbarAction: 'terminal',
+      appId: 'terminal',
       onShow: function () {
         if (termWin) {
           termWin.style.width = "580px";

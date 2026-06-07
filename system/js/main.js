@@ -28,8 +28,9 @@
     startVisible: false,
     taskbarIcon:
       '<img src="system/assets/icons/tango2kde/16x16/apps/dolphin.png" alt="" width="14" height="14" style="flex-shrink:0;">',
-    taskbarLabel: __('programs.title'),
-    taskbarAction: 'programs',
+    taskbarLabel: __('links.title'),
+    taskbarAction: 'links',
+    appId: 'links',
     onInit: function (controls) {
       // Ensure initial position
       controls.setMinimized(false);
@@ -116,8 +117,8 @@
 
   // Register main window for show-desktop
   if (W2K && W2K.AppRegistry) {
-    W2K.AppRegistry.register("programs", {
-      label: __('programs.title'),
+    W2K.AppRegistry.register("links", {
+      label: __('links.title'),
       show: function () {
         winBehavior.show();
       },
@@ -290,6 +291,24 @@
     for (var i = 0; i < deskIcons.length; i++) {
       if (_hiddenShortcuts.indexOf(deskIcons[i].getAttribute('data-action')) !== -1)
         deskIcons[i].classList.add('hidden-shortcut');
+    }
+  }
+
+  function _loadDynamicIcons() {
+    try { return JSON.parse(localStorage.getItem('w2k_dynamic_icons') || '[]'); }
+    catch(e) { return []; }
+  }
+  function _saveDynamicIcons(arr) {
+    try { localStorage.setItem('w2k_dynamic_icons', JSON.stringify(arr)); } catch(e) {}
+  }
+
+  function _ensureDynamicIcons() {
+    var dynamic = _loadDynamicIcons();
+    for (var i = 0; i < dynamic.length; i++) {
+      var action = dynamic[i];
+      if (!_hasDeskIcon(action) && _deskIconMap[action]) {
+        _createDeskIcon(action);
+      }
     }
   }
 
@@ -608,7 +627,7 @@
     var action = item.getAttribute("data-action");
     trackUse(action);
     switch (action) {
-      case "programs":
+      case "links":
         if (winBehavior.isMinimized() || win.style.display === "none") {
           winBehavior.show();
         }
@@ -697,7 +716,7 @@
     .addEventListener("contextmenu", function (e) {
       e.preventDefault();
       var tItem = e.target.closest('.taskbar-item');
-      if (tItem && tItem.getAttribute('data-action') && _hasDeskIcon(tItem.getAttribute('data-action'))) {
+      if (tItem && tItem.getAttribute('data-action')) {
         _showActionMenu(e, tItem.getAttribute('data-action'));
         return;
       }
@@ -730,11 +749,79 @@
        ADD / REMOVE DESKTOP SHORTCUT
        ================================================================ */
 
-  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','programs','settings','feed'];
+  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','links','settings','feed'];
+
+  var _deskIconMap = {
+    terminal: { icon: 'system/assets/icons/tango2kde/48x48/apps/terminal.png', labelKey: 'desktop.terminal' },
+    wakatime: { icon: 'system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png', labelKey: 'desktop.wakatime' },
+    games: { icon: 'system/assets/icons/tango2kde/48x48/categories/applications-games.png', labelKey: 'desktop.games' },
+    soundcloud: { icon: 'system/assets/icons/tango2kde/48x48/apps/kaudiocreator.png', labelKey: 'desktop.soundcloud' },
+    chat: { icon: 'system/assets/icons/tango2kde/48x48/apps/internet-group-chat.png', labelKey: 'desktop.chat' },
+    randomgif: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.randomgif' },
+    links: { icon: 'system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png', labelKey: 'desktop.links' },
+    settings: { icon: 'system/assets/icons/tango2kde/48x48/categories/redhat-system_tools.png', labelKey: 'desktop.settings' },
+    feed: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.feed' },
+    gallery: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.gallery' },
+  };
+
+  function _createDeskIcon(action) {
+    var info = _deskIconMap[action];
+    if (!info) return null;
+    var div = document.createElement('div');
+    div.className = 'desk-icon';
+    div.setAttribute('data-action', action);
+    div.style.position = 'absolute';
+    div.style.cursor = 'pointer';
+    var imgSrc = info.icon || 'system/assets/icons/tango2kde/48x48/apps/gwenview.png';
+    var labelHtml = __('info.label') || action;
+    try { labelHtml = __(info.labelKey); } catch(e) {}
+    div.innerHTML =
+      '<span class="di-icon"><img src="' + imgSrc + '" alt="" width="36" height="36"></span>' +
+      '<span class="di-label">' + labelHtml + '</span>';
+    div.addEventListener('click', function() {
+      deselectAllIcons();
+      div.classList.add('selected');
+      selectedIcon = div;
+    });
+    div.addEventListener('dblclick', function() {
+      deselectAllIcons();
+      if (typeof playLaunchSnd === 'function') playLaunchSnd();
+      openDesktopIcon(action);
+    });
+    document.querySelector('.desktop-icons').appendChild(div);
+    deskIcons = document.querySelectorAll('.desk-icon');
+    var dynamic = _loadDynamicIcons();
+    if (dynamic.indexOf(action) === -1) {
+      dynamic.push(action);
+      _saveDynamicIcons(dynamic);
+    }
+    return div;
+  }
+
+  function _removeDeskIcon(action) {
+    var el = _hasDeskIcon(action);
+    if (!el) return;
+    el.remove();
+    deskIcons = document.querySelectorAll('.desk-icon');
+    var dynamic = _loadDynamicIcons();
+    var idx = dynamic.indexOf(action);
+    if (idx !== -1) {
+      dynamic.splice(idx, 1);
+      _saveDynamicIcons(dynamic);
+    }
+    var hidx = _hiddenShortcuts.indexOf(action);
+    if (hidx !== -1) {
+      _hiddenShortcuts.splice(hidx, 1);
+      _saveHiddenShortcuts();
+    }
+    resolveIconCollisions();
+    saveIconPositions();
+  }
 
   function _hasDeskIcon(action) {
-    for (var i = 0; i < deskIcons.length; i++)
-      if (deskIcons[i].getAttribute('data-action') === action) return deskIcons[i];
+    var icons = document.querySelectorAll(".desk-icon");
+    for (var i = 0; i < icons.length; i++)
+      if (icons[i].getAttribute('data-action') === action) return icons[i];
     return null;
   }
 
@@ -745,36 +832,47 @@
     var old = document.getElementById("scActionMenu");
     if (old) old.remove();
     var icon = _hasDeskIcon(action);
-    if (!icon) return;
-    var hidden = icon.classList.contains('hidden-shortcut');
     var menu = document.createElement('div');
     menu.id = 'scActionMenu';
     menu.className = 'ctx-menu open';
-    menu.style.left = Math.min(e.clientX, window.innerWidth - 200) + 'px';
-    menu.style.top = Math.min(e.clientY, window.innerHeight - 80) + 'px';
+    menu.style.left = Math.min(e.clientX, window.innerWidth - 220) + 'px';
+    menu.style.top = Math.min(e.clientY, window.innerHeight - 120) + 'px';
     menu.style.position = 'fixed';
     menu.style.zIndex = '999999';
-    var label = hidden ? __('ctx.addDesktop') : __('ctx.removeDesktop');
-    menu.innerHTML = '<div class="ctx-menu-item" data-action="' + action + '">' + label + '</div>';
+
+    var isPinned = W2K && W2K.taskbarPins && W2K.taskbarPins.isPinned(action);
+    var pinLabel = isPinned ? __('ctx.unpin') : __('ctx.pin');
+    var shortcutLabel = icon ? __('ctx.removeDesktop') : __('ctx.addDesktop');
+
+    var html =
+      '<div class="ctx-menu-item" data-inner-action="pin">' + pinLabel + '</div>' +
+      '<div class="ctx-menu-item" data-inner-action="shortcut">' + shortcutLabel + '</div>';
+
+    menu.innerHTML = html;
     document.body.appendChild(menu);
-    menu.querySelector('.ctx-menu-item').addEventListener('click', function() {
-      menu.remove();
-      if (hidden) {
-        icon.classList.remove('hidden-shortcut');
-        _hiddenShortcuts.splice(_hiddenShortcuts.indexOf(action), 1);
-        _saveHiddenShortcuts();
-        var free = findFreeGridCell(GRID_OFFSET_X, GRID_OFFSET_Y, icon);
-        icon.style.left = free.x + "px";
-        icon.style.top = free.y + "px";
-        resolveIconCollisions();
-        saveIconPositions();
-      } else {
-        icon.classList.add('hidden-shortcut');
-        _hiddenShortcuts.push(action);
-        _saveHiddenShortcuts();
-        resolveIconCollisions();
-        saveIconPositions();
-      }
+
+    Array.from(menu.querySelectorAll('.ctx-menu-item')).forEach(function(item) {
+      item.addEventListener('click', function() {
+        menu.remove();
+        var innerAct = item.getAttribute('data-inner-action');
+        if (innerAct === 'pin') {
+          if (W2K && W2K.taskbarPins) W2K.taskbarPins.toggle(action);
+        } else if (innerAct === 'shortcut') {
+          var existing = _hasDeskIcon(action);
+          if (existing) {
+            _removeDeskIcon(action);
+          } else {
+            var newIcon = _createDeskIcon(action);
+            if (newIcon) {
+              var free = findFreeGridCell(GRID_OFFSET_X, GRID_OFFSET_Y, newIcon);
+              newIcon.style.left = free.x + "px";
+              newIcon.style.top = free.y + "px";
+              resolveIconCollisions();
+              saveIconPositions();
+            }
+          }
+        }
+      });
     });
   }
 
@@ -788,10 +886,12 @@
     var item = e.target.closest('.start-menu-item');
     if (!item) return;
     var action = item.getAttribute('data-action');
-    if (action && _hasDeskIcon(action)) {
+    if (action && _eligibleActions.indexOf(action) !== -1) {
       _showActionMenu(e, action);
     }
   });
+
+  _ensureDynamicIcons();
 
   /* ================================================================
        BOOT SCREEN

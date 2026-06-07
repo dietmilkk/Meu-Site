@@ -1,17 +1,14 @@
-Fazer deploy no Vercel** com a variável de ambiente `FEED_SECRET` definida (ex: uma senha tipo `"admin123"`)
+mesmo ja definindo uma FEED_SECRET no vercel, quando coloco a senha ele nao entra e da como senha incorreta.
 
-[@feed-data.js](file:///home/user/Downloads/Meu-Site/apps/feed/feed-data.js) faz oque? ela tem a ver com algo da encriptaçao? como esta sendo feita exatamente essa encriptaçao? o codigo nao pode ser vuneravel se alguem ver o codigo o conteudo ainda deve continua protegido
+no soundcloud, em alguns navegadores incluindo principalmente o firefox nao esta conseguindo um volume descente de altura no soundcloud, esta muuito baixo, tem como resolver isso?
 
-ajuste o css da galeria para ter uma aparencia 3d antigo, que nem do sistema
+remova a animaçao de quando passar o nome por cima dos botoes da janela. na lista de musicas aumente o tamanho da fonte dos nomes das musicas quando estiver em janela grande, tbm aumente o tamanho da fonte do nome das musicas no menu da barra de tarefas
 
-o menu do widget do sound cloud esta saindo da tela, ancore ele a lateral direita da tela e a parte superior da barra, isso serve pra o menu de calendario tambem.
-
-refine e melhore o sistema de animaçoes, capriche no conceito de sons e animaçóes que lembrem de sistemas antigos, e pricipalmente de coisas mecanicas.
-
-crie um bloco de texto editavel comunitario, que NIMGUEM pode apagar, utilizando algum serviço de terceiro como Padlet
 
 
 ==Novas funçoes:
+
+crie um bloco de texto editavel comunitario, que NIMGUEM pode apagar, utilizando algum serviço de terceiro como Padlet
 
 integrar chat de bate-papo com alternativa ja pre pronta
 

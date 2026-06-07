@@ -113,6 +113,7 @@
       '<img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __("games.title"),
     taskbarAction: 'games',
+    appId: 'games',
     onShow: function () {
       gamesWin.style.width = "780px";
       gamesWin.style.height = "660px";

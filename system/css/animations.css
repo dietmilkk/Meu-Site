@@ -146,6 +146,98 @@
     100% { transform: scale(1); }
 }
 
+/* --- Start Menu / Context Menu (were missing — now added) --- */
+
+@keyframes startMenuSlide {
+    0% { opacity: 0; transform: scaleY(0.92) translateY(8px); }
+    50% { opacity: 1; transform: scaleY(1.02); }
+    100% { opacity: 1; transform: scaleY(1) translateY(0); }
+}
+@-webkit-keyframes startMenuSlide {
+    0% { opacity: 0; transform: scaleY(0.92) translateY(8px); }
+    50% { opacity: 1; transform: scaleY(1.02); }
+    100% { opacity: 1; transform: scaleY(1) translateY(0); }
+}
+
+@keyframes ctxMenuFade {
+    0% { opacity: 0; transform: scale(0.93); }
+    65% { opacity: 1; transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+}
+@-webkit-keyframes ctxMenuFade {
+    0% { opacity: 0; transform: scale(0.93); }
+    65% { opacity: 1; transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* --- Minimize animation — mechanical slide-down --- */
+
+@keyframes winMinimize {
+    0% { opacity: 1; transform: scale(1) translateY(0); }
+    40% { opacity: 0.6; transform: scale(0.88) translateY(10px); }
+    70% { opacity: 0.3; transform: scale(0.82) translateY(18px); }
+    100% { opacity: 0; transform: scale(0.76) translateY(30px); }
+}
+@-webkit-keyframes winMinimize {
+    0% { opacity: 1; transform: scale(1) translateY(0); }
+    40% { opacity: 0.6; transform: scale(0.88) translateY(10px); }
+    70% { opacity: 0.3; transform: scale(0.82) translateY(18px); }
+    100% { opacity: 0; transform: scale(0.76) translateY(30px); }
+}
+
+/* --- HDD seek rattle (for boot / loading) --- */
+
+@keyframes hddRattle {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-0.5px); }
+    30% { transform: translateX(0.3px); }
+    50% { transform: translateX(-0.8px); }
+    70% { transform: translateX(0.4px); }
+    85% { transform: translateX(-0.3px); }
+}
+
+/* --- Mechanical button press (stiffer than btnPress) --- */
+
+@keyframes mechPress {
+    0% { transform: scale(1); }
+    20% { transform: scale(0.92); }
+    40% { transform: scale(0.96); }
+    60% { transform: scale(0.93); }
+    80% { transform: scale(0.98); }
+    100% { transform: scale(1); }
+}
+
+/* --- Gear tick (subtle rotation for loading spinners / indicators) --- */
+
+@keyframes gearTick {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- Application classes for new animations --- */
+
+.anim-win-shake {
+    -webkit-animation: winShake 0.25s ease;
+    animation: winShake 0.25s ease;
+}
+.anim-start-menu {
+    -webkit-animation: startMenuSlide 0.22s cubic-bezier(0.34, 1.8, 0.64, 1) forwards;
+    animation: startMenuSlide 0.22s cubic-bezier(0.34, 1.8, 0.64, 1) forwards;
+    transform-origin: bottom center;
+}
+.anim-ctx-menu {
+    -webkit-animation: ctxMenuFade 0.15s cubic-bezier(0.34, 1.8, 0.64, 1) forwards;
+    animation: ctxMenuFade 0.15s cubic-bezier(0.34, 1.8, 0.64, 1) forwards;
+    transform-origin: top left;
+}
+.anim-win-minimize {
+    -webkit-animation: winMinimize 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: winMinimize 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
 /* --- Utility / General-purpose --- */
 
 @-webkit-keyframes fadeInUp {
@@ -168,6 +260,16 @@
     100% { opacity: 1; }
 }
 
+/* --- Boot progress bar shine --- */
+@-webkit-keyframes bootShine {
+    0% { background-position: -20px 0; }
+    100% { background-position: 300px 0; }
+}
+@keyframes bootShine {
+    0% { background-position: -20px 0; }
+    100% { background-position: 300px 0; }
+}
+
 /* --- Application classes --- */
 
 .anim-win-open {
@@ -185,31 +287,39 @@
 
 /* ===== Calendar panel animations ===== */
 @-webkit-keyframes calOpen {
-  0% { opacity: 0; transform: scale(0.92); }
-  100% { opacity: 1; transform: scale(1); }
+  0% { opacity: 0; transform: scale(0.92) translateY(4px); }
+  45% { opacity: 1; transform: scale(1.03) translateY(-2px); }
+  75% { transform: scale(0.98) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 @keyframes calOpen {
-  0% { opacity: 0; transform: scale(0.92); }
-  100% { opacity: 1; transform: scale(1); }
+  0% { opacity: 0; transform: scale(0.92) translateY(4px); }
+  45% { opacity: 1; transform: scale(1.03) translateY(-2px); }
+  75% { transform: scale(0.98) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 @-webkit-keyframes calClose {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(0.92); }
+  0% { opacity: 1; transform: scale(1) translateY(0); }
+  40% { opacity: 0.6; transform: scale(0.95) translateY(2px); }
+  100% { opacity: 0; transform: scale(0.9) translateY(6px); }
 }
 @keyframes calClose {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(0.92); }
+  0% { opacity: 1; transform: scale(1) translateY(0); }
+  40% { opacity: 0.6; transform: scale(0.95) translateY(2px); }
+  100% { opacity: 0; transform: scale(0.9) translateY(6px); }
 }
 
 @-webkit-keyframes calCellIn {
-  0% { opacity: 0; transform: scale(0.6) rotate(-4deg); }
-  60% { opacity: 1; transform: scale(1.08) rotate(1deg); }
+  0% { opacity: 0; transform: scale(0.65) rotate(-3deg); }
+  50% { opacity: 1; transform: scale(1.06) rotate(0.5deg); }
+  75% { transform: scale(0.97) rotate(-0.3deg); }
   100% { opacity: 1; transform: scale(1) rotate(0deg); }
 }
 @keyframes calCellIn {
-  0% { opacity: 0; transform: scale(0.6) rotate(-4deg); }
-  60% { opacity: 1; transform: scale(1.08) rotate(1deg); }
+  0% { opacity: 0; transform: scale(0.65) rotate(-3deg); }
+  50% { opacity: 1; transform: scale(1.06) rotate(0.5deg); }
+  75% { transform: scale(0.97) rotate(-0.3deg); }
   100% { opacity: 1; transform: scale(1) rotate(0deg); }
 }
 

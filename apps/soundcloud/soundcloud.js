@@ -400,7 +400,7 @@
               renderTrackList();
               preloadArtwork();
               hideStatus();
-              setTimeout(refresh, 500);
+              setTimeout(refreshFromWidget, 500);
               w.getCurrentSound(function (s) {
                 if (s && s.title) updateFromSound(s);
               });
@@ -422,7 +422,7 @@
       w.getCurrentSound(function (s) {
         if (s && s.title) updateFromSound(s);
       });
-      setTimeout(refresh, 200);
+      setTimeout(refreshFromWidget, 200);
       setTimeout(function () { applyVolumeToWidget(pl.id); }, 100);
       setTimeout(function () { applyVolumeToWidget(pl.id); }, 500);
     });
@@ -684,7 +684,7 @@
                   renderTrackList();
                   preloadArtwork();
                   hideStatus();
-                  setTimeout(refresh, 500);
+                  setTimeout(refreshFromWidget, 500);
                 } else if (tries < 30) {
                   setTimeout(function () {
                     poll(tries + 1);
@@ -707,7 +707,7 @@
       w.getCurrentSound(function (s) {
         if (s && s.title) updateFromSound(s);
       });
-      setTimeout(refresh, 200);
+      setTimeout(refreshFromWidget, 200);
       setTimeout(function () { syncActiveVolume(); }, 100);
       setTimeout(function () { syncActiveVolume(); }, 500);
     });
@@ -852,16 +852,11 @@
   function updateFromSound(s) {
     if (!s) return;
     currentFullSound = s;
-    var idx = currentTrackIndex;
     if (s.title) {
       elTrackName.textContent = s.title;
-      if (!metaCache[idx]) metaCache[idx] = {};
-      metaCache[idx].title = s.title;
     }
     if (s.user && s.user.username) {
       elArtistName.textContent = s.user.username;
-      if (!metaCache[idx]) metaCache[idx] = {};
-      metaCache[idx].author_name = s.user.username;
     }
     if (s.artwork_url) {
       var originalUrl = s.artwork_url;
@@ -875,15 +870,18 @@
     _updateNowPlaying();
   }
 
-  function refresh() {
+  function refreshFromWidget() {
     if (!widgets[activePlaylistId] || !widgetReadies[activePlaylistId]) {
-      setTimeout(refresh, 500);
+      setTimeout(refreshFromWidget, 500);
       return;
     }
     detectMethods(widgets[activePlaylistId]);
     wCallCb("getIdx", function (idx) {
-      if (idx !== null && idx !== undefined) currentTrackIndex = idx;
-      displayTrack();
+      if (idx !== null && idx !== undefined && idx !== currentTrackIndex) {
+        currentTrackIndex = idx;
+        currentFullSound = null;
+        displayTrack();
+      }
     });
     wCallCb("getDuration", function (d) {
       if (d > 0) {
@@ -897,9 +895,6 @@
         elTimeCurrent.textContent = fmt(p);
       }
     });
-    setTimeout(function () {
-      if (!wMethods.getIdx) displayTrack();
-    }, 300);
   }
 
   /* ===== Manual track tracking ===== */
@@ -913,7 +908,7 @@
     currentTrackIndex = (currentTrackIndex + 1) % totalTracks;
     currentFullSound = null;
     wCall("next");
-    setTimeout(displayTrack, 400);
+    displayTrack();
   }
 
   function prevTrack() {
@@ -926,7 +921,7 @@
     currentTrackIndex = (currentTrackIndex - 1 + totalTracks) % totalTracks;
     currentFullSound = null;
     wCall("prev");
-    setTimeout(displayTrack, 400);
+    displayTrack();
   }
 
   function skipTrack(idx) {
@@ -935,7 +930,7 @@
     currentFullSound = null;
     detectMethods(widgets[activePlaylistId]);
     wCall("skip", idx);
-    setTimeout(displayTrack, 400);
+    displayTrack();
   }
 
   /* ===== Artwork & Metadata ===== */
@@ -1224,12 +1219,13 @@
     btnClose: btnClose,
     btnMinimize: btnMinimize,
     btnMaximize: btnMaximize,
-    minW: 460,
-    minH: 500,
+    minW: 300,
+    minH: 400,
     taskbarIcon:
       '<img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __('soundcloud.title'),
     taskbarAction: 'soundcloud',
+    appId: 'soundcloud',
     onShow: function () {
       if (!window._scWidgetsReady) {
         window._scWidgetsReady = true;
@@ -1237,13 +1233,13 @@
       }
       if (_scFirstShow) {
         _scFirstShow = false;
-        win.style.width = "";
-        win.style.height = "";
+        if (!win.style.width || win.style.width === "") win.style.width = "444.5px";
+        if (!win.style.height || win.style.height === "") win.style.height = "666px";
       }
       showAllIframes();
       if (activePlaylistId && widgets[activePlaylistId] && widgetReadies[activePlaylistId]) {
         if (isPlaying) startPoll();
-        setTimeout(refresh, 500);
+        setTimeout(refreshFromWidget, 500);
         return;
       }
       if (!activePlaylistId) {
@@ -1254,7 +1250,7 @@
           }
         }
       }
-      setTimeout(refresh, 500);
+      setTimeout(refreshFromWidget, 500);
     },
     onHide: function () {
       stopPoll();
@@ -1342,7 +1338,16 @@
         return;
       }
       var menu = document.getElementById("scNpMenu");
-      if (menu) menu.classList.toggle("visible");
+      if (menu) {
+        var willShow = !menu.classList.contains("visible");
+        menu.classList.toggle("visible");
+        if (willShow) {
+          var cp = document.getElementById("calendarPanel");
+          if (cp) { cp.style.display = "none"; cp.classList.remove("cal-in", "cal-out"); }
+          var vp = document.getElementById("volumePanel");
+          if (vp) { vp.style.display = "none"; vp.classList.remove("vol-in", "vol-out"); }
+        }
+      }
       if (typeof playClickSnd === 'function') playClickSnd();
     });
     var _scObserver = new MutationObserver(function () {

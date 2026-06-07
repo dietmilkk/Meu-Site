@@ -167,19 +167,19 @@
                     </div>
                 </div>
 
-                <!-- ===== PROGRAM MANAGER WINDOW ===== -->
+                <!-- ===== LINKS PAGE ===== -->
                 <div class="window" id="mainWindow">
                     <div class="title-bar" id="dragHandle">
                         <span class="title-bar-text">
                             <span class="icon">
                                 <img
-                                    src="system/assets/icons/tango2kde/16x16/apps/dolphin.png"
+                                    src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png"
                                     alt=""
                                     width="14"
                                     height="14"
                                 />
                             </span>
-                            <span data-i18n="programs.title">Repositório</span>
+                            <span data-i18n="links.title">Links</span>
                         </span>
                         <script>
                             document.write(createWindowButtons(""));
@@ -189,7 +189,7 @@
                     <div class="window-body">
                         <div class="content-area">
                             <p
-                                data-i18n="programs.desc"
+                                data-i18n="links.desc"
                                 style="
                                     margin: 0 0 16px;
                                     line-height: 1.5;
@@ -197,162 +197,75 @@
                                     color: #111;
                                 "
                             >
-                                Cada projeto aqui foi construído do zero —
-                                alguns são cópias fiéis de serviços reais,
-                                outros são ferramentas autorais. Todos estão
-                                guardados por algum motivo aparente da vida:
-                                registrar o caminho, o que foi aprendido, e o
-                                que pode virar algo maior.
+                                Plataformas onde estou ativo — me segue aí :)
                             </p>
                             <div class="projects-grid">
                                 <div
                                     class="project-card"
-                                    onclick="
-                                        window.open(
-                                            'diretorio/clique-seguro/index.html',
-                                            '_blank',
-                                        )
-                                    "
+                                    onclick="window.open('https://soundcloud.com/cu11','_blank')"
                                     style="cursor: pointer"
                                 >
                                     <div class="project-img">
                                         <img
-                                            src="diretorio/img/clique-seguro.png"
-                                            alt="Clique Seguro"
-                                            data-i18n-alt="programs.proj1.title"
+                                            src="system/assets/icons/tango2kde/48x48/apps/kaudiocreator.png"
+                                            alt="SoundCloud"
+                                            style="background:#ff5500;object-fit:contain;padding:8px;"
                                         />
                                     </div>
                                     <div class="project-body">
-                                        <h3 data-i18n="programs.proj1.title">
-                                            Clique Seguro
-                                        </h3>
-                                        <p data-i18n="programs.proj1.desc">
-                                            Ferramenta de segurança que verifica
-                                            links suspeitos para proteger contra
-                                            golpes online.
+                                        <h3>SoundCloud</h3>
+                                        <p style="color:#666;font-size:12px;margin:0 0 4px;">
+                                            soundcloud.com/cu11
                                         </p>
-                                        <div class="project-tags">
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj1.tag1"
-                                                >JavaScript</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj1.tag2"
-                                                >HTML</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj1.tag3"
-                                                >CSS</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj1.tag4"
-                                                >Segurança</span
-                                            >
-                                        </div>
+                                        <p data-i18n="links.scDesc">
+                                            Minha página no SoundCloud com playlists e músicas.
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div
                                     class="project-card"
-                                    onclick="
-                                        window.open(
-                                            'diretorio/amazon/index.html',
-                                            '_blank',
-                                        )
-                                    "
+                                    onclick="navigator.clipboard.writeText('@sillllky').then(function(){if(typeof playToggleOnSnd==='function')playToggleOnSnd();})"
                                     style="cursor: pointer"
                                 >
                                     <div class="project-img">
                                         <img
-                                            src="diretorio/img/amazon.png"
-                                            alt="Amazon Clone"
-                                            data-i18n-alt="programs.proj2.title"
+                                            src="system/assets/icons/tango2kde/48x48/apps/internet-group-chat.png"
+                                            alt="Discord"
+                                            style="background:#5865f2;object-fit:contain;padding:8px;"
                                         />
                                     </div>
                                     <div class="project-body">
-                                        <h3 data-i18n="programs.proj2.title">
-                                            Amazon Clone
-                                        </h3>
-                                        <p data-i18n="programs.proj2.desc">
-                                            Réplica pixel-perfect da página
-                                            inicial de um grande e-commerce.
+                                        <h3>Discord</h3>
+                                        <p style="color:#666;font-size:12px;margin:0 0 4px;">
+                                            @sillllky
                                         </p>
-                                        <div class="project-tags">
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj2.tag1"
-                                                >Python</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj2.tag2"
-                                                >Flask</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj2.tag3"
-                                                >JavaScript</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj2.tag4"
-                                                >HTML</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj2.tag5"
-                                                >CSS</span
-                                            >
-                                        </div>
+                                        <p data-i18n="links.discordDesc">
+                                            Me adiciona no Discord! (clique para copiar)
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div
                                     class="project-card"
-                                    onclick="window.location.href = '/'"
+                                    onclick="window.open('https://b23.tv/T4CMrOw','_blank')"
                                     style="cursor: pointer"
                                 >
-                                    <div
-                                        class="project-body"
-                                        style="border-left: 4px solid #000080"
-                                    >
-                                        <h3 data-i18n="programs.proj3.title">
-                                            Windows 2000 Desktop
-                                        </h3>
-                                        <p data-i18n="programs.proj3.desc">
-                                            Desktop Windows 2000 completo
-                                            recriado no navegador — janelas
-                                            arrastáveis, barra de tarefas, menu
-                                            iniciar, terminal, chat IA, efeitos
-                                            CRT retrô. HTML/CSS/JS puro, zero
-                                            frameworks.
+                                    <div class="project-img">
+                                        <img
+                                            src="system/assets/icons/tango2kde/48x48/apps/internet-web-browser.png"
+                                            alt="Bilibili"
+                                            style="background:#00a1d6;object-fit:contain;padding:8px;"
+                                        />
+                                    </div>
+                                    <div class="project-body">
+                                        <h3>Bilibili</h3>
+                                        <p style="color:#666;font-size:12px;margin:0 0 4px;">
+                                            b23.tv/T4CMrOw
                                         </p>
-                                        <div class="project-tags">
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj3.tag1"
-                                                >HTML</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj3.tag2"
-                                                >CSS</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj3.tag3"
-                                                >JavaScript</span
-                                            >
-                                            <span
-                                                class="project-tag"
-                                                data-i18n="programs.proj3.tag4"
-                                                >AI</span
-                                            >
-                                        </div>
+                                        <p data-i18n="links.biliDesc">
+                                            Meu perfil no Bilibili chinês — é estranho e divertido, não entendo nada, mas é bem intrigante, e honestamente mais divertido que o YouTube, parece um conteúdo mais genuíno.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -675,7 +588,7 @@
                 </div>
 
                 <!-- ===== SOUNDCLOUD PLAYER ===== -->
-                <div class="window" id="scWindow" style="display: none">
+                <div class="window" id="scWindow" style="display: none; width: 444.5px; height: 666px;">
                     <div class="title-bar" id="scDragHandle">
                         <span class="title-bar-text">
                             <span class="icon">
@@ -853,7 +766,7 @@
                     </div>
                 </div>
 
-                <!-- ===== FEED DE FOTOS ===== -->
+                <!-- ===== REDE SOCIAL ===== -->
                 <div class="window" id="feedWindow" style="display: none">
                     <div class="title-bar" id="feedDragHandle">
                         <span class="title-bar-text">
@@ -865,7 +778,7 @@
                                     height="14"
                                 />
                             </span>
-                            <span data-i18n="feed.title">Feed de Fotos</span>
+                            <span data-i18n="feed.title">Rede Social</span>
                         </span>
                         <script>
                             document.write(createWindowButtons("feed"));
@@ -947,14 +860,14 @@
                                 >Coleção de imgs</span
                             >
                         </div>
-                        <div class="start-menu-item" data-action="programs">
+                        <div class="start-menu-item" data-action="links">
                             <img
-                                src="system/assets/icons/tango2kde/16x16/apps/dolphin.png"
+                                src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png"
                                 alt=""
                                 width="16"
                                 height="16"
                             />
-                            <span data-i18n="start.programs">Repositório</span>
+                            <span data-i18n="start.links">Links</span>
                         </div>
                         <div class="start-menu-item" data-action="feed">
                             <img
@@ -963,7 +876,7 @@
                                 width="16"
                                 height="16"
                             />
-                            <span data-i18n="start.feed">Feed de Fotos</span>
+                            <span data-i18n="start.feed">Rede Social</span>
                         </div>
                         <div class="start-menu-item" data-action="settings">
                             <img
@@ -1059,7 +972,6 @@
         <script src="system/js/geo.js"></script>
         <script src="system/js/dialogs.js"></script>
         <script src="system/js/tray.js"></script>
-        <script src="system/js/cursor.js"></script>
         <script src="system/js/window-manager.js"></script>
         <script src="apps/gallery/gallery.js"></script>
         <script src="apps/terminal/terminal.js"></script>

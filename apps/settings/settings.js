@@ -89,6 +89,7 @@
       '<img src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __('settings.title'),
     taskbarAction: 'settings',
+    appId: 'settings',
     onShow: function () {
       win.style.width = "520px";
       win.style.height = "400px";

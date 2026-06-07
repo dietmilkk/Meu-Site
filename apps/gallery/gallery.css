@@ -13,20 +13,20 @@
 }
 
 .gallery-img {
+  width: 100vw;
   height: 100vh;
-  width: auto;
-  max-width: 100vw;
+  object-fit: contain;
   display: block;
+  background: #000;
 }
 
 .gallery-info {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 44px;
+  right: 0;
+  padding: 4px 12px;
+  font-size: 15px;
   color: #fff;
-  font-family: monospace;
-  font-size: 14px;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 8px 12px;
+  background: #000080;
   z-index: 999999;
 }

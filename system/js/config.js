@@ -81,4 +81,62 @@
     launch: launchSafe,
     forEach: forEachApp,
   };
+
+  /* ================================================================
+       TaskbarPins — pin / unpin apps from the taskbar
+       ================================================================ */
+
+  var PIN_KEY = "w2k_pinned";
+  var _pinListeners = [];
+
+  function _getPinned() {
+    try {
+      return JSON.parse(localStorage.getItem(PIN_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+  function _savePinned(arr) {
+    try {
+      localStorage.setItem(PIN_KEY, JSON.stringify(arr));
+    } catch (e) {}
+  }
+  function _firePinChange(id, pinned) {
+    for (var i = 0; i < _pinListeners.length; i++) {
+      try {
+        _pinListeners[i](id, pinned);
+      } catch (e) {}
+    }
+  }
+
+  global.W2K.taskbarPins = {
+    add: function (id) {
+      var arr = _getPinned();
+      if (arr.indexOf(id) === -1) {
+        arr.push(id);
+        _savePinned(arr);
+        _firePinChange(id, true);
+      }
+    },
+    remove: function (id) {
+      var arr = _getPinned().filter(function (i) {
+        return i !== id;
+      });
+      _savePinned(arr);
+      _firePinChange(id, false);
+    },
+    toggle: function (id) {
+      if (this.isPinned(id)) this.remove(id);
+      else this.add(id);
+    },
+    isPinned: function (id) {
+      return _getPinned().indexOf(id) !== -1;
+    },
+    getAll: function () {
+      return _getPinned();
+    },
+    onChanged: function (fn) {
+      _pinListeners.push(fn);
+    },
+  };
 })(window);

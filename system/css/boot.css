@@ -122,6 +122,16 @@
     color: #3a3a3a;
 }
 
+.boot-welcome .welcome-volume-tip {
+    color: #8a4a00;
+    font-size: 11px;
+    margin: 6px 0 0;
+    padding: 4px 8px;
+    background: #fef0d0;
+    border: 1px solid #e8c878;
+    border-radius: 3px;
+}
+
 .boot-welcome .welcome-check-label {
     color: #444;
 }

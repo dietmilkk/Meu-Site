@@ -112,135 +112,117 @@
   // Relay engage — spring tension building then latching
   function playToggleOnSnd() {
     _mechClick([2200, 1500, 1800, 2100], [0.02, 0.015, 0.025, 0.035], [0.006, 0.005, 0.012, 0.016], 6);
-    _noise(0.004, 0.02, 5);
+    _noise(0.003, 0.015, 6);
     setTimeout(function() {
-      _tone(400, 820, 0.06, 'triangle', 0.03);
-      _sweepNoise(800, 2000, 0.05, 0.015, 2);
-    }, 30);
-    setTimeout(function() {
-      _impact(2800, 0.025, 0.005, 'sine');
-      _noise(0.003, 0.015, 8);
-    }, 50);
+      _impact(2800, 0.015, 0.005, 'sine');
+      _noise(0.002, 0.01, 8);
+    }, 40);
   }
 
   // Relay release — spring snap with falling thud
   function playToggleOffSnd() {
     _mechClick([2500, 1800, 900], [0.025, 0.02, 0.015], [0.007, 0.009, 0.006], 5);
-    _noise(0.003, 0.018, 5);
+    _noise(0.003, 0.015, 6);
     setTimeout(function() {
-      _tone(700, 180, 0.07, 'triangle', 0.022);
-      _sweepNoise(1500, 400, 0.04, 0.012, 1.5);
-    }, 20);
+      _tone(700, 180, 0.04, 'triangle', 0.015);
+    }, 15);
   }
 
   // Gear-driven mechanism — ratcheting clicks that accelerate, ending in a firm lock
   function playOpenSnd() {
-    _impact(1400, 0.015, 0.015, 'sine');
-    _noise(0.003, 0.018, 5);
-    _mechClick([600, 700, 850, 1000, 1200], [0.012, 0.014, 0.018, 0.022, 0.028], [0.006, 0.006, 0.008, 0.01, 0.014], 8);
+    _impact(1400, 0.01, 0.012, 'sine');
+    _noise(0.002, 0.012, 6);
+    _mechClick([600, 700, 850, 1000, 1200], [0.012, 0.014, 0.018, 0.022, 0.028], [0.005, 0.005, 0.006, 0.008, 0.01], 6);
     setTimeout(function() {
-      _sweepNoise(200, 2800, 0.16, 0.028, 0.5);
-      _tone(120, 480, 0.12, 'triangle', 0.028);
-      _tone(70, 260, 0.1, 'sine', 0.014);
-    }, 50);
+      _tone(120, 480, 0.06, 'triangle', 0.02);
+      _noise(0.003, 0.015, 3);
+    }, 40);
     setTimeout(function() {
-      _mechClick([1300, 1050, 1150], [0.04, 0.025, 0.032], [0.02, 0.014, 0.017], 10);
-      _noise(0.006, 0.03, 2);
-      _impact(2200, 0.02, 0.01, 'sine');
-    }, 220);
+      _mechClick([1300, 1050, 1150], [0.03, 0.02, 0.025], [0.014, 0.01, 0.012], 8);
+      _impact(2200, 0.015, 0.008, 'sine');
+    }, 140);
   }
 
   // Heavy latch — thick thud, sliding lock, final click
   function playCloseSnd() {
-    _impact(1200, 0.015, 0.018, 'sine');
-    _mechClick([1100, 900, 750, 600], [0.018, 0.022, 0.028, 0.04], [0.008, 0.01, 0.014, 0.022], 6);
-    _noise(0.005, 0.02, 4);
+    _impact(1200, 0.01, 0.015, 'sine');
+    _mechClick([1100, 900, 750, 600], [0.018, 0.022, 0.028, 0.04], [0.006, 0.008, 0.01, 0.015], 5);
+    _noise(0.003, 0.015, 5);
     setTimeout(function() {
-      _sweepNoise(2400, 80, 0.18, 0.04, 0.4);
-      _tone(450, 40, 0.16, 'square', 0.02);
-      _tone(280, 30, 0.12, 'triangle', 0.016);
-    }, 20);
+      _tone(450, 40, 0.08, 'square', 0.015);
+      _tone(280, 30, 0.06, 'triangle', 0.01);
+    }, 15);
     setTimeout(function() {
-      _mechClick([500, 400, 550], [0.06, 0.03, 0.045], [0.035, 0.018, 0.025], 18);
-      _noise(0.012, 0.045, 1.5);
-      _impact(150, 0.025, 0.04, 'square');
-    }, 240);
+      _mechClick([500, 400, 550], [0.04, 0.025, 0.035], [0.02, 0.012, 0.016], 12);
+      _impact(150, 0.015, 0.03, 'square');
+    }, 150);
   }
 
   // Slide down track — descending swoosh + slot click
   function playMinimizeSnd() {
-    _tone(800, 60, 0.12, 'triangle', 0.04);
-    _tone(550, 35, 0.1, 'sine', 0.025);
-    _sweepNoise(1800, 80, 0.14, 0.03, 0.4);
-    _mechClick([600, 480, 400], [0.015, 0.02, 0.025], [0.008, 0.01, 0.014], 6);
+    _tone(800, 60, 0.06, 'triangle', 0.025);
+    _tone(550, 35, 0.05, 'sine', 0.015);
+    _mechClick([600, 480, 400], [0.015, 0.02, 0.025], [0.006, 0.008, 0.01], 5);
     setTimeout(function() {
-      _mechClick([380, 340, 360], [0.032, 0.02, 0.026], [0.016, 0.012, 0.015], 12);
-      _noise(0.005, 0.025, 3);
-      _impact(220, 0.015, 0.025, 'triangle');
-    }, 130);
+      _mechClick([380, 340, 360], [0.025, 0.015, 0.02], [0.01, 0.008, 0.01], 8);
+      _impact(220, 0.01, 0.018, 'triangle');
+    }, 80);
   }
 
   // Slide up track — ascending swoosh + slot click
   function playRestoreSnd() {
-    _tone(40, 700, 0.12, 'triangle', 0.04);
-    _tone(25, 450, 0.1, 'sine', 0.025);
-    _sweepNoise(60, 1400, 0.14, 0.03, 0.4);
-    _mechClick([350, 420, 500], [0.015, 0.018, 0.022], [0.008, 0.009, 0.012], 6);
+    _tone(40, 700, 0.06, 'triangle', 0.025);
+    _tone(25, 450, 0.05, 'sine', 0.015);
+    _mechClick([350, 420, 500], [0.015, 0.018, 0.022], [0.006, 0.007, 0.009], 5);
     setTimeout(function() {
-      _mechClick([480, 550, 520], [0.032, 0.022, 0.028], [0.016, 0.013, 0.016], 12);
-      _noise(0.005, 0.025, 3);
-      _impact(380, 0.015, 0.02, 'triangle');
-    }, 130);
+      _mechClick([480, 550, 520], [0.025, 0.018, 0.022], [0.01, 0.009, 0.011], 8);
+      _impact(380, 0.01, 0.015, 'triangle');
+    }, 80);
   }
 
   // Expanding frame — telescoping rails locking into place
   function playMaximizeSnd() {
-    _mechClick([300, 450, 600, 780], [0.012, 0.018, 0.025, 0.035], [0.006, 0.008, 0.012, 0.018], 8);
-    _noise(0.004, 0.02, 4);
+    _mechClick([300, 450, 600, 780], [0.012, 0.018, 0.025, 0.035], [0.005, 0.006, 0.008, 0.012], 6);
+    _noise(0.003, 0.015, 5);
     setTimeout(function() {
-      _tone(50, 580, 0.22, 'triangle', 0.05);
-      _tone(30, 350, 0.18, 'sine', 0.028);
-      _sweepNoise(60, 1600, 0.2, 0.035, 0.3);
-    }, 30);
+      _tone(50, 580, 0.1, 'triangle', 0.03);
+      _tone(30, 350, 0.08, 'sine', 0.018);
+    }, 25);
     setTimeout(function() {
-      _mechClick([850, 720, 780], [0.05, 0.028, 0.038], [0.024, 0.016, 0.02], 12);
-      _noise(0.008, 0.035, 1.8);
-      _impact(1500, 0.02, 0.012, 'sine');
-    }, 240);
+      _mechClick([850, 720, 780], [0.04, 0.022, 0.03], [0.016, 0.01, 0.014], 8);
+      _impact(1500, 0.015, 0.01, 'sine');
+    }, 150);
   }
 
   // HDD spin-up + head seek — low hum rising, then sharp click
   function playLaunchSnd() {
-    _mechClick([200, 280, 380, 500], [0.008, 0.01, 0.014, 0.02], [0.005, 0.005, 0.007, 0.01], 10);
-    _noise(0.006, 0.015, 3);
+    _mechClick([200, 280, 380, 500], [0.008, 0.01, 0.014, 0.02], [0.004, 0.004, 0.005, 0.007], 8);
+    _noise(0.004, 0.01, 4);
     setTimeout(function() {
-      _tone(35, 400, 0.3, 'sawtooth', 0.045);
-      _tone(50, 280, 0.25, 'sine', 0.025);
-      _sweepNoise(40, 3500, 0.32, 0.035, 0.2);
-    }, 20);
+      _tone(35, 400, 0.12, 'sawtooth', 0.025);
+      _tone(50, 280, 0.1, 'sine', 0.015);
+    }, 15);
     setTimeout(function() {
-      _mechClick([900, 780, 850, 800], [0.055, 0.035, 0.045, 0.04], [0.03, 0.018, 0.024, 0.022], 8);
-      _noise(0.015, 0.05, 1.5);
-      _impact(3000, 0.025, 0.008, 'sine');
-      _impact(2200, 0.015, 0.004, 'triangle');
-    }, 330);
+      _mechClick([900, 780, 850, 800], [0.04, 0.025, 0.035, 0.03], [0.018, 0.012, 0.015, 0.014], 6);
+      _impact(3000, 0.015, 0.006, 'sine');
+      _impact(2200, 0.01, 0.003, 'triangle');
+    }, 180);
   }
 
   // Old terminal bell — clean metallic ping with decay
   function playNotificationSnd() {
-    _impact(3200, 0.07, 0.05, 'sine');
-    _impact(2800, 0.055, 0.03, 'sine');
-    _tone(2400, 2100, 0.08, 'triangle', 0.025);
-    _tone(3600, 3000, 0.04, 'sine', 0.015);
+    _impact(3200, 0.04, 0.035, 'sine');
+    _impact(2800, 0.03, 0.02, 'sine');
+    _tone(2400, 2100, 0.05, 'triangle', 0.018);
+    _tone(3600, 3000, 0.03, 'sine', 0.01);
     setTimeout(function() {
-      _impact(2600, 0.065, 0.04, 'sine');
-      _impact(2200, 0.055, 0.025, 'sine');
-      _tone(2800, 2500, 0.07, 'triangle', 0.02);
-    }, 180);
+      _impact(2600, 0.035, 0.025, 'sine');
+      _impact(2200, 0.03, 0.015, 'sine');
+      _tone(2800, 2500, 0.04, 'triangle', 0.015);
+    }, 100);
     setTimeout(function() {
-      _tone(1800, 1400, 0.05, 'sine', 0.012);
-      _noise(0.004, 0.015, 6);
-    }, 360);
+      _tone(1800, 1400, 0.03, 'sine', 0.008);
+    }, 200);
   }
 
   // Harsh buzzer w/ FM texture — like an old PC speaker
@@ -252,43 +234,40 @@
       var g1 = ctx.createGain(), g2 = ctx.createGain();
       o1.type = 'square';
       o1.frequency.setValueAtTime(180, ctx.currentTime);
-      o1.frequency.linearRampToValueAtTime(200, ctx.currentTime + 0.08);
-      o1.frequency.linearRampToValueAtTime(150, ctx.currentTime + 0.18);
-      o1.frequency.linearRampToValueAtTime(190, ctx.currentTime + 0.28);
+      o1.frequency.linearRampToValueAtTime(200, ctx.currentTime + 0.05);
+      o1.frequency.linearRampToValueAtTime(150, ctx.currentTime + 0.1);
       o2.type = 'sawtooth';
       o2.frequency.setValueAtTime(90, ctx.currentTime);
-      o2.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.08);
-      o2.frequency.linearRampToValueAtTime(75, ctx.currentTime + 0.18);
-      o2.frequency.linearRampToValueAtTime(95, ctx.currentTime + 0.28);
-      g1.gain.setValueAtTime(0.09, ctx.currentTime);
-      g1.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 0.08);
-      g1.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.16);
-      g1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-      g2.gain.setValueAtTime(0.05, ctx.currentTime);
-      g2.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.08);
-      g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      o2.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.05);
+      o2.frequency.linearRampToValueAtTime(75, ctx.currentTime + 0.1);
+      g1.gain.setValueAtTime(0.07, ctx.currentTime);
+      g1.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.05);
+      g1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      g2.gain.setValueAtTime(0.035, ctx.currentTime);
+      g2.gain.linearRampToValueAtTime(0.025, ctx.currentTime + 0.05);
+      g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
       o1.connect(g1); o2.connect(g2); g1.connect(ctx.destination); g2.connect(ctx.destination);
-      o1.start(); o2.start(); o1.stop(ctx.currentTime + 0.31); o2.stop(ctx.currentTime + 0.31);
+      o1.start(); o2.start(); o1.stop(ctx.currentTime + 0.16); o2.stop(ctx.currentTime + 0.16);
     } catch (e) {}
-    _noise(0.06, 0.045, 1.5);
-    _impact(100, 0.02, 0.06, 'square');
+    _noise(0.03, 0.03, 2);
+    _impact(100, 0.012, 0.04, 'square');
   }
 
   // Error beep — double buzz like old BIOS
   function playErrorBeepSnd() {
-    _tone(220, 170, 0.08, 'square', 0.07);
-    _tone(110, 85, 0.08, 'sawtooth', 0.035);
-    _noise(0.025, 0.04, 2.5);
-    _impact(50, 0.015, 0.05, 'square');
+    _tone(220, 170, 0.05, 'square', 0.05);
+    _tone(110, 85, 0.05, 'sawtooth', 0.025);
+    _noise(0.015, 0.025, 3);
+    _impact(50, 0.01, 0.035, 'square');
     setTimeout(function() {
-      _tone(170, 120, 0.1, 'square', 0.065);
-      _tone(85, 60, 0.1, 'sawtooth', 0.03);
-      _noise(0.025, 0.04, 2.5);
-      _impact(40, 0.015, 0.05, 'square');
-    }, 160);
+      _tone(170, 120, 0.06, 'square', 0.045);
+      _tone(85, 60, 0.06, 'sawtooth', 0.02);
+      _noise(0.015, 0.025, 3);
+      _impact(40, 0.01, 0.035, 'square');
+    }, 100);
     setTimeout(function() {
-      _mechClick([350, 280, 320], [0.035, 0.02, 0.028], [0.015, 0.01, 0.014], 8);
-    }, 280);
+      _mechClick([350, 280, 320], [0.025, 0.015, 0.02], [0.01, 0.007, 0.009], 6);
+    }, 180);
   }
 
   // Film advance mechanism — ratcheting click for next
@@ -900,7 +879,10 @@
 
       tbEntry = document.createElement("div");
       tbEntry.className = "taskbar-item active";
-      if (appId) tbEntry.setAttribute("data-app-id", appId);
+      if (appId) {
+        tbEntry.setAttribute("data-app-id", appId);
+        win.setAttribute("data-app-id", appId);
+      }
       tbEntry.innerHTML = (opts.taskbarIcon || "") + " " + (opts.taskbarLabel || "Window");
       if (opts.taskbarAction) tbEntry.setAttribute("data-action", opts.taskbarAction);
       container.appendChild(tbEntry);
@@ -1071,10 +1053,7 @@
             }
           }
         } else {
-          if (tbEntry && !tbEntry.classList.contains("active")) {
-            tbEntry.remove();
-            tbEntry = null;
-          } else if (tbEntry) {
+          if (tbEntry) {
             tbEntry.classList.remove("pinned");
           }
         }

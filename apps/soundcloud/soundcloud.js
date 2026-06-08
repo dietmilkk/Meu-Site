@@ -602,7 +602,8 @@
 
   window.setSoundCloudVolume = function (v) {
     if (typeof v !== "number" || isNaN(v)) return;
-    v = Math.max(0, Math.min(1, v));
+    var boost = 1.8; /* SC widget audio é baixo em alguns navegadores */
+    v = Math.max(0, Math.min(boost, v * boost));
     for (var id in widgets) {
       if (widgets[id]) {
         try {
@@ -616,8 +617,9 @@
     if (!widgets[id]) return;
     var v = typeof window.getPageVolume === "function" ? window.getPageVolume() : 1;
     if (typeof v !== "number" || isNaN(v)) v = 1;
+    var boost = 1.8;
     try {
-      widgets[id].setVolume(Math.max(0, Math.min(1, v)));
+      widgets[id].setVolume(Math.max(0, Math.min(boost, v * boost)));
     } catch (e) {}
   }
 

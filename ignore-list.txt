@@ -1,5 +1,7 @@
 mesmo ja definindo uma FEED_SECRET no vercel, quando coloco a senha ele nao entra e da como senha incorreta.
 
+no link do bilibili troque por esse https://space.bilibili.com/3706931485084517/dynamic
+
 no soundcloud, em alguns navegadores incluindo principalmente o firefox nao esta conseguindo um volume descente de altura no soundcloud, esta muuito baixo, tem como resolver isso?
 
 remova a animaçao de quando passar o nome por cima dos botoes da janela. na lista de musicas aumente o tamanho da fonte dos nomes das musicas quando estiver em janela grande, tbm aumente o tamanho da fonte do nome das musicas no menu da barra de tarefas

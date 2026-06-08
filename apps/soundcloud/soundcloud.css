@@ -272,9 +272,6 @@
         transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
 }
 
-.sc-btn:hover {
-    transform: scale(1.02);
-}
 
 .sc-btn:active {
     border-color: #5a5a5a #fff #fff #5a5a5a;
@@ -466,8 +463,16 @@
 }
 
 .sc-player.sc-wide .sc-track-item {
-    font-size: 17px;
+    font-size: 19px;
     padding: 7px 14px;
+}
+
+.sc-player.sc-wide .sc-track-name {
+    font-size: 20px;
+}
+
+.sc-player.sc-wide .sc-artist-name {
+    font-size: 18px;
 }
 
 .window-maximized .sc-btn-play {

@@ -117,16 +117,19 @@
         e.stopPropagation();
         calDate.setMonth(calDate.getMonth() - 1);
         renderCalendar();
+        if (typeof playClickSnd === "function") playClickSnd();
       });
     if (calNext)
       calNext.addEventListener("click", function (e) {
         e.stopPropagation();
         calDate.setMonth(calDate.getMonth() + 1);
         renderCalendar();
+        if (typeof playClickSnd === "function") playClickSnd();
       });
 
     /* ===== Scroll to change month (attach once) ===== */
     if (!calPanel._wheelAdded) {
+      var _calWheelTimer = null;
       calPanel.addEventListener("wheel", function calWheel(e) {
         e.preventDefault();
         if (e.deltaY < 0) {
@@ -135,6 +138,10 @@
           calDate.setMonth(calDate.getMonth() + 1);
         }
         renderCalendar();
+        if (!_calWheelTimer && typeof playClickSnd === "function") {
+          playClickSnd();
+          _calWheelTimer = setTimeout(function() { _calWheelTimer = null; }, 80);
+        }
       }, { passive: false });
       calPanel._wheelAdded = true;
     }

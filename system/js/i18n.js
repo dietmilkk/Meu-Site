@@ -15,6 +15,7 @@
       'boot.stage5': 'Finalizando inicialização...',
       'boot.stage6': 'Pronto...',
       'boot.done': 'Pronto! ^^',
+      'page.title': 'Site de ky',
 
       /* Desktop icons */
       'desktop.terminal': 'Terminal',
@@ -55,6 +56,7 @@
       'welcome.langLabel': 'Idioma',
       'welcome.dontShow': 'Não mostrar na inicialização',
       'welcome.startBtn': 'Começar',
+      'welcome.volumeTip': 'Para uma melhor experiência, aumente o volume do seu computador.',
 
       /* Links */
       'links.title': 'Links',
@@ -285,6 +287,7 @@
       'boot.stage5': 'Finishing startup...',
       'boot.stage6': 'Ready...',
       'boot.done': 'Ready! ^^',
+      'page.title': "Ky's Site",
 
       /* Desktop icons */
       'desktop.terminal': 'Terminal',
@@ -325,6 +328,7 @@
       'welcome.langLabel': 'Language',
       'welcome.dontShow': 'Don\'t show on startup',
       'welcome.startBtn': 'Get Started',
+      'welcome.volumeTip': 'For a better experience, increase your computer\'s volume.',
 
       /* Links */
       'links.title': 'Links',
@@ -577,6 +581,7 @@
   }
 
   function applyTranslations() {
+    document.title = t('page.title');
     document.querySelectorAll('[data-i18n]').forEach(function(el) {
       var key = el.getAttribute('data-i18n');
       var val = t(key);

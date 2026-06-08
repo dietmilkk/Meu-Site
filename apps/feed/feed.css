@@ -293,9 +293,6 @@
     border-color 0.12s ease,
     transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
 }
-.feed-age-btn:hover {
-  transform: scale(1.02);
-}
 .feed-age-btn:active {
   border-top: 2px solid #5a5a5a;
   border-left: 2px solid #5a5a5a;
@@ -314,9 +311,6 @@
   border-left-color: #4444cc;
   border-right-color: #000040;
   border-bottom-color: #000040;
-}
-.feed-age-btn-primary:hover {
-  transform: scale(1.02);
 }
 .feed-age-btn-primary:active {
   border-top: 2px solid #000040;
@@ -415,9 +409,6 @@
     background 0.18s cubic-bezier(0.34, 1.8, 0.64, 1),
     border-color 0.12s ease,
     transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
-}
-.feed-auth-btn:hover {
-  transform: scale(1.02);
 }
 .feed-auth-btn:active {
   border-top: 2px solid #5a5a5a;

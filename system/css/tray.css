@@ -2,7 +2,7 @@
 #calendarPanel {
   position: fixed;
   bottom: 40px;
-  right: 0;
+  right: 10px;
   background: #d4d0c8;
   border: 2px solid;
   border-color: #fff #808080 #808080 #fff;
@@ -47,9 +47,7 @@
     border-color 0.12s ease,
     transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
 }
-.cal-nav-btn:hover {
-  transform: scale(1.02);
-}
+
 .cal-nav-btn:active {
   border-color: #5a5a5a #fff #fff #5a5a5a;
   background: linear-gradient(180deg, #c8c4bc, #d4d0c8);
@@ -95,7 +93,6 @@
 }
 .cal-cell:not(.cal-today):hover {
   background: #c8c4bc;
-  transform: scale(1.12);
 }
 .cal-cell:not(.cal-today):active {
   background: #b0aca4;
@@ -231,7 +228,6 @@
 
 .volume-thumb:hover {
   background: #c8c4bc;
-  transform: scale(1.1);
 }
 
 .volume-thumb:active {

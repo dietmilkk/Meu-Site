@@ -103,6 +103,11 @@
       e.preventDefault();
       startBtn.click();
     }
+    if (!e.repeat && !e.ctrlKey && !e.altKey && !e.metaKey) {
+      if (e.key.length === 1 || e.key === "Enter" || e.key === "Backspace" || e.key === "Tab" || e.key === "Escape" || e.key === "Delete") {
+        if (typeof playClickSnd === "function") playClickSnd();
+      }
+    }
   });
 
   document.addEventListener("fullscreenchange", function () {
@@ -161,8 +166,18 @@
               fn({ hasEntry: w.hasEntry }, "reg" + i);
             });
           })(function (app, id) {
+        var z = 0;
+        if (id.indexOf("reg") === 0) {
+          var idx = parseInt(id.replace("reg", ""));
+          var wins = document.querySelectorAll('.window');
+          if (wins[idx]) z = parseInt(wins[idx].style.zIndex) || 0;
+        } else {
+          var winEl = document.querySelector('.window[data-app-id="' + id + '"]');
+          if (winEl) z = parseInt(winEl.style.zIndex) || 0;
+        }
         _sdState.push({
           id: id,
+          zIndex: z,
           wasOpen: app.hasEntry ? app.hasEntry() : false,
         });
         if (app.minimize) appList.push(app);
@@ -172,8 +187,9 @@
       });
       if (ql) ql.classList.add("active");
     } else {
-      _sdState.forEach(function (s, i) {
-        if (!s.wasOpen) return;
+      var toShow = _sdState.filter(function (s) { return s.wasOpen; });
+      toShow.sort(function (a, b) { return a.zIndex - b.zIndex; });
+      toShow.forEach(function (s, i) {
         setTimeout(function () {
           if (W2K && W2K.AppRegistry) {
             var app = W2K.AppRegistry.get(s.id);
@@ -340,7 +356,26 @@
   }
 
   function loadIconPositions() {
-    setDefaultPositions();
+    var saved;
+    try { saved = JSON.parse(localStorage.getItem('w2k_desktop_icons') || '{}'); } catch(e) { saved = {}; }
+    var keys = Object.keys(saved);
+    if (keys.length === 0) {
+      setDefaultPositions();
+      return;
+    }
+    for (var i = 0; i < deskIcons.length; i++) {
+      var icon = deskIcons[i];
+      if (!_isIconVisible(icon)) continue;
+      var action = icon.getAttribute('data-action');
+      if (action && saved[action]) {
+        icon.style.left = saved[action].x + 'px';
+        icon.style.top = saved[action].y + 'px';
+      } else {
+        var free = findFreeGridCell(GRID_OFFSET_X, GRID_OFFSET_Y, icon);
+        icon.style.left = free.x + 'px';
+        icon.style.top = free.y + 'px';
+      }
+    }
   }
 
   function saveIconPositions() {
@@ -359,9 +394,6 @@
       localStorage.setItem("w2k_desktop_icons", JSON.stringify(data));
     } catch (e) {}
   }
-
-  loadIconPositions();
-  _syncHiddenIcons();
 
   function getIconRect(icon) {
     var l = parseInt(icon.style.left, 10);
@@ -461,37 +493,68 @@
 
   var dragIcon = null;
   var dragOffX = 0, dragOffY = 0;
+  var _rubber = null; /* { startX, startY, endX, endY, el } */
 
   document.addEventListener("mousedown", function (e) {
     if (e.button !== 0) return;
     var icon = e.target.closest(".desk-icon");
-    if (!icon) return;
-    if (typeof playClickSnd === 'function') playClickSnd();
-    dragIcon = icon;
-    var r = icon.getBoundingClientRect();
-    dragOffX = e.clientX - r.left;
-    dragOffY = e.clientY - r.top;
-    icon.classList.add("dragging");
-    icon.style.transition = 'left 0.06s ease, top 0.06s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    deselectAllIcons();
-    e.preventDefault();
+    if (icon) {
+      if (typeof playClickSnd === 'function') playClickSnd();
+      dragIcon = icon;
+      var r = icon.getBoundingClientRect();
+      dragOffX = e.clientX - r.left;
+      dragOffY = e.clientY - r.top;
+      icon.classList.add("dragging");
+      icon.style.transition = 'left 0.06s ease, top 0.06s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      deselectAllIcons();
+      e.preventDefault();
+      return;
+    }
+    /* Start rubber band selection on desktop background */
+    if (e.target.closest('.desktop-icons')) {
+      deselectAllIcons();
+      var el = document.createElement('div');
+      el.className = 'desktop-rubber';
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+      el.style.width = '0px';
+      el.style.height = '0px';
+      document.querySelector('.desktop-icons').appendChild(el);
+      _rubber = { startX: e.clientX, startY: e.clientY, el: el };
+      e.preventDefault();
+    }
   });
 
   document.addEventListener("mousemove", function (e) {
-    if (!dragIcon) return;
-    var parentRect = dragIcon.parentElement.getBoundingClientRect();
-    var x = e.clientX - parentRect.left - dragOffX;
-    var y = e.clientY - parentRect.top - dragOffY;
-    var minX = GRID_OFFSET_X;
-    var maxX = window.innerWidth - GRID_OFFSET_X - ICON_W;
-    var minY = GRID_OFFSET_Y;
-    var maxY = window.innerHeight - TASKBAR_H - GRID_OFFSET_Y - ICON_H;
-    x = Math.max(minX, Math.min(x, maxX));
-    y = Math.max(minY, Math.min(y, maxY));
-    var snapped = snapToGrid(x, y);
-    dragIcon.style.left = snapped.x + "px";
-    dragIcon.style.top = snapped.y + "px";
-    e.preventDefault();
+    if (dragIcon) {
+      var parentRect = dragIcon.parentElement.getBoundingClientRect();
+      var x = e.clientX - parentRect.left - dragOffX;
+      var y = e.clientY - parentRect.top - dragOffY;
+      var minX = GRID_OFFSET_X;
+      var maxX = window.innerWidth - GRID_OFFSET_X - ICON_W;
+      var minY = GRID_OFFSET_Y;
+      var maxY = window.innerHeight - TASKBAR_H - GRID_OFFSET_Y - ICON_H;
+      x = Math.max(minX, Math.min(x, maxX));
+      y = Math.max(minY, Math.min(y, maxY));
+      var snapped = snapToGrid(x, y);
+      dragIcon.style.left = snapped.x + "px";
+      dragIcon.style.top = snapped.y + "px";
+      e.preventDefault();
+      return;
+    }
+    if (_rubber) {
+      var sx = _rubber.startX, sy = _rubber.startY;
+      var ex = e.clientX, ey = e.clientY;
+      var l = Math.min(sx, ex), t = Math.min(sy, ey);
+      var w = Math.abs(ex - sx), h = Math.abs(ey - sy);
+      _rubber.el.style.left = l + 'px';
+      _rubber.el.style.top = t + 'px';
+      _rubber.el.style.width = w + 'px';
+      _rubber.el.style.height = h + 'px';
+      _rubber.endX = ex;
+      _rubber.endY = ey;
+      e.preventDefault();
+    }
   });
 
   function findFreeGridCell(x, y, exclude) {
@@ -538,19 +601,39 @@
   }
 
   document.addEventListener("mouseup", function (e) {
-    if (!dragIcon) return;
-    dragIcon.classList.remove("dragging");
-    var l = parseInt(dragIcon.style.left, 10);
-    var t = parseInt(dragIcon.style.top, 10);
-    if (!isNaN(l) && !isNaN(t)) {
-      var free = findFreeGridCell(l, t, dragIcon);
-      dragIcon.style.left = free.x + "px";
-      dragIcon.style.top = free.y + "px";
+    if (dragIcon) {
+      dragIcon.classList.remove("dragging");
+      var l = parseInt(dragIcon.style.left, 10);
+      var t = parseInt(dragIcon.style.top, 10);
+      if (!isNaN(l) && !isNaN(t)) {
+        var free = findFreeGridCell(l, t, dragIcon);
+        dragIcon.style.left = free.x + "px";
+        dragIcon.style.top = free.y + "px";
+      }
+      resolveIconCollisions();
+      saveIconPositions();
+      if (typeof playToggleOffSnd === 'function') playToggleOffSnd();
+      dragIcon = null;
+      return;
     }
-    resolveIconCollisions();
-    saveIconPositions();
-    if (typeof playToggleOffSnd === 'function') playToggleOffSnd();
-    dragIcon = null;
+    if (_rubber) {
+      if (_rubber.el && _rubber.el.parentNode) _rubber.el.parentNode.removeChild(_rubber.el);
+      var sx = _rubber.startX, sy = _rubber.startY;
+      var ex = _rubber.endX !== undefined ? _rubber.endX : sx;
+      var ey = _rubber.endY !== undefined ? _rubber.endY : sy;
+      var rl = Math.min(sx, ex), rt = Math.min(sy, ey);
+      var rr = Math.max(sx, ex), rb = Math.max(sy, ey);
+      for (var i = 0; i < deskIcons.length; i++) {
+        var icon = deskIcons[i];
+        if (!_isIconVisible(icon)) continue;
+        var ir = icon.getBoundingClientRect();
+        if (ir.right > rl && ir.left < rr && ir.bottom > rt && ir.top < rb) {
+          icon.classList.add("selected");
+        }
+      }
+      _rubber = null;
+      e.preventDefault();
+    }
   });
 
   window.addEventListener("resize", function () {
@@ -568,6 +651,7 @@
     e.stopPropagation();
     startMenu.classList.toggle("open");
     startBtn.classList.toggle("active", startMenu.classList.contains("open"));
+    if (typeof playClickSnd === 'function') playClickSnd();
     if (startMenu.classList.contains("open")) sortMostUsed();
   });
 
@@ -618,6 +702,14 @@
   /* ================================================================
        START MENU ITEMS
        ================================================================ */
+
+  var _lastMenuItem = null;
+  startMenu.addEventListener("mouseover", function (e) {
+    var item = e.target.closest(".start-menu-item");
+    if (!item || item === _lastMenuItem) return;
+    _lastMenuItem = item;
+    if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
+  });
 
   startMenu.addEventListener("click", function (e) {
     var item = e.target.closest(".start-menu-item");
@@ -720,10 +812,6 @@
         _showActionMenu(e, tItem.getAttribute('data-action'));
         return;
       }
-      if (typeof playClickSnd === 'function') playClickSnd();
-      ctxMenu.style.left = Math.max(0, Math.min(e.clientX, window.innerWidth - (ctxMenu.offsetWidth || 180))) + "px";
-      ctxMenu.style.top = Math.max(0, e.clientY - (ctxMenu.offsetHeight || 160)) + "px";
-      ctxMenu.classList.add("open");
     });
 
   /* ================================================================
@@ -763,6 +851,12 @@
     feed: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.feed' },
     gallery: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.gallery' },
   };
+
+  _ensureDynamicIcons();
+  loadIconPositions();
+  resolveIconCollisions();
+  saveIconPositions();
+  _syncHiddenIcons();
 
   function _createDeskIcon(action) {
     var info = _deskIconMap[action];
@@ -890,8 +984,6 @@
       _showActionMenu(e, action);
     }
   });
-
-  _ensureDynamicIcons();
 
   /* ================================================================
        BOOT SCREEN

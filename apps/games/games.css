@@ -74,7 +74,6 @@
 }
 
 .games-card:hover {
-    transform: scale(1.02);
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
@@ -208,7 +207,6 @@
 }
 
 .games-detail-start:hover {
-    transform: scale(1.02);
     box-shadow: 0 0 16px rgba(0,255,0,0.2);
     border-color: #0f0 #5a5a5a #5a5a5a #0f0;
     color: #060;
@@ -254,9 +252,7 @@
         transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
 }
 
-.games-back-btn:hover {
-    transform: translateY(-50%) scale(1.02);
-}
+
 
 .games-back-btn:active {
     border-color: #5a5a5a #fff #fff #5a5a5a;
@@ -268,7 +264,6 @@
     transition: transform 0.3s cubic-bezier(0.34, 1.8, 0.64, 1), box-shadow 0.25s ease, border-color 0.2s ease !important;
 }
 .games-block:hover {
-    transform: translateY(-3px) scale(1.03) !important;
     box-shadow: 0 6px 20px rgba(0,0,128,0.5) !important;
     border-color: #4040ff #000040 #000040 #4040ff !important;
 }

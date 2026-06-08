@@ -139,4 +139,12 @@
       _pinListeners.push(fn);
     },
   };
+
+  // Default pinned apps on first run
+  if (localStorage.getItem(PIN_KEY) === null) {
+    var defaults = ["feed", "soundcloud"];
+    for (var d = 0; d < defaults.length; d++) {
+      W2K.taskbarPins.add(defaults[d]);
+    }
+  }
 })(window);

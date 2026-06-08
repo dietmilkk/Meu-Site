@@ -602,7 +602,7 @@
 
   window.setSoundCloudVolume = function (v) {
     if (typeof v !== "number" || isNaN(v)) return;
-    var boost = 1.8; /* SC widget audio é baixo em alguns navegadores */
+    var boost = 3.0;
     v = Math.max(0, Math.min(boost, v * boost));
     for (var id in widgets) {
       if (widgets[id]) {
@@ -617,7 +617,7 @@
     if (!widgets[id]) return;
     var v = typeof window.getPageVolume === "function" ? window.getPageVolume() : 1;
     if (typeof v !== "number" || isNaN(v)) v = 1;
-    var boost = 1.8;
+    var boost = 3.0;
     try {
       widgets[id].setVolume(Math.max(0, Math.min(boost, v * boost)));
     } catch (e) {}
@@ -1239,6 +1239,9 @@
         if (!win.style.height || win.style.height === "") win.style.height = "666px";
       }
       showAllIframes();
+      if (typeof window.setSoundCloudVolume === 'function') {
+        window.setSoundCloudVolume(typeof window.getPageVolume === 'function' ? window.getPageVolume() : 1);
+      }
       if (activePlaylistId && widgets[activePlaylistId] && widgetReadies[activePlaylistId]) {
         if (isPlaying) startPoll();
         setTimeout(refreshFromWidget, 500);
@@ -1257,11 +1260,19 @@
     onHide: function () {
       stopPoll();
       if (elNowPlaying) elNowPlaying.classList.remove("visible");
-      if (isPlaying && widgets[activePlaylistId] && widgetReadies[activePlaylistId]) {
-        wCall("pause");
-        isPlaying = false;
-        if (typeof updatePlayBtn === 'function') updatePlayBtn();
+      for (var _id in widgets) {
+        if (widgets[_id] && widgetReadies[_id]) {
+          try {
+            var _w = widgets[_id];
+            var _p = wMethods.pause || "pause";
+            if (typeof _w[_p] === "function") _w[_p]();
+            var _v = wMethods.setVolume || "setVolume";
+            if (typeof _w[_v] === "function") _w[_v](0);
+          } catch (e) {}
+        }
       }
+      isPlaying = false;
+      if (typeof updatePlayBtn === 'function') updatePlayBtn();
     },
 
   });

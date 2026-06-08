@@ -1,53 +1,14 @@
-var path = require("path");
-var fs = require("fs");
-var crypto = require("crypto");
-
-function decrypt(secret, hexPayload) {
-  var parts = hexPayload.split(":");
-  var iv = Buffer.from(parts[0], "hex");
-  var enc = Buffer.from(parts[1], "hex");
-  var key = crypto.createHash("sha256").update(secret, "utf8").digest();
-  var decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
-  return decipher.update(enc) + decipher.final("utf8");
-}
-
 module.exports = function (req, res) {
   res.setHeader("Cache-Control", "no-cache");
-
-  var secret = process.env.FEED_SECRET || "";
-  if (!secret) {
-    res.status(500).json({ error: "FEED_SECRET not configured" });
-    return;
-  }
-  var auth = req.headers["authorization"] || "";
-  var authorized = false;
-  if (secret && auth === "Bearer " + secret) {
-    authorized = true;
-  }
-
-  if (!authorized) {
-    var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress || "";
-    var country = req.headers["x-vercel-ip-country"] || "";
-    if (country === "BR") {
-      var lang = req.headers["accept-language"] || "";
-      var msg = lang.indexOf("pt") === 0 ? "Indisponível na sua região" : "Not available in your region";
-      res.status(403).json({ error: msg });
-      return;
-    }
-  }
-
-  var feedPath = path.join(process.cwd(), "apps", "feed", "feed-data.js");
-  try {
-    var content = fs.readFileSync(feedPath, "utf8");
-    var match = content.match(/module\.exports\s*=\s*"([^"]+)"/);
-    if (!match) {
-      res.status(500).json({ error: "Invalid feed data" });
-      return;
-    }
-    var decrypted = decrypt(secret, match[1]);
-    var data = JSON.parse(decrypted);
-    res.json(data);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+  var data = [
+    { "date": "2026-06-08", "text": "Hoje passei o dia todo codando esse site. Ta tomando forma, to gostando do resultado. O terminal ficou bonito, o som ambiente ta uma delicinha. Acho que vou dormir ouvindo uma lo-fi." },
+    { "date": "2026-06-07", "text": "Mexi nas config do site, adicionei uns bagulho de localizacao que eu tinha perdido. Geo location ta de volta. Bateu uma nostalgia de quando eu era mlk e ficava vendo esses trem de ip." },
+    { "date": "2026-06-05", "text": "Botei um sistema de diario aqui no lugar do feed antigo. Nao precisei mais de criptografia nem nada, era so firula. Agora e mais pessoal, so meus pensamentos aleatorios." },
+    { "date": "2026-06-01", "text": "Final de semana chuvoso. Perfeito pra ficar em casa, tomar cafe e ouvir musica no SoundCloud pelo site. Ta funcionando direitinho o volume agora." },
+    { "date": "2026-05-28", "text": "Tava vendo uns bagulho de windows 2000 hoje, por isso o tema do site. A barra de tarefas ta bem fiel, ate o menu iniciu tem a carinha. So falta o bloco de notas azul." },
+    { "date": "2026-05-20", "text": "Comida aleatoria que eu fiz: macarrao com salsicha e molho de tomate. Todo mundo fala que e comida de pobre mas eu gosto pra caralho. Ficou bonital" },
+    { "date": "2026-05-15", "text": "To ouvindo um radiohead enquanto escrevo isso. Alguem me explica como uma banda consegue ser tão boa em todo album? OK Computer e obra prima." },
+    { "date": "2026-05-10", "text": "Dia produtivo! Consegui finalizar a parte de arrastar icones na area de trabalho e a selecao com rubber band. Parece coisa besta mas demorei um tempinho pra deixar certinho." }
+  ];
+  res.json(data);
 };

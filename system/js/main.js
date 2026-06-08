@@ -337,7 +337,7 @@
 
   function snapToGrid(x, y) {
     return {
-      x: Math.round((x - GRID_OFFSET_X) / GRID_X) * GRID_X + GRID_OFFSET_X,
+      x: GRID_OFFSET_X,
       y: Math.round((y - GRID_OFFSET_Y) / GRID_Y) * GRID_Y + GRID_OFFSET_Y
     };
   }
@@ -412,26 +412,20 @@
   }
 
   function _buildOccupancyGrid(exclude) {
-    var viewW = window.innerWidth;
     var viewH = window.innerHeight;
-    var cols = Math.ceil((viewW - GRID_OFFSET_X) / GRID_X) + 2;
+    var cols = 1;
     var rows = Math.ceil((viewH - GRID_OFFSET_Y) / GRID_Y) + 2;
-    if (cols < 10) cols = 10;
     if (rows < 10) rows = 10;
     var grid = [];
-    for (var c = 0; c < cols; c++) {
-      grid[c] = [];
-      for (var r = 0; r < rows; r++) grid[c][r] = false;
-    }
+    grid[0] = [];
+    for (var r = 0; r < rows; r++) grid[0][r] = false;
     for (var k = 0; k < deskIcons.length; k++) {
       var icon = deskIcons[k];
       if (icon === exclude || !_isIconVisible(icon)) continue;
-      var l = parseInt(icon.style.left, 10);
       var t = parseInt(icon.style.top, 10);
-      if (isNaN(l) || isNaN(t)) continue;
-      var gc = Math.round((l - GRID_OFFSET_X) / GRID_X);
+      if (isNaN(t)) continue;
       var gr = Math.round((t - GRID_OFFSET_Y) / GRID_Y);
-      if (gc >= 0 && gc < cols && gr >= 0 && gr < rows) grid[gc][gr] = true;
+      if (gr >= 0 && gr < rows) grid[0][gr] = true;
     }
     return { grid: grid, cols: cols, rows: rows };
   }
@@ -471,7 +465,6 @@
   resolveIconCollisions();
 
   function repositionOutOfBounds() {
-    var viewW = window.innerWidth;
     var viewH = window.innerHeight;
     var pad = 10;
     for (var i = 0; i < deskIcons.length; i++) {
@@ -479,11 +472,10 @@
       if (!_isIconVisible(icon)) continue;
       var r = getIconRect(icon);
       if (!r) continue;
-      var x = r.x, y = r.y;
-      if (x + r.w > viewW - pad) x = GRID_OFFSET_X;
+      var y = r.y;
       if (y + r.h > viewH - pad) y = GRID_OFFSET_Y;
-      if (x !== r.x || y !== r.y) {
-        var s = snapToGrid(x, y);
+      if (y !== r.y) {
+        var s = snapToGrid(GRID_OFFSET_X, y);
         icon.style.left = s.x + "px";
         icon.style.top = s.y + "px";
       }
@@ -530,13 +522,10 @@
       var parentRect = dragIcon.parentElement.getBoundingClientRect();
       var x = e.clientX - parentRect.left - dragOffX;
       var y = e.clientY - parentRect.top - dragOffY;
-      var minX = GRID_OFFSET_X;
-      var maxX = window.innerWidth - GRID_OFFSET_X - ICON_W;
       var minY = GRID_OFFSET_Y;
       var maxY = window.innerHeight - TASKBAR_H - GRID_OFFSET_Y - ICON_H;
-      x = Math.max(minX, Math.min(x, maxX));
       y = Math.max(minY, Math.min(y, maxY));
-      var snapped = snapToGrid(x, y);
+      var snapped = snapToGrid(GRID_OFFSET_X, y);
       dragIcon.style.left = snapped.x + "px";
       dragIcon.style.top = snapped.y + "px";
       e.preventDefault();
@@ -558,45 +547,19 @@
   });
 
   function findFreeGridCell(x, y, exclude) {
-    var px = parseInt(x, 10), py = parseInt(y, 10);
-    if (isNaN(px)) px = GRID_OFFSET_X;
+    var py = parseInt(y, 10);
     if (isNaN(py)) py = GRID_OFFSET_Y;
     var occ = _buildOccupancyGrid(exclude);
-    var maxCol = Math.max(0, Math.floor((window.innerWidth - GRID_OFFSET_X - ICON_W) / GRID_X));
     var maxRow = Math.max(0, Math.floor((window.innerHeight - TASKBAR_H - GRID_OFFSET_Y - ICON_H) / GRID_Y));
-    var ccol = Math.round((px - GRID_OFFSET_X) / GRID_X);
     var crow = Math.round((py - GRID_OFFSET_Y) / GRID_Y);
-    if (ccol < 0) ccol = 0;
     if (crow < 0) crow = 0;
-    if (ccol > maxCol) ccol = maxCol;
     if (crow > maxRow) crow = maxRow;
-    var maxRadius = Math.max(occ.cols, occ.rows);
-    for (var r = 0; r <= maxRadius; r++) {
-      for (var dx = -r; dx <= r; dx++) {
-        var cx = ccol + dx, cy = crow - r;
-        if (cx >= 0 && cx <= maxCol && cy >= 0 && cy <= maxRow && !occ.grid[cx][cy])
-          return { x: GRID_OFFSET_X + cx * GRID_X, y: GRID_OFFSET_Y + cy * GRID_Y };
-      }
-      for (var dy = -r + 1; dy <= r; dy++) {
-        var cx = ccol + r, cy = crow + dy;
-        if (cx >= 0 && cx <= maxCol && cy >= 0 && cy <= maxRow && !occ.grid[cx][cy])
-          return { x: GRID_OFFSET_X + cx * GRID_X, y: GRID_OFFSET_Y + cy * GRID_Y };
-      }
-      for (var dx = r - 1; dx >= -r; dx--) {
-        var cx = ccol + dx, cy = crow + r;
-        if (cx >= 0 && cx <= maxCol && cy >= 0 && cy <= maxRow && !occ.grid[cx][cy])
-          return { x: GRID_OFFSET_X + cx * GRID_X, y: GRID_OFFSET_Y + cy * GRID_Y };
-      }
-      for (var dy = r - 1; dy >= -r + 1; dy--) {
-        var cx = ccol - r, cy = crow + dy;
-        if (cx >= 0 && cx <= maxCol && cy >= 0 && cy <= maxRow && !occ.grid[cx][cy])
-          return { x: GRID_OFFSET_X + cx * GRID_X, y: GRID_OFFSET_Y + cy * GRID_Y };
-      }
-    }
-    for (var c = 0; c <= maxCol; c++)
-      for (var rr = 0; rr <= maxRow; rr++)
-        if (!occ.grid[c][rr])
-          return { x: GRID_OFFSET_X + c * GRID_X, y: GRID_OFFSET_Y + rr * GRID_Y };
+    for (var rr = crow; rr <= maxRow; rr++)
+      if (!occ.grid[0][rr])
+        return { x: GRID_OFFSET_X, y: GRID_OFFSET_Y + rr * GRID_Y };
+    for (var rr = crow - 1; rr >= 0; rr--)
+      if (!occ.grid[0][rr])
+        return { x: GRID_OFFSET_X, y: GRID_OFFSET_Y + rr * GRID_Y };
     return { x: GRID_OFFSET_X, y: GRID_OFFSET_Y };
   }
 
@@ -1083,6 +1046,22 @@
     if (e.button !== 0) return;
     var t = e.target.closest(_clickSndSelectors + ', .desk-icon, .start-menu-item, .settings-category, .games-block, .sc-playlist-item, .sc-playlist-add, .sc-playlist-remove, .sc-np-btn, #scBtnShuffle, #scBtnPrev, #scBtnNext, #scBtnPlay, #welcomeLangPt, #welcomeLangEn, #welcomeStartBtn');
     if (t) playClickSnd();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'a' || e.key === 'A')) {
+      var target = e.target;
+      if (target && target.closest) {
+        var input = target.closest('input, textarea, [contenteditable]');
+        if (input) return;
+      }
+      e.preventDefault();
+      for (var i = 0; i < deskIcons.length; i++) {
+        if (_isIconVisible(deskIcons[i])) {
+          deskIcons[i].classList.add('selected');
+        }
+      }
+    }
   });
 
 })();

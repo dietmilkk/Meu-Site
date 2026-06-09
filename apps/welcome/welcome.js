@@ -4,6 +4,8 @@
   var bootScreen = document.getElementById('bootScreen');
   var bootWelcome = document.getElementById('bootWelcome');
   var startBtn = document.getElementById('welcomeStartBtn');
+  var btnDesktop = document.getElementById('welcomeModeDesktop');
+  var btnMobile = document.getElementById('welcomeModeMobile');
 
   function showBootWelcome() {
     bootScreen.classList.add('has-welcome');
@@ -18,13 +20,44 @@
     setTimeout(function() { bootScreen.remove(); }, 600);
   }
 
+  function setMobileMode(mobile) {
+    try {
+      localStorage.setItem('w2kMobile', mobile ? 'true' : 'false');
+    } catch (e) {}
+    if (mobile) {
+      document.body.classList.add('mobile-mode');
+      btnMobile.classList.add('active');
+      btnDesktop.classList.remove('active');
+    } else {
+      document.body.classList.remove('mobile-mode');
+      btnDesktop.classList.add('active');
+      btnMobile.classList.remove('active');
+    }
+  }
+
+  btnDesktop.addEventListener('click', function() {
+    setMobileMode(false);
+    if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
+  });
+  btnMobile.addEventListener('click', function() {
+    setMobileMode(true);
+    if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
+  });
+
   function loadPrefs() {
     var savedLang = null;
     var welcomed = null;
+    var savedMobile = null;
     try {
       savedLang = localStorage.getItem('w2kLang');
       welcomed = localStorage.getItem('w2kWelcomed');
+      savedMobile = localStorage.getItem('w2kMobile');
     } catch (e) {}
+
+    // Apply mobile mode before boot screen shows
+    if (savedMobile === 'true') {
+      setMobileMode(true);
+    }
 
     if (savedLang === 'en') {
       document.getElementById('welcomeLangEn').classList.add('active');

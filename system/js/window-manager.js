@@ -530,6 +530,7 @@
         minimized = true;
         win.style.display = 'none';
         win.classList.remove('anim-win-close');
+        if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
       }, 400);
     }
 
@@ -925,6 +926,7 @@
         win.style.left = Math.max(0, Math.round((window.innerWidth - w) / 2)) + "px";
         win.style.top = Math.max(0, Math.round((window.innerHeight - h) / 2)) + "px";
       }
+      if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
       var onOpenEnd = function () {
         win.removeEventListener("animationend", onOpenEnd);
         win.classList.remove("anim-win-open");

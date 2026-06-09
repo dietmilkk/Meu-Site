@@ -722,6 +722,7 @@
   document
     .querySelector(".desktop")
     .addEventListener("contextmenu", function (e) {
+      if (document.body.classList.contains('mobile-mode')) return;
       e.preventDefault();
       if (typeof playClickSnd === 'function') playClickSnd();
       var mw2 = ctxMenu.offsetWidth || 180, mh2 = ctxMenu.offsetHeight || 160;
@@ -1027,6 +1028,14 @@
   var _clickSndSelectors = '.win-btn, .xp-dialog-btn, .start-btn, .ql-icon, .settings-btn, .settings-file-btn, .ctx-menu-item, .tray-icon, .tray-clock, .project-card';
   document.addEventListener('mousedown', function(e) {
     if (e.button !== 0) return;
+    if (document.body.classList.contains('mobile-mode')) {
+      var btns = e.target.closest('.win-btn, .xp-dialog-btn, .mobile-app-item, .mobile-app-drawer-item');
+      if (btns) {
+        btns.style.transition = 'transform 0.08s ease';
+        btns.style.transform = 'scale(0.93)';
+      }
+      return;
+    }
     var btn = e.target.closest(_clickSndSelectors);
     if (btn) {
       _pressedBtn = btn;
@@ -1035,6 +1044,13 @@
     }
   });
   document.addEventListener('mouseup', function() {
+    if (document.body.classList.contains('mobile-mode')) {
+      document.querySelectorAll('.win-btn, .xp-dialog-btn, .mobile-app-item, .mobile-app-drawer-item').forEach(function(el) {
+        el.style.transform = '';
+        el.style.transition = '';
+      });
+      return;
+    }
     if (_pressedBtn) {
       _pressedBtn.style.transform = 'scale(1)';
       var el = _pressedBtn;
@@ -1044,6 +1060,7 @@
   });
   document.addEventListener('click', function(e) {
     if (e.button !== 0) return;
+    if (document.body.classList.contains('mobile-mode')) return;
     var t = e.target.closest(_clickSndSelectors + ', .desk-icon, .start-menu-item, .settings-category, .games-block, .sc-playlist-item, .sc-playlist-add, .sc-playlist-remove, .sc-np-btn, #scBtnShuffle, #scBtnPrev, #scBtnNext, #scBtnPlay, #welcomeLangPt, #welcomeLangEn, #welcomeStartBtn');
     if (t) playClickSnd();
   });

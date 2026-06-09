@@ -1,0 +1,196 @@
+/* ===== Mobile Mode ===== */
+body.mobile-mode {
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+body.mobile-mode .taskbar {
+    display: none !important;
+}
+
+body.mobile-mode .desktop-icons {
+    display: none !important;
+}
+
+body.mobile-mode .window {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    border: none !important;
+    box-shadow: none !important;
+    z-index: 100;
+}
+
+body.mobile-mode .window.active {
+    z-index: 200;
+}
+
+body.mobile-mode .window-body {
+    height: calc(100vh - 32px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+body.mobile-mode .title-bar {
+    cursor: default !important;
+    min-height: 32px;
+    padding: 2px 4px;
+}
+
+body.mobile-mode .win-btn {
+    width: 32px;
+    height: 28px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body.mobile-mode .win-btn[data-wbtn="minimize"],
+body.mobile-mode .win-btn[data-wbtn="maximize"] {
+    display: none;
+}
+
+body.mobile-mode .resize-edge,
+body.mobile-mode .resize-corner {
+    display: none !important;
+}
+
+body.mobile-mode .desk-icon {
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+}
+body.mobile-mode .desk-icon:hover {
+    background: transparent;
+    border-color: transparent;
+}
+
+body.mobile-mode .desk-icon .di-label {
+    font-size: 14px;
+}
+
+/* ===== Mobile App Menu (replaces taskbar) ===== */
+.mobile-app-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #d4d0c8;
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #5a5a5a;
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+    z-index: 99999;
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mobile-app-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 14px;
+    font-family: var(--ff-ui);
+    color: #000;
+    background: #d8d4cc;
+    border-top: 2px solid #888480;
+    border-left: 2px solid #888480;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+}
+
+.mobile-app-item.active {
+    background: #c0bcb4;
+    border-top: 2px solid #606060;
+    border-left: 2px solid #606060;
+    border-right: 2px solid #e0dcd4;
+    border-bottom: 2px solid #e0dcd4;
+    font-weight: 600;
+}
+
+.mobile-app-item:active {
+    background: #b0aca4;
+}
+
+body.mobile-mode .ctx-menu {
+    font-size: 16px;
+    min-width: 160px;
+}
+
+body.mobile-mode .ctx-menu-item {
+    padding: 10px 16px;
+}
+
+/* ===== Mobile App Drawer ===== */
+.mobile-app-drawer {
+    position: fixed;
+    bottom: 44px;
+    left: 4px;
+    right: 4px;
+    max-height: 60vh;
+    background: #ece9e0;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #5a5a5a;
+    border-bottom: 2px solid #5a5a5a;
+    z-index: 99998;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 2px -2px 6px rgba(0,0,0,0.2);
+}
+
+.mobile-app-drawer.open {
+    display: block !important;
+}
+
+.mobile-app-drawer-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    font-size: 16px;
+    font-family: var(--ff-ui);
+    color: #000;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    border-bottom: 1px solid #d0ccc4;
+}
+
+.mobile-app-drawer-item:last-child {
+    border-bottom: none;
+}
+
+.mobile-app-drawer-item:hover {
+    background: #000080;
+    color: #fff;
+}
+
+.mobile-app-drawer-item:active {
+    background: #0000a0;
+}
+
+.mobile-app-drawer-item img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.mobile-app-drawer-divider {
+    height: 1px;
+    margin: 4px 10px;
+    background: #c8c4bc;
+    border-bottom: 1px solid #fff;
+}
+
+@media (max-width: 768px) {
+    body.mobile-mode .window-body {
+        height: calc(100vh - 32px);
+    }
+}

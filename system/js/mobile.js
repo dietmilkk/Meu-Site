@@ -55,7 +55,7 @@
   document.addEventListener('click', function(e) {
     var drawer = document.getElementById('mobileAppDrawer');
     if (!drawer || !drawer.classList.contains('open')) return;
-    if (!e.target.closest('.mobile-app-drawer') && !e.target.closest('.win-btn[data-wbtn="menu"]')) {
+    if (!e.target.closest('.mobile-app-drawer') && !e.target.closest('[data-wbtn="menu"]') && !e.target.closest('.mobile-fab')) {
       closeDrawer();
     }
   });
@@ -129,8 +129,9 @@
     // FAB button toggles the drawer
     var fab = document.getElementById('mobileFab');
     if (fab) {
-      fab.style.display = '';
-      fab.addEventListener('click', function() {
+      fab.style.removeProperty('display');
+      fab.addEventListener('click', function(e) {
+        e.stopPropagation();
         var drawer = document.getElementById('mobileAppDrawer');
         if (drawer && drawer.classList.contains('open')) {
           closeDrawer();

@@ -105,35 +105,42 @@ body.mobile-mode .ctx-menu-item {
     padding: 12px 18px;
 }
 
-/* ---- Floating FAB (always visible when no windows are open) --- */
+/* ---- Floating ≡ button (Win2000 raised 3D, square) ----------- */
 body.mobile-mode .mobile-fab {
     display: flex !important;
     position: fixed;
-    bottom: 14px;
-    right: 14px;
+    bottom: 16px;
+    right: 16px;
     z-index: 99999;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: #000080;
-    color: #fff;
-    font-size: 24px;
-    font-weight: 700;
+    width: 44px;
+    height: 44px;
     align-items: center;
     justify-content: center;
-    border: 2px solid #fff;
-    border-top-color: #c0c0c0;
-    border-left-color: #c0c0c0;
+    background: #c0c0c0;
+    color: #000;
+    font-size: 22px;
+    font-weight: 700;
+    font-family: var(--ff-ui, 'Tahoma', sans-serif);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.35);
     line-height: 1;
     padding: 0;
+    margin: 0;
+    /* Win2000 3D raised border */
+    border: 2px solid;
+    border-top-color: #fff;
+    border-left-color: #fff;
+    border-right-color: #5a5a5a;
+    border-bottom-color: #5a5a5a;
+    outline: 1px solid #808080;
+    box-shadow: none;
 }
 
 body.mobile-mode .mobile-fab:active {
-    background: #ffbd63;
-    color: #000;
+    border-top-color: #5a5a5a;
+    border-left-color: #5a5a5a;
+    border-right-color: #fff;
+    border-bottom-color: #fff;
 }
 
 /* ---- App Drawer ---------------------------------------------- */

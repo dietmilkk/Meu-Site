@@ -289,11 +289,11 @@
 }
 
 @media (max-width: 768px) {
-    .title-bar-text { font-size: 13px; }
-    .title-bar-text .icon svg { width: 12px; height: 12px; }
+    body:not(.mobile-mode) .title-bar-text { font-size: 13px; }
+    body:not(.mobile-mode) .title-bar-text .icon svg { width: 12px; height: 12px; }
 }
 
 @media (max-width: 600px) {
-    .win-btn { width: 18px; height: 18px; font-size: 13px; }
-    .xp-dialog { min-width: 280px; max-width: 92vw; }
+    body:not(.mobile-mode) .win-btn { width: 18px; height: 18px; font-size: 13px; }
+    body:not(.mobile-mode) .xp-dialog { min-width: 280px; max-width: 92vw; }
 }

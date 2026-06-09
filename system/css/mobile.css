@@ -1,17 +1,19 @@
-/* ===== Mobile Mode ===== */
+/* ===== Mobile Mode ============================================
+   Overrides for the Win2000 theme on touch/mobile devices.
+   All sizes bumped for minimum 44px touch targets where possible.
+   =============================================================== */
+
 body.mobile-mode {
     overflow: hidden;
     touch-action: manipulation;
 }
 
-body.mobile-mode .taskbar {
-    display: none !important;
-}
-
+body.mobile-mode .taskbar,
 body.mobile-mode .desktop-icons {
     display: none !important;
 }
 
+/* ---- Windows: fullscreen, no borders ------------------------- */
 body.mobile-mode .window {
     position: fixed !important;
     top: 0 !important;
@@ -28,27 +30,34 @@ body.mobile-mode .window.active {
 }
 
 body.mobile-mode .window-body {
-    height: calc(100vh - 32px);
+    height: calc(100vh - 38px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
+/* ---- Title bar: taller for touch ----------------------------- */
 body.mobile-mode .title-bar {
     cursor: default !important;
-    min-height: 32px;
-    padding: 2px 4px;
+    min-height: 38px;
+    padding: 2px 6px;
 }
 
 body.mobile-mode .title-bar-text {
     font-size: 15px;
 }
 
+body.mobile-mode .title-bar-text .icon img {
+    width: 18px;
+    height: 18px;
+}
+
+/* ---- Win buttons: touch-friendly ----------------------------- */
 body.mobile-mode .win-btn {
-    width: 34px;
-    height: 30px;
+    width: 38px;
+    height: 34px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 body.mobile-mode .win-btn[data-wbtn="minimize"],
@@ -61,6 +70,7 @@ body.mobile-mode .resize-corner {
     display: none !important;
 }
 
+/* ---- Desktop icons (hidden, but keep hover clean) ------------ */
 body.mobile-mode .desk-icon {
     cursor: default;
     -webkit-tap-highlight-color: transparent;
@@ -74,27 +84,28 @@ body.mobile-mode .desk-icon .di-label {
     font-size: 14px;
 }
 
-/* Kill desktop-like animations on mobile */
+/* ---- Kill desktop animations --------------------------------- */
 body.mobile-mode .anim-win-open,
 body.mobile-mode .anim-win-close {
     animation: none !important;
 }
 
-/* Hide scanline overlay on mobile */
-body.mobile-mode #scanline {
+body.mobile-mode #scanline,
+body.mobile-mode #ambientOverlay {
     display: none !important;
 }
 
+/* ---- Context menu -------------------------------------------- */
 body.mobile-mode .ctx-menu {
     font-size: 16px;
-    min-width: 160px;
+    min-width: 180px;
 }
 
 body.mobile-mode .ctx-menu-item {
-    padding: 10px 16px;
+    padding: 12px 18px;
 }
 
-/* ===== Mobile App Drawer ===== */
+/* ---- App Drawer ---------------------------------------------- */
 .mobile-app-drawer {
     position: fixed;
     bottom: 4px;
@@ -119,14 +130,15 @@ body.mobile-mode .ctx-menu-item {
 .mobile-app-drawer-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
+    gap: 14px;
+    padding: 14px 16px;
     font-size: 16px;
     font-family: var(--ff-ui);
     color: #000;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     border-bottom: 1px solid #d0ccc4;
+    min-height: 48px;
 }
 
 .mobile-app-drawer-item:last-child {
@@ -139,8 +151,8 @@ body.mobile-mode .ctx-menu-item {
 }
 
 .mobile-app-drawer-item img {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
 }
 
@@ -151,36 +163,108 @@ body.mobile-mode .ctx-menu-item {
     border-bottom: 1px solid #fff;
 }
 
-/* ===== Ambient sound toggle on mobile ===== */
-body.mobile-mode #ambientOverlay {
-    display: none;
-}
-
-/* ===== Welcome screen mobile adjustments ===== */
+/* ---- Welcome screen ------------------------------------------ */
 body.mobile-mode .boot-welcome {
-    max-width: 92vw;
-    max-height: 80vh;
+    max-width: 96vw;
+    max-height: 85vh;
     overflow-y: auto;
 }
 
-body.mobile-mode .welcome-layout {
-    gap: 6px;
+body.mobile-mode .boot-welcome .welcome-layout {
+    width: auto;
+    padding: 18px 16px;
+    gap: 8px;
+}
+
+body.mobile-mode .welcome-avatar img {
+    width: 40px;
+    height: 40px;
 }
 
 body.mobile-mode .welcome-greeting {
     font-size: 16px;
+    margin: 0 0 2px;
 }
 
 body.mobile-mode .welcome-desc {
     font-size: 14px;
 }
 
+body.mobile-mode .welcome-volume-tip {
+    font-size: 11px;
+    margin: 4px 0 0;
+    padding: 4px 6px;
+}
+
+body.mobile-mode .welcome-lang-btn {
+    padding: 8px 16px;
+    font-size: 15px;
+}
+
 body.mobile-mode .welcome-start-btn {
-    padding: 8px 24px;
+    padding: 10px 28px;
     font-size: 16px;
 }
 
-/* ===== Settings on mobile ===== */
+body.mobile-mode .welcome-check-label {
+    font-size: 14px;
+}
+
+body.mobile-mode .welcome-check-label input {
+    width: 18px;
+    height: 18px;
+}
+
+/* ---- Settings ------------------------------------------------ */
 body.mobile-mode .settings-layout {
     flex-direction: column;
+}
+
+body.mobile-mode .settings-btn {
+    min-height: 44px;
+    font-size: 15px;
+}
+
+/* ---- Gallery ------ ------------------------------------------ */
+body.mobile-mode .gallery-info {
+    bottom: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+}
+
+/* ---- Terminal ------------------------------------------------ */
+body.mobile-mode .term-input {
+    font-size: 16px;
+    min-height: 38px;
+}
+
+/* ---- SoundCloud ---- ----------------------------------------- */
+body.mobile-mode .sc-playlist-item {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 15px;
+}
+
+body.mobile-mode .sc-btn {
+    min-height: 38px;
+    min-width: 38px;
+}
+
+body.mobile-mode .sc-btn.sc-btn-play {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+body.mobile-mode .sc-np-btn {
+    min-height: 38px;
+}
+
+/* ---- Games ---- ---------------------------------------------- */
+body.mobile-mode .games-block {
+    min-height: 44px;
+    padding: 10px 14px;
+}
+
+body.mobile-mode .games-block h3 {
+    font-size: 16px;
 }

@@ -541,7 +541,6 @@
         minimized = true;
         win.style.display = 'none';
         if (tbEntry) tbEntry.classList.remove('active');
-        if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
         return;
       }
       saveRect();
@@ -552,7 +551,6 @@
         minimized = true;
         win.style.display = 'none';
         win.classList.remove('anim-win-close');
-        if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
       }, 400);
     }
 
@@ -951,7 +949,6 @@
           win.style.top = Math.max(0, Math.round((window.innerHeight - h) / 2)) + "px";
         }
       }
-      if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
       var onOpenEnd = function () {
         win.removeEventListener("animationend", onOpenEnd);
         win.classList.remove("anim-win-open");
@@ -970,7 +967,6 @@
         opts._onShowFired = false;
         if (controls) controls.clearSavedRect();
         if (opts.onHide) opts.onHide(this);
-        if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
         return;
       }
       if (tbEntry) tbEntry.classList.remove("active");

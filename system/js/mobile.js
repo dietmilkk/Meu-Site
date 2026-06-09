@@ -2,7 +2,6 @@
   'use strict';
 
   var _appList = [];
-  var MOBILE_BAR_H = 44;
 
   function isMobile() {
     return document.body.classList.contains('mobile-mode');
@@ -10,40 +9,6 @@
 
   function registerApp(appId, label, icon) {
     _appList.push({ id: appId, label: label, icon: icon });
-  }
-
-  function rebuildMobileMenu() {
-    var container = document.getElementById('mobileAppItems');
-    if (!container) return;
-    container.innerHTML = '';
-    var openWindows = document.querySelectorAll('.window:not([style*="display: none"])');
-    var shown = [];
-    openWindows.forEach(function(w) {
-      var id = w.getAttribute('data-app-id');
-      if (id && shown.indexOf(id) === -1) {
-        shown.push(id);
-        var tbText = w.querySelector('.title-bar-text');
-        var label = tbText ? tbText.textContent.trim() : id;
-        if (label.length > 20) label = label.substring(0, 18) + '…';
-        var item = document.createElement('div');
-        item.className = 'mobile-app-item' + (w.classList.contains('active') ? ' active' : '');
-        item.textContent = label;
-        item.addEventListener('click', function() {
-          var app = global.W2K && global.W2K.AppRegistry && global.W2K.AppRegistry.get(id);
-          if (app) {
-            if (w.classList.contains('active')) {
-              if (app.minimize) app.minimize();
-              else w.style.display = 'none';
-            } else {
-              app.show();
-            }
-          }
-          closeDrawer();
-          injectTitleBarMenuBtns();
-        });
-        container.appendChild(item);
-      }
-    });
   }
 
   function openDrawer() {
@@ -60,7 +25,6 @@
         closeDrawer();
         var a = global.W2K && global.W2K.AppRegistry && global.W2K.AppRegistry.get(app.id);
         if (a && a.show) a.show();
-        injectTitleBarMenuBtns();
       });
       body.appendChild(item);
     });
@@ -92,7 +56,7 @@
   document.addEventListener('click', function(e) {
     var drawer = document.getElementById('mobileAppDrawer');
     if (!drawer || !drawer.classList.contains('open')) return;
-    if (!e.target.closest('.mobile-app-drawer') && !e.target.closest('#mobileMenuBtn') && !e.target.closest('.win-btn[data-wbtn="menu"]')) {
+    if (!e.target.closest('.mobile-app-drawer') && !e.target.closest('.win-btn[data-wbtn="menu"]')) {
       closeDrawer();
     }
   });
@@ -161,22 +125,7 @@
     updateViewport();
     fixWindowStyles();
     disableAnimations();
-
-    var menuBtn = document.getElementById('mobileMenuBtn');
-    if (menuBtn) {
-      menuBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var drawer = document.getElementById('mobileAppDrawer');
-        if (drawer && drawer.classList.contains('open')) {
-          closeDrawer();
-        } else {
-          openDrawer();
-        }
-      });
-    }
-
     injectTitleBarMenuBtns();
-    rebuildMobileMenu();
 
     document.addEventListener('touchstart', function(e) {
       if (!isMobile()) return;
@@ -191,52 +140,7 @@
         e.preventDefault();
       }
     });
-
-    // Fix window body height on resize
-    function fixHeight() {
-      document.querySelectorAll('.window-body').forEach(function(b) {
-        b.style.height = 'calc(100vh - 32px - ' + MOBILE_BAR_H + 'px)';
-      });
-    }
-    window.addEventListener('resize', fixHeight);
-    fixHeight();
   }
-
-  var _pendingRebuild = false;
-  function _queueRebuild() {
-    if (_pendingRebuild) return;
-    _pendingRebuild = true;
-    setTimeout(function() {
-      _pendingRebuild = false;
-      if (isMobile()) {
-        rebuildMobileMenu();
-        injectTitleBarMenuBtns();
-      }
-    }, 80);
-  }
-
-  function _patchAppRegistry() {
-    if (!global.W2K || !global.W2K.AppRegistry) {
-      setTimeout(_patchAppRegistry, 100);
-      return;
-    }
-    var origRegister = global.W2K.AppRegistry.register;
-    global.W2K.AppRegistry.register = function(id, app) {
-      origRegister.call(this, id, app);
-      var origShow = app.show;
-      if (origShow) {
-        app.show = function() {
-          origShow.call(this);
-          _queueRebuild();
-        };
-      }
-    };
-  }
-  _patchAppRegistry();
-
-  global.__mobileOnShow = function() {
-    _queueRebuild();
-  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initMobile);
@@ -246,7 +150,6 @@
 
   global.MobileMenu = {
     registerApp: registerApp,
-    rebuild: rebuildMobileMenu,
     openDrawer: openDrawer,
     closeDrawer: closeDrawer,
     isMobile: isMobile,

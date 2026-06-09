@@ -28,7 +28,7 @@ body.mobile-mode .window.active {
 }
 
 body.mobile-mode .window-body {
-    height: calc(100vh - 32px - 44px);
+    height: calc(100vh - 32px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -85,99 +85,6 @@ body.mobile-mode #scanline {
     display: none !important;
 }
 
-/* ===== Mobile App Menu (bottom bar) ===== */
-.mobile-app-menu {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 44px;
-    background: #d4d0c8;
-    border-top: 2px solid #fff;
-    display: flex;
-    align-items: center;
-    padding: 0 4px;
-    z-index: 99999;
-    gap: 3px;
-}
-
-.mobile-app-items {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    overflow-x: auto;
-    flex: 1;
-    height: 36px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
-
-.mobile-app-items::-webkit-scrollbar {
-    display: none;
-}
-
-.mobile-app-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    height: 30px;
-    font-size: 13px;
-    font-family: var(--ff-ui);
-    color: #000;
-    background: #d8d4cc;
-    border-top: 2px solid #888480;
-    border-left: 2px solid #888480;
-    border-right: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    white-space: nowrap;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    flex-shrink: 0;
-    user-select: none;
-}
-
-.mobile-app-item.active {
-    background: #c0bcb4;
-    border-top: 2px solid #606060;
-    border-left: 2px solid #606060;
-    border-right: 2px solid #e0dcd4;
-    border-bottom: 2px solid #e0dcd4;
-    font-weight: 600;
-}
-
-.mobile-app-item:active {
-    background: #b0aca4;
-}
-
-/* ===== Mobile ≡ button in bottom bar ===== */
-#mobileMenuBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    font-size: 22px;
-    font-weight: 700;
-    background: #d8d4cc;
-    border-top: 2px solid #888480;
-    border-left: 2px solid #888480;
-    border-right: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    flex-shrink: 0;
-    user-select: none;
-}
-
-#mobileMenuBtn:active {
-    background: #b0aca4;
-    border-top: 2px solid #606060;
-    border-left: 2px solid #606060;
-    border-right: 2px solid #e0dcd4;
-    border-bottom: 2px solid #e0dcd4;
-}
-
 body.mobile-mode .ctx-menu {
     font-size: 16px;
     min-width: 160px;
@@ -190,7 +97,7 @@ body.mobile-mode .ctx-menu-item {
 /* ===== Mobile App Drawer ===== */
 .mobile-app-drawer {
     position: fixed;
-    bottom: 48px;
+    bottom: 4px;
     left: 4px;
     right: 4px;
     max-height: 55vh;

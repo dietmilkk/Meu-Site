@@ -113,11 +113,20 @@
       menuBtn.style.lineHeight = '1';
       menuBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        var drawer = document.getElementById('mobileAppDrawer');
-        if (drawer && drawer.classList.contains('open')) {
-          closeDrawer();
+        if (isMobile()) {
+          var drawer = document.getElementById('mobileAppDrawer');
+          if (drawer && drawer.classList.contains('open')) {
+            closeDrawer();
+          } else {
+            openDrawer();
+          }
         } else {
-          openDrawer();
+          var startMenu = document.getElementById('startMenu');
+          var startBtn = document.getElementById('startBtn');
+          if (startMenu) {
+            startMenu.classList.toggle('open');
+            if (startBtn) startBtn.classList.toggle('active', startMenu.classList.contains('open'));
+          }
         }
       });
       btns.insertBefore(menuBtn, btns.firstChild);
@@ -159,6 +168,10 @@
 
   function initMobile() {
     if (_mobileInited) return;
+
+    // Inject ≡ button in ALL title bars (mobile opens drawer, desktop opens start menu)
+    injectTitleBarMenuBtns();
+
     if (!isMobile()) {
       if (!_observer) {
         _observer = new MutationObserver(function() {
@@ -175,7 +188,6 @@
     updateViewport();
     fixWindowStyles();
     disableAnimations();
-    injectTitleBarMenuBtns();
 
     var fab = document.getElementById('mobileFab');
     if (fab) {

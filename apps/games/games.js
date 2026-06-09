@@ -268,6 +268,50 @@
   }
 
   /* ================================================================
+      Mobile Touch Support
+     ================================================================ */
+  function addSwipeSupport(el, onSwipe) {
+    var sx = 0, sy = 0;
+    function ts(e) {
+      sx = e.touches[0].clientX;
+      sy = e.touches[0].clientY;
+    }
+    function te(e) {
+      var dx = e.changedTouches[0].clientX - sx;
+      var dy = e.changedTouches[0].clientY - sy;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 30) return;
+      onSwipe(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
+    }
+    el.addEventListener('touchstart', ts, { passive: true });
+    el.addEventListener('touchend', te, { passive: true });
+    return function () {
+      el.removeEventListener('touchstart', ts);
+      el.removeEventListener('touchend', te);
+    };
+  }
+
+  function addDPad(parentEl, onDir) {
+    var dirs = [
+      { l: '\u25B3', r: 0, c: 1, d: 'up' },
+      { l: '\u25BD', r: 2, c: 1, d: 'down' },
+      { l: '\u25C1', r: 1, c: 0, d: 'left' },
+      { l: '\u25B7', r: 1, c: 2, d: 'right' },
+    ];
+    var btnStyle = 'width:44px;height:44px;background:var(--btn-bg,#e0dcd4);border:2px solid;border-color:var(--btn-bd,#fff #5a5a5a #5a5a5a #fff);font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;color:#000;outline:none;user-select:none;-webkit-user-select:none;touch-action:manipulation;pointer-events:auto;';
+    dirs.forEach(function (d) {
+      var btn = document.createElement('button');
+      btn.textContent = d.l;
+      btn.style.cssText = btnStyle;
+      btn.style.gridRow = (d.r + 1);
+      btn.style.gridColumn = (d.c + 1);
+      function press(e) { e.preventDefault(); onDir(d.d); }
+      btn.addEventListener('mousedown', press);
+      btn.addEventListener('touchstart', press, { passive: false });
+      parentEl.appendChild(btn);
+    });
+  }
+
+  /* ================================================================
       Shared 3D Board Builder
      ================================================================ */
   function create3DBoard(rows, cols, getCellClass, cellSize) {
@@ -551,6 +595,8 @@
         "</span></div>" +
         '<div style="margin-top:14px;font-size:11px;color:#888;font-family:monospace;">' + __("games.replay") + '</div></div>';
       boardEl.appendChild(ov);
+      ov.addEventListener('click', function () { if (!running) { cleanup(); startSnake(); } });
+      ov.addEventListener('touchstart', function (e) { if (!running) { cleanup(); startSnake(); } e.preventDefault(); }, { passive: false });
     }
 
     function keyHandler(e) {
@@ -691,6 +737,18 @@
     boardWrap.appendChild(grid);
     c.appendChild(boardWrap);
 
+    // Mobile: swipe control
+    var removeSwipe = addSwipeSupport(boardWrap, function (swipeDir) {
+      if (!running) return;
+      var k = swipeDir === 'up' ? 'ArrowUp' : swipeDir === 'down' ? 'ArrowDown' : swipeDir === 'left' ? 'ArrowLeft' : 'ArrowRight';
+      switch (k) {
+        case "ArrowUp": nextDir = { x: 0, y: -1 }; break;
+        case "ArrowDown": nextDir = { x: 0, y: 1 }; break;
+        case "ArrowLeft": nextDir = { x: -1, y: 0 }; break;
+        case "ArrowRight": nextDir = { x: 1, y: 0 }; break;
+      }
+    });
+
     gamesBody.appendChild(c);
 
     document.addEventListener("keydown", keyHandler);
@@ -718,6 +776,7 @@
       }
       clearInterval(speedCheck);
       document.removeEventListener("keydown", keyHandler);
+      removeSwipe();
     };
   }
 
@@ -842,7 +901,7 @@
       var dEl = document.getElementById("typingDestroyed");
       if (dEl) dEl.textContent = destroyed;
       var inpEl = document.getElementById("typingInput");
-      if (inpEl) inpEl.textContent = currentInput;
+      if (inpEl) inpEl.value = currentInput;
     }
 
     function endGame() {
@@ -859,8 +918,15 @@
         '<div style="text-align:center;">' +
         '<div class="anim-neon-flicker" style="font-size:28px;font-weight:bold;color:#c00;font-family:monospace;text-shadow:0 0 4px #c00,0 0 12px #c00,0 0 24px #c00;margin-bottom:8px;letter-spacing:2px;">' + __("games.gameover") + '</div>' +
         '<div style="color:#0f0;font-size:13px;margin:4px 0;font-family:monospace;">' + __("games.score") + '<span style="color:#0ff;">' + destroyed + '</span></div>' +
-        '<div style="margin-top:14px;font-size:11px;color:#888;font-family:monospace;">ENTER / R = ' + __("games.replay") + '</div></div>';
+        '<div style="margin-top:14px;font-size:11px;color:#888;font-family:monospace;">' + __("games.replay") + ' (ENTER / R / toque)</div></div>';
       boardEl.appendChild(ov);
+      ov.addEventListener('click', function () {
+        if (!running) { cleanup(); startTypingChaos(); }
+      });
+      ov.addEventListener('touchstart', function (e) {
+        if (!running) { cleanup(); startTypingChaos(); }
+        e.preventDefault();
+      }, { passive: false });
     }
 
     function replayKeyHandler(e) {
@@ -876,6 +942,7 @@
       if (spawnInterval) { clearInterval(spawnInterval); spawnInterval = null; }
       document.removeEventListener("keydown", keyHandler);
       document.removeEventListener("keydown", replayKeyHandler);
+      if (inputLine) inputLine.removeEventListener("input", _inputHandler);
     }
 
     var c = document.createElement("div");
@@ -895,11 +962,54 @@
     boardWrap.style.cssText = "flex:1;position:relative;background:#0a0a1a;overflow:hidden;min-height:0;";
     c.appendChild(boardWrap);
 
-    var inputLine = document.createElement("div");
-    inputLine.style.cssText = "background:#111;color:#0f0;font-family:monospace;font-size:18px;padding:6px 12px;text-align:center;border-top:2px solid #333;letter-spacing:2px;min-height:22px;";
+    var inputLine = document.createElement("input");
+    inputLine.type = "text";
     inputLine.id = "typingInput";
-    inputLine.textContent = "";
+    inputLine.autocomplete = "off";
+    inputLine.autocapitalize = "off";
+    inputLine.spellcheck = false;
+    inputLine.style.cssText = "background:#111;color:#0f0;font-family:monospace;font-size:18px;padding:6px 12px;text-align:center;border-top:2px solid #333;letter-spacing:2px;min-height:22px;width:100%;box-sizing:border-box;outline:none;border-left:none;border-right:none;border-bottom:none;caret-color:#0f0;";
+    inputLine.value = "";
     c.appendChild(inputLine);
+
+    // Mobile: input event processes typing (virtual keyboard), auto-focus
+    var _inputHandler = function () {
+      var clean = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (clean !== this.value) this.value = clean;
+      if (clean.length > currentInput.length) {
+        for (var _ci = currentInput.length; _ci < clean.length; _ci++) {
+          var _c = clean[_ci];
+          if (!/[A-Z0-9]/.test(_c)) continue;
+          currentInput += _c;
+          var _matched = false;
+          for (var _i = 0; _i < falling.length; _i++) {
+            var _f = falling[_i];
+            if (_f.done) continue;
+            if (_f.word.indexOf(currentInput) === 0) {
+              activeWordIdx = _i;
+              _matched = true;
+              if (currentInput === _f.word) {
+                destroyed++; _f.done = true; currentInput = ""; activeWordIdx = -1;
+              }
+              break;
+            }
+          }
+          if (!_matched) { currentInput = ""; activeWordIdx = -1; }
+        }
+      } else if (clean.length < currentInput.length) {
+        currentInput = clean;
+        activeWordIdx = -1;
+        if (currentInput.length > 0) {
+          for (var _bi = 0; _bi < falling.length; _bi++) {
+            if (!falling[_bi].done && falling[_bi].word.indexOf(currentInput) === 0) {
+              activeWordIdx = _bi; break;
+            }
+          }
+        }
+      }
+    };
+    inputLine.addEventListener("input", _inputHandler);
+    requestAnimationFrame(function () { inputLine.focus(); });
 
     gamesBody.appendChild(c);
 
@@ -1118,6 +1228,13 @@
         action +
         "</div></div>";
       boardEl.appendChild(ov);
+      ov.addEventListener('click', function () {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true, bubbles: true }));
+      });
+      ov.addEventListener('touchstart', function (e) {
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true, bubbles: true }));
+        e.preventDefault();
+      }, { passive: false });
     }
 
     function removeOverlay() {
@@ -1330,8 +1447,10 @@
     function cleanup() {
       stopCamera();
       document.removeEventListener("keydown", keyHandler);
+      for (var _ti = 0; _ti < touchCleanupFns.length; _ti++) touchCleanupFns[_ti]();
     }
 
+    var touchCleanupFns = [];
     var c = document.createElement("div");
     c.className = "games-container";
     c.style.cssText =
@@ -1348,7 +1467,7 @@
     var boardWrap = document.createElement("div");
     boardWrap.id = "mazeBoard";
     boardWrap.style.cssText =
-      "flex:1;display:flex;align-items:stretch;background:#000;min-height:0;";
+      "flex:1;display:flex;align-items:stretch;background:#000;min-height:0;position:relative;";
     var grid = create3DBoard(
       g.st.maze.height,
       g.st.maze.width,
@@ -1356,6 +1475,23 @@
       g.cellSize,
     );
     boardWrap.appendChild(grid);
+
+    // Mobile: swipe + D-pad
+    var _mazeTouchSend = function (cmd) {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: cmd, cancelable: true, bubbles: true }));
+    };
+    touchCleanupFns.push(addSwipeSupport(boardWrap, function (dir) {
+      _mazeTouchSend(dir === 'up' ? 'w' : dir === 'down' ? 's' : dir === 'left' ? 'a' : 'd');
+    }));
+    var dpadWrap = document.createElement('div');
+    dpadWrap.className = 'game-dpad';
+    dpadWrap.style.cssText = 'position:absolute;bottom:8px;right:8px;z-index:20;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:2px;pointer-events:none;';
+    addDPad(dpadWrap, function (dir) {
+      _mazeTouchSend(dir === 'up' ? 'w' : dir === 'down' ? 's' : dir === 'left' ? 'a' : 'd');
+    });
+    boardWrap.appendChild(dpadWrap);
+    touchCleanupFns.push(function () { dpadWrap.remove(); });
+
     c.appendChild(boardWrap);
 
     gamesBody.appendChild(c);
@@ -1365,8 +1501,7 @@
     renderMaze();
 
     gameState.cleanup = function () {
-      stopCamera();
-      document.removeEventListener("keydown", keyHandler);
+      cleanup();
     };
   }
 

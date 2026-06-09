@@ -218,6 +218,25 @@
     transform: scale(0.92);
 }
 
+/* Mobile D-pad */
+
+.game-dpad button:active {
+    border-color: var(--btn-bd-active) !important;
+    background: var(--btn-bg-active) !important;
+}
+
+/* Mobile typing input */
+body.mobile-mode #typingInput {
+    font-size: 20px;
+    padding: 10px 12px;
+    min-height: 44px;
+}
+
+body.mobile-mode .games-block {
+    min-height: 44px;
+    padding: 10px 14px;
+}
+
 .games-sel-foot {
     padding: 4px 8px;
     background: #d4d0c8;

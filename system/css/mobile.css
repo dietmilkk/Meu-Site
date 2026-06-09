@@ -300,11 +300,3 @@ body.mobile-mode .sc-np-btn {
 }
 
 /* ---- Games ---- ---------------------------------------------- */
-body.mobile-mode .games-block {
-    min-height: 44px;
-    padding: 10px 14px;
-}
-
-body.mobile-mode .games-block h3 {
-    font-size: 16px;
-}

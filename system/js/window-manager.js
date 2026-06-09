@@ -410,6 +410,13 @@
 
     function minimize() {
       if (minimized) return;
+      if (document.body.classList.contains('mobile-mode')) {
+        minimized = true;
+        win.style.display = 'none';
+        if (tbEntry) tbEntry.classList.remove('active');
+        if (onMinimize) onMinimize();
+        return;
+      }
       var tb = getTb();
       if (!tb) {
         minimized = true;
@@ -462,6 +469,14 @@
 
     function restore() {
       if (!minimized) return;
+      if (document.body.classList.contains('mobile-mode')) {
+        minimized = false;
+        win.style.display = '';
+        if (tbEntry) tbEntry.classList.add('active');
+        bringToFront();
+        if (onRestore) onRestore();
+        return;
+      }
       if (minimizeTimer) { clearTimeout(minimizeTimer); minimizeTimer = null; }
       minimized = false;
       snapped = false;
@@ -522,6 +537,13 @@
 
     function hide() {
       if (minimized) return;
+      if (document.body.classList.contains('mobile-mode')) {
+        minimized = true;
+        win.style.display = 'none';
+        if (tbEntry) tbEntry.classList.remove('active');
+        if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
+        return;
+      }
       saveRect();
       win.classList.add('anim-win-close');
       playCloseSnd();
@@ -865,6 +887,7 @@
 
     function createTaskbarEntry() {
       if (tbEntry) return;
+      if (document.body.classList.contains('mobile-mode')) return;
       var container = document.querySelector(".taskbar-items");
       if (!container) return;
 
@@ -921,10 +944,12 @@
         if (opts.onShow) {
           opts.onShow(this);
         }
-        var w = parseInt(win.style.width) || win.offsetWidth || 600;
-        var h = parseInt(win.style.height) || win.offsetHeight || 450;
-        win.style.left = Math.max(0, Math.round((window.innerWidth - w) / 2)) + "px";
-        win.style.top = Math.max(0, Math.round((window.innerHeight - h) / 2)) + "px";
+        if (!document.body.classList.contains('mobile-mode')) {
+          var w = parseInt(win.style.width) || win.offsetWidth || 600;
+          var h = parseInt(win.style.height) || win.offsetHeight || 450;
+          win.style.left = Math.max(0, Math.round((window.innerWidth - w) / 2)) + "px";
+          win.style.top = Math.max(0, Math.round((window.innerHeight - h) / 2)) + "px";
+        }
       }
       if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
       var onOpenEnd = function () {
@@ -937,6 +962,17 @@
 
     function hide() {
       if (controls && controls.isMinimized()) return;
+      if (document.body.classList.contains('mobile-mode')) {
+        controls.setMinimized(true);
+        win.style.display = 'none';
+        if (tbEntry) tbEntry.classList.remove('active');
+        removeTaskbarEntry();
+        opts._onShowFired = false;
+        if (controls) controls.clearSavedRect();
+        if (opts.onHide) opts.onHide(this);
+        if (typeof global.__mobileOnShow === 'function') global.__mobileOnShow();
+        return;
+      }
       if (tbEntry) tbEntry.classList.remove("active");
       win.classList.remove("anim-win-open");
       playCloseSnd();
@@ -1018,7 +1054,7 @@
     _init();
 
     // Create idle pinned entry if app is pinned but not visible
-    if (!opts.startVisible && _isPinned()) {
+    if (!opts.startVisible && _isPinned() && !document.body.classList.contains('mobile-mode')) {
       var container = document.querySelector(".taskbar-items");
       if (container && !container.querySelector('[data-app-id="' + appId + '"]')) {
         tbEntry = document.createElement("div");

@@ -2,6 +2,7 @@
   'use strict';
 
   var _appList = [];
+  var MOBILE_BAR_H = 44;
 
   function isMobile() {
     return document.body.classList.contains('mobile-mode');
@@ -21,7 +22,9 @@
       var id = w.getAttribute('data-app-id');
       if (id && shown.indexOf(id) === -1) {
         shown.push(id);
-        var label = w.querySelector('.title-bar-text') ? w.querySelector('.title-bar-text').textContent.trim() : id;
+        var tbText = w.querySelector('.title-bar-text');
+        var label = tbText ? tbText.textContent.trim() : id;
+        if (label.length > 20) label = label.substring(0, 18) + '…';
         var item = document.createElement('div');
         item.className = 'mobile-app-item' + (w.classList.contains('active') ? ' active' : '');
         item.textContent = label;
@@ -36,6 +39,7 @@
             }
           }
           closeDrawer();
+          injectTitleBarMenuBtns();
         });
         container.appendChild(item);
       }
@@ -49,7 +53,6 @@
     body.innerHTML = '';
 
     _appList.forEach(function(app) {
-      if (app.id === 'menu') return;
       var item = document.createElement('div');
       item.className = 'mobile-app-drawer-item';
       item.innerHTML = (app.icon || '') + ' ' + app.label;
@@ -57,21 +60,21 @@
         closeDrawer();
         var a = global.W2K && global.W2K.AppRegistry && global.W2K.AppRegistry.get(app.id);
         if (a && a.show) a.show();
+        injectTitleBarMenuBtns();
       });
       body.appendChild(item);
     });
 
-    // Settings
     var div = document.createElement('div');
     div.className = 'mobile-app-drawer-divider';
     body.appendChild(div);
+
     var settingsItem = document.createElement('div');
     settingsItem.className = 'mobile-app-drawer-item';
-    settingsItem.innerHTML = '<img src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png" alt="" width="20" height="20"> Configurações';
+    settingsItem.innerHTML = '<img src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png" alt="" width="22" height="22"> Config';
     settingsItem.addEventListener('click', function() {
       closeDrawer();
-      var a = global.W2K && global.W2K.AppRegistry && global.W2K.AppRegistry.get('settings');
-      if (a && a.show) a.show();
+      global.W2K.AppRegistry.launch('settings');
     });
     body.appendChild(settingsItem);
 
@@ -89,7 +92,7 @@
   document.addEventListener('click', function(e) {
     var drawer = document.getElementById('mobileAppDrawer');
     if (!drawer || !drawer.classList.contains('open')) return;
-    if (!e.target.closest('.mobile-app-drawer') && !e.target.closest('#mobileMenuBtn')) {
+    if (!e.target.closest('.mobile-app-drawer') && !e.target.closest('#mobileMenuBtn') && !e.target.closest('.win-btn[data-wbtn="menu"]')) {
       closeDrawer();
     }
   });
@@ -119,8 +122,45 @@
     });
   }
 
+  function updateViewport() {
+    var meta = document.querySelector('meta[name="viewport"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'viewport';
+      document.head.appendChild(meta);
+    }
+    if (isMobile()) {
+      meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+    } else {
+      meta.content = 'width=1200';
+    }
+  }
+
+  function fixWindowStyles() {
+    document.querySelectorAll('.window').forEach(function(w) {
+      if (w.style.left) w.style.left = '';
+      if (w.style.top) w.style.top = '';
+      if (w.style.width) w.style.width = '';
+      if (w.style.height) w.style.height = '';
+    });
+  }
+
+  function disableAnimations() {
+    var style = document.getElementById('mobile-no-anim');
+    if (!style && isMobile()) {
+      var s = document.createElement('style');
+      s.id = 'mobile-no-anim';
+      s.textContent = '.anim-win-open,.anim-win-close{animation:none!important}';
+      document.head.appendChild(s);
+    }
+  }
+
   function initMobile() {
     if (!isMobile()) return;
+
+    updateViewport();
+    fixWindowStyles();
+    disableAnimations();
 
     var menuBtn = document.getElementById('mobileMenuBtn');
     if (menuBtn) {
@@ -139,6 +179,7 @@
     rebuildMobileMenu();
 
     document.addEventListener('touchstart', function(e) {
+      if (!isMobile()) return;
       var titleBar = e.target.closest('.title-bar');
       if (titleBar && !e.target.closest('.win-btn')) {
         e.preventDefault();
@@ -150,6 +191,15 @@
         e.preventDefault();
       }
     });
+
+    // Fix window body height on resize
+    function fixHeight() {
+      document.querySelectorAll('.window-body').forEach(function(b) {
+        b.style.height = 'calc(100vh - 32px - ' + MOBILE_BAR_H + 'px)';
+      });
+    }
+    window.addEventListener('resize', fixHeight);
+    fixHeight();
   }
 
   var _pendingRebuild = false;
@@ -158,8 +208,11 @@
     _pendingRebuild = true;
     setTimeout(function() {
       _pendingRebuild = false;
-      if (isMobile()) rebuildMobileMenu();
-    }, 50);
+      if (isMobile()) {
+        rebuildMobileMenu();
+        injectTitleBarMenuBtns();
+      }
+    }, 80);
   }
 
   function _patchAppRegistry() {
@@ -199,10 +252,10 @@
     isMobile: isMobile,
   };
 
-  registerApp('links', 'Links', '<img src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png" alt="" width="20" height="20">');
-  registerApp('soundcloud', 'SoundCloud', '<img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="20" height="20">');
-  registerApp('feed', 'Diário', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="20" height="20">');
-  registerApp('games', 'Jogos', '<img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="20" height="20">');
-  registerApp('terminal', 'Terminal', '<img src="system/assets/icons/tango2kde/16x16/apps/terminal.png" alt="" width="20" height="20">');
-  registerApp('randomgif', 'Galeria', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="20" height="20">');
+  registerApp('links', 'Links', '<img src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png" alt="" width="22" height="22">');
+  registerApp('soundcloud', 'SoundCloud', '<img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="22" height="22">');
+  registerApp('feed', 'Diário', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="22" height="22">');
+  registerApp('games', 'Jogos', '<img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="22" height="22">');
+  registerApp('terminal', 'Terminal', '<img src="system/assets/icons/tango2kde/16x16/apps/terminal.png" alt="" width="22" height="22">');
+  registerApp('randomgif', 'Galeria', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="22" height="22">');
 })(window);

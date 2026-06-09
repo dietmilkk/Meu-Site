@@ -28,7 +28,7 @@ body.mobile-mode .window.active {
 }
 
 body.mobile-mode .window-body {
-    height: calc(100vh - 32px);
+    height: calc(100vh - 32px - 44px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -39,11 +39,16 @@ body.mobile-mode .title-bar {
     padding: 2px 4px;
 }
 
+body.mobile-mode .title-bar-text {
+    font-size: 15px;
+}
+
 body.mobile-mode .win-btn {
-    width: 32px;
-    height: 28px;
+    width: 34px;
+    height: 30px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    font-size: 18px;
 }
 
 body.mobile-mode .win-btn[data-wbtn="minimize"],
@@ -69,22 +74,46 @@ body.mobile-mode .desk-icon .di-label {
     font-size: 14px;
 }
 
-/* ===== Mobile App Menu (replaces taskbar) ===== */
+/* Kill desktop-like animations on mobile */
+body.mobile-mode .anim-win-open,
+body.mobile-mode .anim-win-close {
+    animation: none !important;
+}
+
+/* Hide scanline overlay on mobile */
+body.mobile-mode #scanline {
+    display: none !important;
+}
+
+/* ===== Mobile App Menu (bottom bar) ===== */
 .mobile-app-menu {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
+    height: 44px;
     background: #d4d0c8;
     border-top: 2px solid #fff;
-    border-bottom: 2px solid #5a5a5a;
     display: flex;
     align-items: center;
-    padding: 4px 6px;
+    padding: 0 4px;
     z-index: 99999;
-    gap: 4px;
+    gap: 3px;
+}
+
+.mobile-app-items {
+    display: flex;
+    align-items: center;
+    gap: 3px;
     overflow-x: auto;
+    flex: 1;
+    height: 36px;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.mobile-app-items::-webkit-scrollbar {
+    display: none;
 }
 
 .mobile-app-item {
@@ -92,7 +121,8 @@ body.mobile-mode .desk-icon .di-label {
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    font-size: 14px;
+    height: 30px;
+    font-size: 13px;
     font-family: var(--ff-ui);
     color: #000;
     background: #d8d4cc;
@@ -104,6 +134,7 @@ body.mobile-mode .desk-icon .di-label {
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     flex-shrink: 0;
+    user-select: none;
 }
 
 .mobile-app-item.active {
@@ -119,6 +150,34 @@ body.mobile-mode .desk-icon .di-label {
     background: #b0aca4;
 }
 
+/* ===== Mobile ≡ button in bottom bar ===== */
+#mobileMenuBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+    font-weight: 700;
+    background: #d8d4cc;
+    border-top: 2px solid #888480;
+    border-left: 2px solid #888480;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+#mobileMenuBtn:active {
+    background: #b0aca4;
+    border-top: 2px solid #606060;
+    border-left: 2px solid #606060;
+    border-right: 2px solid #e0dcd4;
+    border-bottom: 2px solid #e0dcd4;
+}
+
 body.mobile-mode .ctx-menu {
     font-size: 16px;
     min-width: 160px;
@@ -131,10 +190,10 @@ body.mobile-mode .ctx-menu-item {
 /* ===== Mobile App Drawer ===== */
 .mobile-app-drawer {
     position: fixed;
-    bottom: 44px;
+    bottom: 48px;
     left: 4px;
     right: 4px;
-    max-height: 60vh;
+    max-height: 55vh;
     background: #ece9e0;
     border-top: 2px solid #fff;
     border-left: 2px solid #fff;
@@ -153,8 +212,8 @@ body.mobile-mode .ctx-menu-item {
 .mobile-app-drawer-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
+    gap: 12px;
+    padding: 12px 14px;
     font-size: 16px;
     font-family: var(--ff-ui);
     color: #000;
@@ -167,18 +226,14 @@ body.mobile-mode .ctx-menu-item {
     border-bottom: none;
 }
 
-.mobile-app-drawer-item:hover {
+.mobile-app-drawer-item:active {
     background: #000080;
     color: #fff;
 }
 
-.mobile-app-drawer-item:active {
-    background: #0000a0;
-}
-
 .mobile-app-drawer-item img {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     flex-shrink: 0;
 }
 
@@ -189,8 +244,36 @@ body.mobile-mode .ctx-menu-item {
     border-bottom: 1px solid #fff;
 }
 
-@media (max-width: 768px) {
-    body.mobile-mode .window-body {
-        height: calc(100vh - 32px);
-    }
+/* ===== Ambient sound toggle on mobile ===== */
+body.mobile-mode #ambientOverlay {
+    display: none;
+}
+
+/* ===== Welcome screen mobile adjustments ===== */
+body.mobile-mode .boot-welcome {
+    max-width: 92vw;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+body.mobile-mode .welcome-layout {
+    gap: 6px;
+}
+
+body.mobile-mode .welcome-greeting {
+    font-size: 16px;
+}
+
+body.mobile-mode .welcome-desc {
+    font-size: 14px;
+}
+
+body.mobile-mode .welcome-start-btn {
+    padding: 8px 24px;
+    font-size: 16px;
+}
+
+/* ===== Settings on mobile ===== */
+body.mobile-mode .settings-layout {
+    flex-direction: column;
 }

@@ -49,7 +49,6 @@
     var drawer = document.getElementById('mobileAppDrawer');
     if (drawer) {
       drawer.classList.remove('open');
-      drawer.style.display = 'none';
     }
   }
 
@@ -127,6 +126,20 @@
     disableAnimations();
     injectTitleBarMenuBtns();
 
+    // FAB button toggles the drawer
+    var fab = document.getElementById('mobileFab');
+    if (fab) {
+      fab.style.display = '';
+      fab.addEventListener('click', function() {
+        var drawer = document.getElementById('mobileAppDrawer');
+        if (drawer && drawer.classList.contains('open')) {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
+      });
+    }
+
     document.addEventListener('touchstart', function(e) {
       if (!isMobile()) return;
       var titleBar = e.target.closest('.title-bar');
@@ -140,6 +153,9 @@
         e.preventDefault();
       }
     });
+
+    // Auto-open the drawer after boot screen clears
+    setTimeout(function() { openDrawer(); }, 600);
   }
 
   if (document.readyState === 'loading') {

@@ -105,6 +105,37 @@ body.mobile-mode .ctx-menu-item {
     padding: 12px 18px;
 }
 
+/* ---- Floating FAB (always visible when no windows are open) --- */
+body.mobile-mode .mobile-fab {
+    display: flex !important;
+    position: fixed;
+    bottom: 14px;
+    right: 14px;
+    z-index: 99999;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #000080;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    border-top-color: #c0c0c0;
+    border-left-color: #c0c0c0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.35);
+    line-height: 1;
+    padding: 0;
+}
+
+body.mobile-mode .mobile-fab:active {
+    background: #ffbd63;
+    color: #000;
+}
+
 /* ---- App Drawer ---------------------------------------------- */
 .mobile-app-drawer {
     position: fixed;

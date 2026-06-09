@@ -16,9 +16,35 @@
       String(now.getMinutes()).padStart(2, "0");
     var el = document.getElementById("taskbarClock");
     if (el) el.textContent = t;
+    document.querySelectorAll('.title-bar-clock').forEach(function(c) {
+      c.textContent = t;
+    });
   }
   updateClocks();
   setInterval(updateClocks, 1000);
+
+  /* Inject clock span into each window's title bar */
+  function injectTitleBarClocks() {
+    document.querySelectorAll('.title-bar').forEach(function(tb) {
+      if (tb.querySelector('.title-bar-clock')) return;
+      var btns = tb.querySelector('.title-bar-buttons');
+      if (!btns) return;
+      var clock = document.createElement('span');
+      clock.className = 'title-bar-clock';
+      var now = new Date();
+      clock.textContent =
+        String(now.getHours() % 12 || 12).padStart(2, "0") + ":" +
+        String(now.getMinutes()).padStart(2, "0");
+      clock.style.cssText = 'margin-left: auto; margin-right: 6px; font-size: 14px; font-weight: 400; letter-spacing: 0.5px; opacity: 0.9; flex-shrink: 0;';
+      tb.insertBefore(clock, btns);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectTitleBarClocks);
+  } else {
+    injectTitleBarClocks();
+  }
 
   /* ===== Helper: close other tray menus ===== */
 

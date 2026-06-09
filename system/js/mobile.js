@@ -62,6 +62,25 @@
     });
     body.appendChild(settingsItem);
 
+    // Fullscreen toggle
+    var fsItem = document.createElement('div');
+    fsItem.className = 'mobile-app-drawer-item';
+    var isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    fsItem.innerHTML = '<img src="system/assets/icons/tango2kde/16x16/actions/view-fullscreen.png" alt="" width="22" height="22"> ' + (isFS ? 'Sair da tela cheia' : 'Tela cheia');
+    fsItem.id = 'mobileFsItem';
+    fsItem.addEventListener('click', function() {
+      closeDrawer();
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      } else {
+        var el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      }
+    });
+    body.appendChild(fsItem);
+
     drawer.classList.add('open');
   }
 

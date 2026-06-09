@@ -33,6 +33,9 @@ body.mobile-mode .window-body {
     height: calc(100vh - 38px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding-left: max(0px, env(safe-area-inset-left, 0px));
+    padding-right: max(0px, env(safe-area-inset-right, 0px));
+    padding-bottom: max(0px, env(safe-area-inset-bottom, 0px));
 }
 
 /* ---- Title bar: taller for touch ----------------------------- */
@@ -107,10 +110,10 @@ body.mobile-mode .ctx-menu-item {
 
 /* ---- Floating ≡ button (Win2000 raised 3D, square) ----------- */
 body.mobile-mode .mobile-fab {
-    display: flex !important;
+    display: flex;
     position: fixed;
-    bottom: 16px;
-    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    right: max(16px, env(safe-area-inset-right, 16px));
     z-index: 99999;
     width: 44px;
     height: 44px;
@@ -146,9 +149,9 @@ body.mobile-mode .mobile-fab:active {
 /* ---- App Drawer ---------------------------------------------- */
 .mobile-app-drawer {
     position: fixed;
-    bottom: 4px;
-    left: 4px;
-    right: 4px;
+    bottom: max(4px, env(safe-area-inset-bottom, 4px));
+    left: max(4px, env(safe-area-inset-left, 4px));
+    right: max(4px, env(safe-area-inset-right, 4px));
     max-height: 55vh;
     background: #ece9e0;
     border-top: 2px solid #fff;

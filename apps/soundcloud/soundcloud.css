@@ -263,9 +263,9 @@
     padding: 2px;
     box-sizing: border-box;
     user-select: none;
-    background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: #fff #5a5a5a #5a5a5a #fff;
+    border-color: var(--btn-bd);
     outline: none;
 }
 
@@ -275,34 +275,34 @@
 
 .sc-btn:active,
 .sc-btn.sc-pressed {
-    border-color: #5a5a5a #fff #fff #5a5a5a !important;
-    background: linear-gradient(180deg, #c8c4bc, #d4d0c8) !important;
+    border-color: var(--btn-bd-active) !important;
+    background: var(--btn-bg-active) !important;
 }
 
 .sc-btn-sm {
     width: 26px;
     height: 22px;
-    background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: #fff #5a5a5a #5a5a5a #fff;
+    border-color: var(--btn-bd);
 }
 
 .sc-btn-play {
     width: 50px;
     height: 28px;
-    background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: #fff #5a5a5a #5a5a5a #fff;
+    border-color: var(--btn-bd);
 }
 
 .sc-btn-play:active,
 .sc-btn-play-active {
-    border-color: #5a5a5a #fff #fff #5a5a5a !important;
-    background: linear-gradient(180deg, #c8c4bc, #d4d0c8) !important;
+    border-color: var(--btn-bd-active) !important;
+    background: var(--btn-bg-active) !important;
 }
 
 .sc-btn-shuffle-active {
-    border-color: #5a5a5a #fff #fff #5a5a5a !important;
+    border-color: var(--btn-bd-active) !important;
     background: #b0aca4 !important;
 }
 
@@ -310,8 +310,8 @@
 .sc-btn.sc-pressed,
 .sc-btn-play.sc-pressed,
 .sc-btn-shuffle.sc-pressed {
-    border-color: #5a5a5a #fff #fff #5a5a5a !important;
-    background: linear-gradient(180deg, #c8c4bc, #d4d0c8) !important;
+    border-color: var(--btn-bd-active) !important;
+    background: var(--btn-bg-active) !important;
 }
 
 .sc-track-counter {

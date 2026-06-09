@@ -114,25 +114,16 @@
     gap: 4px;
     padding: 2px 14px 2px 5px;
     height: 30px;
-    background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
-    border-top: 2px solid #fff;
-    border-left: 2px solid #fff;
-    border-right: 2px solid #5a5a5a;
-    border-bottom: 2px solid #5a5a5a;
-    transition:
-        background 0.18s cubic-bezier(0.34, 1.8, 0.64, 1),
-        border-color 0.12s ease,
-        transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
+    background: var(--btn-bg);
+    border: 2px solid;
+    border-color: var(--btn-bd);
 }
 
 
 .start-btn:active,
 .start-btn.active {
-    border-top: 2px solid #5a5a5a;
-    border-left: 2px solid #5a5a5a;
-    border-right: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    background: linear-gradient(180deg, #c8c4bc, #d4d0c8);
+    border-color: var(--btn-bd-active);
+    background: var(--btn-bg-active);
 }
 
 .start-text {
@@ -555,9 +546,9 @@
     gap: 3px;
 }
 .sc-now-playing-menu .sc-np-btn {
-    background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: #fff #5a5a5a #5a5a5a #fff;
+    border-color: var(--btn-bd);
     cursor: pointer;
     padding: 4px 8px;
     color: #000;
@@ -567,15 +558,11 @@
     flex: 1;
     min-width: 0;
     min-height: 28px;
-    transition:
-        background 0.18s cubic-bezier(0.34, 1.8, 0.64, 1),
-        border-color 0.12s ease,
-        transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
 }
 
 .sc-now-playing-menu .sc-np-btn:active {
-    border-color: #5a5a5a #fff #fff #5a5a5a;
-    background: linear-gradient(180deg, #c8c4bc, #d4d0c8);
+    border-color: var(--btn-bd-active);
+    background: var(--btn-bg-active);
 }
 .sc-now-playing-menu .sc-np-btn svg {
     display: block;

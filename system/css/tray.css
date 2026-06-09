@@ -39,18 +39,14 @@
   font-size: 18px;
   font-weight: bold;
   border: 2px solid;
-  border-color: #fff #5a5a5a #5a5a5a #fff;
-  background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
+  border-color: var(--btn-bd);
+  background: var(--btn-bg);
   user-select: none;
-  transition:
-    background 0.18s cubic-bezier(0.34, 1.8, 0.64, 1),
-    border-color 0.12s ease,
-    transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
 }
 
 .cal-nav-btn:active {
-  border-color: #5a5a5a #fff #fff #5a5a5a;
-  background: linear-gradient(180deg, #c8c4bc, #d4d0c8);
+  border-color: var(--btn-bd-active);
+  background: var(--btn-bg-active);
 }
 
 .cal-month-year {

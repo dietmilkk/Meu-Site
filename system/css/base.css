@@ -24,6 +24,12 @@
     --clr-panel-bg: #d4d0c8;
     --clr-border-dark: #5a5a5a;
     --clr-border-light: #fff;
+
+    /* Button states: deactivated = normal (raised), activated = pressed (depressed) */
+    --btn-bg: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
+    --btn-bg-active: linear-gradient(180deg, #c8c4bc, #d4d0c8);
+    --btn-bd: #fff #5a5a5a #5a5a5a #fff;
+    --btn-bd-active: #5a5a5a #fff #fff #5a5a5a;
 }
 
 * {

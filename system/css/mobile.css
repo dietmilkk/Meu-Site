@@ -149,7 +149,7 @@ body.mobile-mode .mobile-fab:active {
     right: max(0px, env(safe-area-inset-right, 0px));
     bottom: max(0px, env(safe-area-inset-bottom, 0px));
     background: #ece9e0;
-    z-index: 99998;
+    z-index: 999997;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -261,6 +261,14 @@ body.mobile-mode .gallery-info {
     bottom: 8px;
     padding: 8px 14px;
     font-size: 14px;
+}
+
+body.mobile-mode .gallery-close-btn {
+    top: max(8px, env(safe-area-inset-top, 8px));
+    right: max(8px, env(safe-area-inset-right, 8px));
+    width: 44px;
+    height: 40px;
+    font-size: 26px;
 }
 
 /* ---- Terminal ------------------------------------------------ */

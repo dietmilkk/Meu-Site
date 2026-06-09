@@ -47,7 +47,7 @@
       });
   }
 
-  if (W2K && W2K.AppRegistry) {
+  if (typeof W2K !== "undefined" && W2K.AppRegistry) {
     W2K.AppRegistry.register("randomgif", {
       label: __("gallery.title"),
       show: function () {
@@ -71,12 +71,14 @@
     var info = document.createElement("div");
     info.id = "galleryInfo";
     info.classList.add("gallery-info");
-    if (isMobile) {
-      info.textContent = (pos + 1) + "/" + total + " — Toque para sair, deslize para navegar";
-    } else {
-      info.textContent = __("gallery.info") + (pos + 1) + "/" + total + __("gallery.infoEnd");
-    }
+    info.textContent = (pos + 1) + "/" + total;
     overlay.appendChild(info);
+
+    var closeBtn = document.createElement("button");
+    closeBtn.className = "gallery-close-btn";
+    closeBtn.textContent = "\u00D7";
+    closeBtn.setAttribute("aria-label", "Fechar");
+    overlay.appendChild(closeBtn);
 
     document.body.appendChild(overlay);
     overlay.focus();
@@ -100,13 +102,13 @@
     preload(name);
     preloadAhead(10);
 
+    function close() {
+      overlay.remove();
+    }
+
     function update() {
       img.src = "apps/gallery/media/" + encodeURIComponent(name);
-      if (document.body.classList.contains('mobile-mode')) {
-        info.textContent = (pos + 1) + "/" + total + " — Toque para sair, deslize para navegar";
-      } else {
-        info.textContent = __("gallery.info") + (pos + 1) + "/" + total + __("gallery.infoEnd");
-      }
+      info.textContent = (pos + 1) + "/" + total;
       preload(name);
       preloadAhead(10);
     }
@@ -129,37 +131,32 @@
       update();
     }
 
+    closeBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      close();
+    });
+
     overlay.addEventListener("keydown", function (e) {
-      if (e.key === " ") {
+      if (e.key === "Escape" || e.key === " ") {
         e.preventDefault();
-        overlay.remove();
+        close();
       } else if (e.key === "ArrowRight") {
         next();
       } else if (e.key === "ArrowLeft") {
         prev();
       }
     });
-    overlay.addEventListener("click", function (e) {
-      if (_touchSwiped) { _touchSwiped = false; return; }
-      overlay.remove();
-    });
 
-    var _touchStartX = 0, _touchSwiped = false;
-    overlay.addEventListener("touchstart", function (e) {
-      _touchStartX = e.touches[0].clientX;
-      _touchSwiped = false;
-    }, { passive: true });
-    overlay.addEventListener("touchmove", function (e) {
-      e.preventDefault();
-    }, { passive: false });
-    overlay.addEventListener("touchend", function (e) {
-      var dx = e.changedTouches[0].clientX - _touchStartX;
-      if (Math.abs(dx) > 50) {
-        _touchSwiped = true;
-        if (dx > 0) prev();
-        else next();
+    overlay.addEventListener("click", function (e) {
+      var box = overlay.getBoundingClientRect();
+      var x = e.clientX - box.left;
+      var w = box.width;
+      if (x < w * 0.4) {
+        prev();
+      } else if (x > w * 0.6) {
+        next();
       }
-    }, { passive: true });
+    });
   }
 
   window.openGallery = function () {

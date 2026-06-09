@@ -273,7 +273,8 @@
     border: 0;
 }
 
-.sc-btn:active {
+.sc-btn:active,
+.sc-btn.sc-pressed {
     border-color: #5a5a5a #fff #fff #5a5a5a !important;
     background: linear-gradient(180deg, #c8c4bc, #d4d0c8) !important;
 }
@@ -303,6 +304,14 @@
 .sc-btn-shuffle-active {
     border-color: #5a5a5a #fff #fff #5a5a5a !important;
     background: #b0aca4 !important;
+}
+
+/* Force pressed look on ANY sc-btn when physically clicked (overrides active classes) */
+.sc-btn.sc-pressed,
+.sc-btn-play.sc-pressed,
+.sc-btn-shuffle.sc-pressed {
+    border-color: #5a5a5a #fff #fff #5a5a5a !important;
+    background: linear-gradient(180deg, #c8c4bc, #d4d0c8) !important;
 }
 
 .sc-track-counter {

@@ -1130,6 +1130,21 @@
     dragging = false;
   });
 
+  /* ===== Force button press/release (reliable :active replacement) ===== */
+  function wirePress(el) {
+    if (!el) return;
+    el.addEventListener('mousedown', function() { el.classList.add('sc-pressed'); });
+    el.addEventListener('mouseup', function() { el.classList.remove('sc-pressed'); });
+    el.addEventListener('mouseleave', function() { el.classList.remove('sc-pressed'); });
+    el.addEventListener('touchstart', function() { el.classList.add('sc-pressed'); }, { passive: true });
+    el.addEventListener('touchend', function() { el.classList.remove('sc-pressed'); });
+    el.addEventListener('touchcancel', function() { el.classList.remove('sc-pressed'); });
+  }
+  wirePress(elBtnPlay);
+  wirePress(elBtnNext);
+  wirePress(elBtnPrev);
+  if (elBtnShuffle) wirePress(elBtnShuffle);
+
   /* ===== Buttons ===== */
   elBtnPlay.addEventListener("click", function () {
     if (!widgets[activePlaylistId] || !widgetReadies[activePlaylistId]) return;

@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 cd "$(dirname "$0")"
-echo "Build complete — no encryption step needed."
+echo "Build complete."

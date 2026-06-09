@@ -266,16 +266,16 @@
     background: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
     border: 2px solid;
     border-color: #fff #5a5a5a #5a5a5a #fff;
-    transition:
-        background 0.18s cubic-bezier(0.34, 1.8, 0.64, 1),
-        border-color 0.12s ease,
-        transform 0.22s cubic-bezier(0.34, 1.8, 0.64, 1);
+    outline: none;
 }
 
+.sc-btn::-moz-focus-inner {
+    border: 0;
+}
 
 .sc-btn:active {
-    border-color: #5a5a5a #fff #fff #5a5a5a;
-    background: linear-gradient(180deg, #c8c4bc, #d4d0c8);
+    border-color: #5a5a5a #fff #fff #5a5a5a !important;
+    background: linear-gradient(180deg, #c8c4bc, #d4d0c8) !important;
 }
 
 .sc-btn-sm {
@@ -296,8 +296,8 @@
 
 .sc-btn-play:active,
 .sc-btn-play-active {
-    border-color: #5a5a5a #fff #fff #5a5a5a;
-    background: linear-gradient(180deg, #c8c4bc, #d4d0c8);
+    border-color: #5a5a5a #fff #fff #5a5a5a !important;
+    background: linear-gradient(180deg, #c8c4bc, #d4d0c8) !important;
 }
 
 .sc-btn-shuffle-active {

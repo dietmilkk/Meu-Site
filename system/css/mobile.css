@@ -285,6 +285,10 @@ body.mobile-mode #scWindow {
     min-height: 0;
 }
 
+body.mobile-mode .sc-btn {
+    -webkit-tap-highlight-color: transparent;
+}
+
 body.mobile-mode .sc-playlist-item {
     min-height: 44px;
     padding: 10px 12px;

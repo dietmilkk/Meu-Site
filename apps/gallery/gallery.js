@@ -67,10 +67,15 @@
     img.src = "apps/gallery/media/" + encodeURIComponent(name);
     overlay.appendChild(img);
 
+    var isMobile = document.body.classList.contains('mobile-mode');
     var info = document.createElement("div");
     info.id = "galleryInfo";
     info.classList.add("gallery-info");
-    info.textContent = __("gallery.info") + (pos + 1) + "/" + total + __("gallery.infoEnd");
+    if (isMobile) {
+      info.textContent = (pos + 1) + "/" + total + " — Toque para sair, deslize para navegar";
+    } else {
+      info.textContent = __("gallery.info") + (pos + 1) + "/" + total + __("gallery.infoEnd");
+    }
     overlay.appendChild(info);
 
     document.body.appendChild(overlay);
@@ -97,7 +102,11 @@
 
     function update() {
       img.src = "apps/gallery/media/" + encodeURIComponent(name);
-      info.textContent = __("gallery.info") + (pos + 1) + "/" + total + __("gallery.infoEnd");
+      if (document.body.classList.contains('mobile-mode')) {
+        info.textContent = (pos + 1) + "/" + total + " — Toque para sair, deslize para navegar";
+      } else {
+        info.textContent = __("gallery.info") + (pos + 1) + "/" + total + __("gallery.infoEnd");
+      }
       preload(name);
       preloadAhead(10);
     }

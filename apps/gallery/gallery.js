@@ -130,9 +130,27 @@
         prev();
       }
     });
-    overlay.addEventListener("click", function () {
+    overlay.addEventListener("click", function (e) {
+      if (_touchSwiped) { _touchSwiped = false; return; }
       overlay.remove();
     });
+
+    var _touchStartX = 0, _touchSwiped = false;
+    overlay.addEventListener("touchstart", function (e) {
+      _touchStartX = e.touches[0].clientX;
+      _touchSwiped = false;
+    }, { passive: true });
+    overlay.addEventListener("touchmove", function (e) {
+      e.preventDefault();
+    }, { passive: false });
+    overlay.addEventListener("touchend", function (e) {
+      var dx = e.changedTouches[0].clientX - _touchStartX;
+      if (Math.abs(dx) > 50) {
+        _touchSwiped = true;
+        if (dx > 0) prev();
+        else next();
+      }
+    }, { passive: true });
   }
 
   window.openGallery = function () {

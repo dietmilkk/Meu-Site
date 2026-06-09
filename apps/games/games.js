@@ -732,22 +732,28 @@
     var boardWrap = document.createElement("div");
     boardWrap.id = "snakeBoard";
     boardWrap.style.cssText =
-      "flex:1;display:flex;align-items:stretch;background:#000;min-height:0;";
+      "flex:1;display:flex;align-items:stretch;background:#000;min-height:0;position:relative;";
     var grid = create3DBoard(size, size, getCellClass, cellSize);
     boardWrap.appendChild(grid);
-    c.appendChild(boardWrap);
 
-    // Mobile: swipe control
+    // Mobile: swipe + D-pad control
+    var _snakeTouchSend = function (k) {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: k, cancelable: true, bubbles: true }));
+    };
     var removeSwipe = addSwipeSupport(boardWrap, function (swipeDir) {
-      if (!running) return;
       var k = swipeDir === 'up' ? 'ArrowUp' : swipeDir === 'down' ? 'ArrowDown' : swipeDir === 'left' ? 'ArrowLeft' : 'ArrowRight';
-      switch (k) {
-        case "ArrowUp": nextDir = { x: 0, y: -1 }; break;
-        case "ArrowDown": nextDir = { x: 0, y: 1 }; break;
-        case "ArrowLeft": nextDir = { x: -1, y: 0 }; break;
-        case "ArrowRight": nextDir = { x: 1, y: 0 }; break;
-      }
+      _snakeTouchSend(k);
     });
+    var _snakeDpadWrap = document.createElement('div');
+    _snakeDpadWrap.className = 'game-dpad';
+    _snakeDpadWrap.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:20;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:2px;pointer-events:none;';
+    addDPad(_snakeDpadWrap, function (dir) {
+      var k = dir === 'up' ? 'ArrowUp' : dir === 'down' ? 'ArrowDown' : dir === 'left' ? 'ArrowLeft' : 'ArrowRight';
+      _snakeTouchSend(k);
+    });
+    boardWrap.appendChild(_snakeDpadWrap);
+
+    c.appendChild(boardWrap);
 
     gamesBody.appendChild(c);
 
@@ -777,6 +783,7 @@
       clearInterval(speedCheck);
       document.removeEventListener("keydown", keyHandler);
       removeSwipe();
+      _snakeDpadWrap.remove();
     };
   }
 
@@ -1434,6 +1441,7 @@
     function rebuildMazeBoard() {
       var boardEl = document.querySelector("#mazeBoard");
       if (!boardEl) return;
+      var existingDpad = boardEl.querySelector('.game-dpad');
       boardEl.innerHTML = "";
       var grid = create3DBoard(
         g.st.maze.height,
@@ -1442,6 +1450,7 @@
         g.cellSize,
       );
       boardEl.appendChild(grid);
+      if (existingDpad) boardEl.appendChild(existingDpad);
     }
 
     function cleanup() {
@@ -1485,7 +1494,7 @@
     }));
     var dpadWrap = document.createElement('div');
     dpadWrap.className = 'game-dpad';
-    dpadWrap.style.cssText = 'position:absolute;bottom:8px;right:8px;z-index:20;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:2px;pointer-events:none;';
+    dpadWrap.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:20;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:2px;pointer-events:none;';
     addDPad(dpadWrap, function (dir) {
       _mazeTouchSend(dir === 'up' ? 'w' : dir === 'down' ? 's' : dir === 'left' ? 'a' : 'd');
     });

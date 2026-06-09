@@ -91,8 +91,8 @@
 
   function artworkSuffix() {
     var p = document.getElementById("scPlayer");
-    if (p && p.getBoundingClientRect().width >= 700) return "-t500x500";
-    return "-t250x250";
+    if (p && p.getBoundingClientRect().width >= 700) return "-t250x250";
+    return "-t120x120";
   }
 
   /* ===== Compatibility layer for Widget API method names ===== */

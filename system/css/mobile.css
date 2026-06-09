@@ -280,6 +280,11 @@ body.mobile-mode .term-input {
 }
 
 /* ---- SoundCloud ---- ----------------------------------------- */
+body.mobile-mode #scWindow {
+    min-width: 0;
+    min-height: 0;
+}
+
 body.mobile-mode .sc-playlist-item {
     min-height: 44px;
     padding: 10px 12px;

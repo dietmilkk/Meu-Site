@@ -55,7 +55,7 @@
 
     var settingsItem = document.createElement('div');
     settingsItem.className = 'mobile-app-drawer-item';
-    settingsItem.innerHTML = '<img src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png" alt="" width="22" height="22"> Config';
+    settingsItem.innerHTML = '<img src="system/assets/icons/tango2kde/22x22/categories/redhat-system_tools.png" alt="" width="22" height="22"> Config';
     settingsItem.addEventListener('click', function() {
       closeDrawer();
       global.W2K.AppRegistry.launch('settings');
@@ -66,7 +66,7 @@
     var fsItem = document.createElement('div');
     fsItem.className = 'mobile-app-drawer-item';
     var isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
-    fsItem.innerHTML = '<img src="system/assets/icons/tango2kde/16x16/actions/view-fullscreen.png" alt="" width="22" height="22"> ' + (isFS ? 'Sair da tela cheia' : 'Tela cheia');
+    fsItem.innerHTML = '<img src="system/assets/icons/tango2kde/22x22/actions/view-fullscreen.png" alt="" width="22" height="22"> ' + (isFS ? 'Sair da tela cheia' : 'Tela cheia');
     fsItem.id = 'mobileFsItem';
     fsItem.addEventListener('click', function() {
       closeDrawer();
@@ -113,20 +113,11 @@
       menuBtn.style.lineHeight = '1';
       menuBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        if (isMobile()) {
-          var drawer = document.getElementById('mobileAppDrawer');
-          if (drawer && drawer.classList.contains('open')) {
-            closeDrawer();
-          } else {
-            openDrawer();
-          }
+        var drawer = document.getElementById('mobileAppDrawer');
+        if (drawer && drawer.classList.contains('open')) {
+          closeDrawer();
         } else {
-          var startMenu = document.getElementById('startMenu');
-          var startBtn = document.getElementById('startBtn');
-          if (startMenu) {
-            startMenu.classList.toggle('open');
-            if (startBtn) startBtn.classList.toggle('active', startMenu.classList.contains('open'));
-          }
+          openDrawer();
         }
       });
       btns.insertBefore(menuBtn, btns.firstChild);
@@ -169,9 +160,6 @@
   function initMobile() {
     if (_mobileInited) return;
 
-    // Inject ≡ button in ALL title bars (mobile opens drawer, desktop opens start menu)
-    injectTitleBarMenuBtns();
-
     if (!isMobile()) {
       if (!_observer) {
         _observer = new MutationObserver(function() {
@@ -188,6 +176,7 @@
     updateViewport();
     fixWindowStyles();
     disableAnimations();
+    injectTitleBarMenuBtns();
 
     var fab = document.getElementById('mobileFab');
     if (fab) {
@@ -238,10 +227,10 @@
     updateFab: updateFab,
   };
 
-  registerApp('links', 'Links', '<img src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png" alt="" width="22" height="22">');
-  registerApp('soundcloud', 'SoundCloud', '<img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="22" height="22">');
-  registerApp('feed', 'Di\u00e1rio', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="22" height="22">');
-  registerApp('games', 'Jogos', '<img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="22" height="22">');
-  registerApp('terminal', 'Terminal', '<img src="system/assets/icons/tango2kde/16x16/apps/terminal.png" alt="" width="22" height="22">');
-  registerApp('randomgif', 'Galeria', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="22" height="22">');
+  registerApp('links', 'Links', '<img src="system/assets/icons/tango2kde/22x22/apps/redhat-web-browser.png" alt="" width="22" height="22">');
+  registerApp('soundcloud', 'SoundCloud', '<img src="system/assets/icons/tango2kde/22x22/apps/kaudiocreator.png" alt="" width="22" height="22">');
+  registerApp('feed', 'Di\u00e1rio', '<img src="system/assets/icons/tango2kde/22x22/apps/gwenview.png" alt="" width="22" height="22">');
+  registerApp('games', 'Jogos', '<img src="system/assets/icons/tango2kde/22x22/categories/applications-games.png" alt="" width="22" height="22">');
+  registerApp('terminal', 'Terminal', '<img src="system/assets/icons/tango2kde/22x22/apps/terminal.png" alt="" width="22" height="22">');
+  registerApp('randomgif', 'Galeria', '<img src="system/assets/icons/tango2kde/22x22/apps/gwenview.png" alt="" width="22" height="22">');
 })(window);

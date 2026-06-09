@@ -47,6 +47,7 @@ body.mobile-mode .title-bar {
 
 body.mobile-mode .title-bar-text {
     font-size: 15px;
+    gap: 12px;
 }
 
 body.mobile-mode .title-bar-text .icon img {

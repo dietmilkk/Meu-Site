@@ -2,6 +2,8 @@
   'use strict';
 
   var _appList = [];
+  var _mobileInited = false;
+  var _observer = null;
 
   function isMobile() {
     return document.body.classList.contains('mobile-mode');
@@ -9,6 +11,24 @@
 
   function registerApp(appId, label, icon) {
     _appList.push({ id: appId, label: label, icon: icon });
+  }
+
+  function anyWindowVisible() {
+    var wins = document.querySelectorAll('.window');
+    for (var i = 0; i < wins.length; i++) {
+      if (wins[i].style.display !== 'none') return true;
+    }
+    return false;
+  }
+
+  function updateFab() {
+    var fab = document.getElementById('mobileFab');
+    if (!fab) return;
+    if (isMobile() && !anyWindowVisible()) {
+      fab.style.display = '';
+    } else {
+      fab.style.display = 'none';
+    }
   }
 
   function openDrawer() {
@@ -68,7 +88,7 @@
       var menuBtn = document.createElement('span');
       menuBtn.className = 'win-btn';
       menuBtn.setAttribute('data-wbtn', 'menu');
-      menuBtn.textContent = '≡';
+      menuBtn.textContent = '\u2261';
       menuBtn.style.fontSize = '20px';
       menuBtn.style.fontWeight = '700';
       menuBtn.style.lineHeight = '1';
@@ -119,17 +139,27 @@
   }
 
   function initMobile() {
-    if (!isMobile()) return;
+    if (_mobileInited) return;
+    if (!isMobile()) {
+      if (!_observer) {
+        _observer = new MutationObserver(function() {
+          if (isMobile()) initMobile();
+        });
+        _observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      }
+      return;
+    }
+
+    _mobileInited = true;
+    if (_observer) { _observer.disconnect(); _observer = null; }
 
     updateViewport();
     fixWindowStyles();
     disableAnimations();
     injectTitleBarMenuBtns();
 
-    // FAB button toggles the drawer
     var fab = document.getElementById('mobileFab');
     if (fab) {
-      fab.style.removeProperty('display');
       fab.addEventListener('click', function(e) {
         e.stopPropagation();
         var drawer = document.getElementById('mobileAppDrawer');
@@ -155,7 +185,11 @@
       }
     });
 
-    // Auto-open the drawer after boot screen clears
+    // Watch window show/hide to toggle FAB
+    document.addEventListener('click', function() { setTimeout(updateFab, 50); });
+    document.addEventListener('touchstart', function() { setTimeout(updateFab, 50); });
+
+    updateFab();
     setTimeout(function() { openDrawer(); }, 600);
   }
 
@@ -170,11 +204,12 @@
     openDrawer: openDrawer,
     closeDrawer: closeDrawer,
     isMobile: isMobile,
+    updateFab: updateFab,
   };
 
   registerApp('links', 'Links', '<img src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png" alt="" width="22" height="22">');
   registerApp('soundcloud', 'SoundCloud', '<img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="22" height="22">');
-  registerApp('feed', 'Diário', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="22" height="22">');
+  registerApp('feed', 'Di\u00e1rio', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="22" height="22">');
   registerApp('games', 'Jogos', '<img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="22" height="22">');
   registerApp('terminal', 'Terminal', '<img src="system/assets/icons/tango2kde/16x16/apps/terminal.png" alt="" width="22" height="22">');
   registerApp('randomgif', 'Galeria', '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="22" height="22">');

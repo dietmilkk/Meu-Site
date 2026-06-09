@@ -955,6 +955,7 @@
       };
       win.removeEventListener("animationend", onOpenEnd);
       win.addEventListener("animationend", onOpenEnd);
+      if (global.MobileMenu && global.MobileMenu.updateFab) global.MobileMenu.updateFab();
     }
 
     function hide() {
@@ -967,6 +968,7 @@
         opts._onShowFired = false;
         if (controls) controls.clearSavedRect();
         if (opts.onHide) opts.onHide(this);
+        if (global.MobileMenu && global.MobileMenu.updateFab) global.MobileMenu.updateFab();
         return;
       }
       if (tbEntry) tbEntry.classList.remove("active");
@@ -995,6 +997,7 @@
             opts._onShowFired = false;
             if (controls) controls.clearSavedRect();
             if (opts.onHide) opts.onHide(this);
+            if (global.MobileMenu && global.MobileMenu.updateFab) global.MobileMenu.updateFab();
           }.bind(this);
           win.addEventListener("transitionend", onCloseEnd);
           setTimeout(

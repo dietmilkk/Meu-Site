@@ -517,14 +517,22 @@
     padding: 12px 14px;
     z-index: 99999;
     white-space: nowrap;
-    width: 130px;
+    width: auto;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.35);
+    align-items: flex-start;
+    gap: 0;
 }
 .sc-now-playing-menu.visible {
-    display: block;
+    display: flex;
 }
 .sc-now-playing-menu .sc-np-art {
-    display: none;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    margin-right: 10px;
 }
 .sc-now-playing-menu .sc-np-body {
     display: flex;
@@ -630,4 +638,9 @@
     .taskbar-tray {
         gap: 1px;
     }
+}
+
+/* Hide mobile-only title-bar menu button on desktop */
+body:not(.mobile-mode) .win-btn[data-wbtn="menu"] {
+    display: none;
 }

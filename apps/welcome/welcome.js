@@ -62,7 +62,13 @@
     if (savedLang === 'en') {
       document.getElementById('welcomeLangEn').classList.add('active');
       document.getElementById('welcomeLangPt').classList.remove('active');
+      document.getElementById('welcomeLangZh').classList.remove('active');
       setLanguage('en');
+    } else if (savedLang === 'zh') {
+      document.getElementById('welcomeLangZh').classList.add('active');
+      document.getElementById('welcomeLangPt').classList.remove('active');
+      document.getElementById('welcomeLangEn').classList.remove('active');
+      setLanguage('zh');
     } else {
       setLanguage('pt');
     }
@@ -83,13 +89,22 @@
   document.getElementById('welcomeLangPt').addEventListener('click', function() {
     document.getElementById('welcomeLangPt').classList.add('active');
     document.getElementById('welcomeLangEn').classList.remove('active');
+    document.getElementById('welcomeLangZh').classList.remove('active');
     setLanguage('pt');
     if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
   });
   document.getElementById('welcomeLangEn').addEventListener('click', function() {
     document.getElementById('welcomeLangEn').classList.add('active');
     document.getElementById('welcomeLangPt').classList.remove('active');
+    document.getElementById('welcomeLangZh').classList.remove('active');
     setLanguage('en');
+    if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
+  });
+  document.getElementById('welcomeLangZh').addEventListener('click', function() {
+    document.getElementById('welcomeLangZh').classList.add('active');
+    document.getElementById('welcomeLangPt').classList.remove('active');
+    document.getElementById('welcomeLangEn').classList.remove('active');
+    setLanguage('zh');
     if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
   });
 

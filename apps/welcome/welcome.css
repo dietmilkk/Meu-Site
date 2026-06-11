@@ -100,6 +100,13 @@
     color: #fff;
 }
 
+.welcome-translation-note {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
+}
+
 .welcome-footer {
     display: flex;
     align-items: center;

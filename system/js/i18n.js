@@ -67,6 +67,7 @@
       'links.scDesc': 'Minha página no SoundCloud com playlists e músicas.',
       'links.discordDesc': 'Me adiciona no Discord! (clique para copiar)',
       'links.biliDesc': 'Meu perfil no Bilibili chinês — é estranho e divertido, não entendo nada, mas é bem intrigante, e honestamente mais divertido que o YouTube, parece um conteúdo mais genuíno.',
+      'links.wakatimeDesc': 'Minhas estatísticas de código — veja o que ando codando.',
 
       /* Games */
       'games.title': 'Jogos',
@@ -319,6 +320,7 @@
       'links.scDesc': 'My SoundCloud page with playlists and music.',
       'links.discordDesc': 'Add me on Discord! (click to copy)',
       'links.biliDesc': 'My profile on Chinese Bilibili — it\'s weird and fun, I don\'t understand anything, but it\'s intriguing, and honestly more fun than YouTube, the content feels more genuine.',
+      'links.wakatimeDesc': 'My coding statistics — see what I\'ve been coding.',
 
       /* Games */
       'games.title': 'Games',

@@ -229,7 +229,7 @@
 
   registerApp('links', 'Links', '<img src="system/assets/icons/tango2kde/22x22/apps/redhat-web-browser.png" alt="" width="22" height="22">');
   registerApp('soundcloud', 'SoundCloud', '<img src="system/assets/icons/tango2kde/22x22/apps/kaudiocreator.png" alt="" width="22" height="22">');
-  registerApp('feed', 'Di\u00e1rio', '<img src="system/assets/icons/tango2kde/22x22/apps/gwenview.png" alt="" width="22" height="22">');
+  registerApp('feed', 'Di\u00e1rio', '<img src="system/assets/icons/tango2kde/22x22/apps/text-editor.png" alt="" width="22" height="22">');
   registerApp('games', 'Jogos', '<img src="system/assets/icons/tango2kde/22x22/categories/applications-games.png" alt="" width="22" height="22">');
   registerApp('terminal', 'Terminal', '<img src="system/assets/icons/tango2kde/22x22/apps/terminal.png" alt="" width="22" height="22">');
   registerApp('randomgif', 'Galeria', '<img src="system/assets/icons/tango2kde/22x22/apps/gwenview.png" alt="" width="22" height="22">');

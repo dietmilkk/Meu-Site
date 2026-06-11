@@ -21,21 +21,8 @@
   var _diary = [];
 
   function _loadDiary(callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "apps/feed/diary.json", true);
-    xhr.onload = function () {
-      try {
-        _diary = JSON.parse(xhr.responseText);
-      } catch (e) {
-        _diary = [];
-      }
-      if (callback) callback();
-    };
-    xhr.onerror = function () {
-      _diary = [];
-      if (callback) callback();
-    };
-    xhr.send();
+    _diary = [];
+    if (callback) callback();
   }
 
   function _render() {
@@ -93,7 +80,7 @@
     minW: 480,
     minH: 520,
     taskbarIcon:
-      '<img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="14" height="14" style="flex-shrink:0;">',
+      '<img src="system/assets/icons/tango2kde/16x16/apps/text-editor.png" alt="" width="14" height="14" style="flex-shrink:0;">',
     taskbarLabel: __('feed.title'),
     taskbarAction: 'feed',
     appId: 'feed',

@@ -468,13 +468,12 @@
     w.bind(SC.Widget.Events.FINISH, function () {
       if (pl.id !== activePlaylistId) return;
       applyVolumeToWidget(pl.id);
-      if (shuffle) {
-        skipTrack(Math.floor(Math.random() * totalTracks));
-      } else {
+      if (!shuffle) {
         currentTrackIndex = (currentTrackIndex + 1) % totalTracks;
         currentFullSound = null;
         displayTrack();
       }
+      // When shuffle is on the widget auto-advances; PLAY event syncs the UI
     });
   }
 

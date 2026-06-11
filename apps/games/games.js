@@ -744,14 +744,16 @@
       var k = swipeDir === 'up' ? 'ArrowUp' : swipeDir === 'down' ? 'ArrowDown' : swipeDir === 'left' ? 'ArrowLeft' : 'ArrowRight';
       _snakeTouchSend(k);
     });
-    var _snakeDpadWrap = document.createElement('div');
-    _snakeDpadWrap.className = 'game-dpad';
-    _snakeDpadWrap.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:20;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:2px;pointer-events:none;';
-    addDPad(_snakeDpadWrap, function (dir) {
-      var k = dir === 'up' ? 'ArrowUp' : dir === 'down' ? 'ArrowDown' : dir === 'left' ? 'ArrowLeft' : 'ArrowRight';
-      _snakeTouchSend(k);
-    });
-    boardWrap.appendChild(_snakeDpadWrap);
+    if (document.body.classList.contains('mobile-mode')) {
+      var _snakeDpadWrap = document.createElement('div');
+      _snakeDpadWrap.className = 'game-dpad';
+      _snakeDpadWrap.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:20;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:2px;pointer-events:none;';
+      addDPad(_snakeDpadWrap, function (dir) {
+        var k = dir === 'up' ? 'ArrowUp' : dir === 'down' ? 'ArrowDown' : dir === 'left' ? 'ArrowLeft' : 'ArrowRight';
+        _snakeTouchSend(k);
+      });
+      boardWrap.appendChild(_snakeDpadWrap);
+    }
 
     c.appendChild(boardWrap);
 
@@ -783,7 +785,7 @@
       clearInterval(speedCheck);
       document.removeEventListener("keydown", keyHandler);
       removeSwipe();
-      _snakeDpadWrap.remove();
+      if (_snakeDpadWrap) _snakeDpadWrap.remove();
     };
   }
 
@@ -1492,14 +1494,16 @@
     touchCleanupFns.push(addSwipeSupport(boardWrap, function (dir) {
       _mazeTouchSend(dir === 'up' ? 'w' : dir === 'down' ? 's' : dir === 'left' ? 'a' : 'd');
     }));
-    var dpadWrap = document.createElement('div');
-    dpadWrap.className = 'game-dpad';
-    dpadWrap.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:20;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:2px;pointer-events:none;';
-    addDPad(dpadWrap, function (dir) {
-      _mazeTouchSend(dir === 'up' ? 'w' : dir === 'down' ? 's' : dir === 'left' ? 'a' : 'd');
-    });
-    boardWrap.appendChild(dpadWrap);
-    touchCleanupFns.push(function () { dpadWrap.remove(); });
+    if (document.body.classList.contains('mobile-mode')) {
+      var dpadWrap = document.createElement('div');
+      dpadWrap.className = 'game-dpad';
+      dpadWrap.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:20;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:2px;pointer-events:none;';
+      addDPad(dpadWrap, function (dir) {
+        _mazeTouchSend(dir === 'up' ? 'w' : dir === 'down' ? 's' : dir === 'left' ? 'a' : 'd');
+      });
+      boardWrap.appendChild(dpadWrap);
+      touchCleanupFns.push(function () { dpadWrap.remove(); });
+    }
 
     c.appendChild(boardWrap);
 

@@ -22,6 +22,7 @@
   var elBtnNext = $("scBtnNext");
   var elBtnPrev = $("scBtnPrev");
   var elBtnShuffle = $("scBtnShuffle");
+  var elBtnHideArt = $("scBtnHideArt");
   var elProgressFill = $("scProgressFill");
   var elProgressThumb = $("scProgressThumb");
   var elProgressBar = $("scProgressBar");
@@ -1169,6 +1170,7 @@
   wirePress(elBtnNext);
   wirePress(elBtnPrev);
   if (elBtnShuffle) wirePress(elBtnShuffle);
+  if (elBtnHideArt) wirePress(elBtnHideArt);
 
   /* ===== Buttons ===== */
   elBtnPlay.addEventListener("click", function () {
@@ -1199,6 +1201,17 @@
       wCall("toggleShuffle");
       if (typeof playToggleOnSnd === 'function') {
         shuffle ? playToggleOnSnd() : playToggleOffSnd();
+      }
+    });
+  }
+
+  if (elBtnHideArt) {
+    elBtnHideArt.addEventListener("click", function () {
+      var scPlayer = document.getElementById("scPlayer");
+      var hidden = scPlayer.classList.toggle("sc-hide-artwork");
+      elBtnHideArt.classList.toggle("sc-btn-hideart-active", hidden);
+      if (typeof playToggleOnSnd === 'function') {
+        hidden ? playToggleOnSnd() : playToggleOffSnd();
       }
     });
   }

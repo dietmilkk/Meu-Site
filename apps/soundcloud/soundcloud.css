@@ -306,6 +306,11 @@
     background: #b0aca4 !important;
 }
 
+.sc-btn-hideart-active {
+    border-color: var(--btn-bd-active) !important;
+    background: #b0aca4 !important;
+}
+
 /* Force pressed look on ANY sc-btn when physically clicked (overrides active classes) */
 .sc-btn.sc-pressed,
 .sc-btn-play.sc-pressed,
@@ -556,4 +561,27 @@ body.is-fullscreen .sc-player.sc-wide {
 .sc-mobile-playlist-btn-active {
     border-color: var(--btn-bd-active) !important;
     background: var(--btn-bg-active) !important;
+}
+
+/* ---- Hide artwork ------------------------------------------- */
+.sc-hide-artwork .sc-artwork {
+    display: none;
+}
+
+.sc-hide-artwork .sc-playlist-bar {
+    width: 100% !important;
+}
+
+.sc-hide-artwork .sc-track-name {
+    font-size: 22px;
+}
+
+.sc-player.sc-wide.sc-hide-artwork .sc-artwork {
+    display: none;
+}
+
+.sc-player.sc-wide.sc-hide-artwork .sc-info {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: center;
 }

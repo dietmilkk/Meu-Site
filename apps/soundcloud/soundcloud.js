@@ -298,6 +298,13 @@
         bar.appendChild(btn);
       })(playlists[i]);
     }
+
+    var addBtn = document.createElement("button");
+    addBtn.className = "sc-mobile-playlist-btn sc-mobile-playlist-add";
+    addBtn.innerHTML = '+';
+    addBtn.title = __('soundcloud.addPlaylist');
+    addBtn.addEventListener("click", showAddDialog);
+    bar.appendChild(addBtn);
   }
 
   function showAddDialog() {

@@ -543,8 +543,8 @@ body.is-fullscreen .sc-player.sc-wide {
 
 .sc-mobile-playlist-btn {
     flex-shrink: 0;
-    padding: 4px 12px;
-    font-size: 14px;
+    padding: 2px 10px;
+    font-size: 13px;
     font-family: var(--ff-ui);
     background: var(--btn-bg);
     border: 2px solid;
@@ -554,13 +554,20 @@ body.is-fullscreen .sc-player.sc-wide {
     white-space: nowrap;
     outline: none;
     touch-action: manipulation;
-    min-height: 38px;
+    min-height: 28px;
 }
 
 .sc-mobile-playlist-btn:active,
 .sc-mobile-playlist-btn-active {
     border-color: var(--btn-bd-active) !important;
     background: var(--btn-bg-active) !important;
+}
+
+.sc-mobile-playlist-add {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 8px;
 }
 
 /* ---- Hide artwork ------------------------------------------- */

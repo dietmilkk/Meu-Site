@@ -281,7 +281,7 @@
     if (!bar) return;
     bar.innerHTML = "";
     var isMob = document.body.classList.contains("mobile-mode");
-    bar.style.display = isMob ? "" : "none";
+    bar.style.display = isMob ? "flex" : "none";
     if (!isMob) return;
 
     for (var i = 0; i < playlists.length; i++) {
@@ -1461,4 +1461,15 @@
 
   renderPlaylists();
   _setupNowPlaying();
+
+  /* Watch for mobile-mode toggle and re-render mobile playlists */
+  var _scPrevMob = document.body.classList.contains("mobile-mode");
+  var _scMobObserver = new MutationObserver(function () {
+    var now = document.body.classList.contains("mobile-mode");
+    if (now !== _scPrevMob) {
+      _scPrevMob = now;
+      renderMobilePlaylists();
+    }
+  });
+  _scMobObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 })();

@@ -1060,7 +1060,7 @@
   document.addEventListener('click', function(e) {
     if (e.button !== 0) return;
     if (document.body.classList.contains('mobile-mode')) return;
-    var t = e.target.closest(_clickSndSelectors + ', .desk-icon, .start-menu-item, .settings-category, .games-block, .sc-playlist-item, .sc-playlist-add, .sc-playlist-remove, .sc-np-btn, #scBtnShuffle, #scBtnPrev, #scBtnNext, #scBtnPlay, #welcomeLangPt, #welcomeLangEn, #welcomeStartBtn');
+    var t = e.target.closest(_clickSndSelectors + ', .desk-icon, .start-menu-item, .settings-category, .games-block, .sc-playlist-item, .sc-playlist-add, .sc-playlist-remove, .sc-np-btn, #scBtnShuffle, #scBtnHideArt, #scBtnPrev, #scBtnNext, #scBtnPlay, #welcomeLangPt, #welcomeLangEn, #welcomeLangZh, #welcomeStartBtn');
     if (t) playClickSnd();
   });
 

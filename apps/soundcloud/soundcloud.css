@@ -518,3 +518,42 @@ body.is-fullscreen .sc-player.sc-wide {
 }
 
 /* Taskbar popup menu (removed — menu now lives in tray widget) */
+
+/* ---- Mobile playlist bar ------------------------------------- */
+.sc-mobile-playlist-bar {
+    display: none;
+    gap: 4px;
+    padding: 4px 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-shrink: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sc-mobile-playlist-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.sc-mobile-playlist-btn {
+    flex-shrink: 0;
+    padding: 4px 12px;
+    font-size: 14px;
+    font-family: var(--ff-ui);
+    background: var(--btn-bg);
+    border: 2px solid;
+    border-color: var(--btn-bd);
+    color: #000;
+    cursor: pointer;
+    white-space: nowrap;
+    outline: none;
+    touch-action: manipulation;
+    min-height: 38px;
+}
+
+.sc-mobile-playlist-btn:active,
+.sc-mobile-playlist-btn-active {
+    border-color: var(--btn-bd-active) !important;
+    background: var(--btn-bg-active) !important;
+}

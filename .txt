@@ -1,0 +1,3 @@
+no cel, no app do soundcloud, as playlists deve ser em um sistema de "botoes" em baixo dos controles de musica e sao alinhados um ao lado da outra e é arrastavel para mostrar todas das lista de playlists, so na versao de cel
+
+faça com que seja possivel ocultar a capa da musica com um pequeno botao mantendo a mesma aparecencia do botao de deixar em ordem aleatoria ao lado dele, e quando estiver ocultado a capa, o titulo da musica aumenta, o sistema de musica em ordem aleatoria nao esta funcionando e o botao de passar as musicas ao serem clicados devem voltar assim que nao estiver mais sendo segurado

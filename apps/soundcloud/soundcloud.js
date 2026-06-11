@@ -271,6 +271,32 @@
       '<svg viewBox="0 0 10 10" width="10" height="10"><line x1="5" y1="1" x2="5" y2="9" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.5"/></svg>';
     addBtn.addEventListener("click", showAddDialog);
     elPlaylistItems.appendChild(addBtn);
+
+    renderMobilePlaylists();
+  }
+
+  function renderMobilePlaylists() {
+    var bar = document.querySelector(".sc-mobile-playlist-bar");
+    if (!bar) return;
+    bar.innerHTML = "";
+    var isMob = document.body.classList.contains("mobile-mode");
+    bar.style.display = isMob ? "" : "none";
+    if (!isMob) return;
+
+    for (var i = 0; i < playlists.length; i++) {
+      (function (pl) {
+        var btn = document.createElement("button");
+        btn.className =
+          "sc-mobile-playlist-btn" +
+          (pl.id === activePlaylistId ? " sc-mobile-playlist-btn-active" : "");
+        btn.textContent = pl.label;
+        btn.addEventListener("click", function () {
+          if (typeof playClickSnd === 'function') playClickSnd();
+          switchPlaylist(pl.id);
+        });
+        bar.appendChild(btn);
+      })(playlists[i]);
+    }
   }
 
   function showAddDialog() {
@@ -1414,6 +1440,14 @@
 
   /* ===== Init ===== */
   elArtImg.style.display = "none";
+
+  var elMobilePlBar = document.createElement("div");
+  elMobilePlBar.className = "sc-mobile-playlist-bar";
+  var controlsRow = document.querySelector(".sc-controls-row");
+  if (controlsRow && controlsRow.parentNode) {
+    controlsRow.parentNode.insertBefore(elMobilePlBar, controlsRow.nextSibling);
+  }
+
   renderPlaylists();
   _setupNowPlaying();
 })();

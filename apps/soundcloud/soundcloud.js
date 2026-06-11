@@ -469,12 +469,13 @@
     w.bind(SC.Widget.Events.FINISH, function () {
       if (pl.id !== activePlaylistId) return;
       applyVolumeToWidget(pl.id);
-      if (!shuffle) {
+      if (shuffle) {
+        skipTrack(Math.floor(Math.random() * totalTracks));
+      } else {
         currentTrackIndex = (currentTrackIndex + 1) % totalTracks;
         currentFullSound = null;
         displayTrack();
       }
-      // When shuffle is on the widget auto-advances; PLAY event syncs the UI
     });
   }
 
@@ -755,7 +756,9 @@
     w.bind(SC.Widget.Events.FINISH, function () {
       if (pl.id !== activePlaylistId) return;
       syncActiveVolume();
-      if (!shuffle) {
+      if (shuffle) {
+        skipTrack(Math.floor(Math.random() * totalTracks));
+      } else {
         currentTrackIndex = (currentTrackIndex + 1) % totalTracks;
         currentFullSound = null;
         displayTrack();
@@ -929,8 +932,7 @@
   function nextTrack() {
     if (totalTracks === 0) return;
     if (shuffle) {
-      currentFullSound = null;
-      wCall("next");
+      skipTrack(Math.floor(Math.random() * totalTracks));
       return;
     }
     currentTrackIndex = (currentTrackIndex + 1) % totalTracks;
@@ -942,8 +944,7 @@
   function prevTrack() {
     if (totalTracks === 0) return;
     if (shuffle) {
-      currentFullSound = null;
-      wCall("prev");
+      skipTrack(Math.floor(Math.random() * totalTracks));
       return;
     }
     currentTrackIndex = (currentTrackIndex - 1 + totalTracks) % totalTracks;
@@ -1197,8 +1198,6 @@
     elBtnShuffle.addEventListener("click", function () {
       shuffle = !shuffle;
       elBtnShuffle.classList.toggle("sc-btn-shuffle-active", shuffle);
-      detectMethods(widgets[activePlaylistId]);
-      wCall("toggleShuffle");
       if (typeof playToggleOnSnd === 'function') {
         shuffle ? playToggleOnSnd() : playToggleOffSnd();
       }

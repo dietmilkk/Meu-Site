@@ -25,6 +25,7 @@
       'desktop.gallery': 'Coleção de imgs',
       'desktop.links': 'Links',
       'desktop.settings': 'Config',
+      'desktop.dopamina': 'Dopamina',
 
       /* Start menu */
       'start.label': 'Start',
@@ -34,6 +35,7 @@
       'start.gallery': 'Coleção de imgs',
       'start.links': 'Links',
       'start.settings': 'Configurações',
+      'start.dopamina': 'Dopamina',
       'start.soundcloud': 'SoundCloud',
       'start.system': 'Sistema',
       'start.terminal': 'Terminal',
@@ -201,6 +203,7 @@
       'desktop.chat': 'Bate-papo',
       'desktop.randomgif': 'GIF Aleatório',
       'desktop.feed': 'Diário',
+      'dopamina.title': 'Dopamina',
       'gallery.title': 'Coleção de imgs',
       'gallery.info': 'SPACE para sair | ← → para navegar (',
       'gallery.infoEnd': ')',
@@ -278,6 +281,7 @@
       'desktop.soundcloud': 'SoundCloud',
       'desktop.gallery': 'Image Collection',
       'desktop.links': 'Links',
+      'desktop.dopamina': 'Dopamina',
       'desktop.settings': 'Settings',
 
       /* Start menu */
@@ -288,6 +292,7 @@
       'start.gallery': 'Image Collection',
       'start.links': 'Links',
       'start.settings': 'Settings',
+      'start.dopamina': 'Dopamina',
       'start.soundcloud': 'SoundCloud',
       'start.system': 'System',
       'start.terminal': 'Terminal',
@@ -455,6 +460,7 @@
       'desktop.chat': 'Chat',
       'desktop.randomgif': 'Random GIF',
       'desktop.feed': 'Diary',
+      'dopamina.title': 'Dopamina',
       'gallery.title': 'Image Collection',
       'gallery.info': 'SPACE to exit | ← → to navigate (',
       'gallery.infoEnd': ')',
@@ -532,6 +538,7 @@
       'desktop.soundcloud': 'SoundCloud',
       'desktop.gallery': '图片收藏',
       'desktop.links': '链接',
+      'desktop.dopamina': '多巴胺',
       'desktop.settings': '设置',
 
       /* Start menu */
@@ -542,6 +549,7 @@
       'start.gallery': '图片收藏',
       'start.links': '链接',
       'start.settings': '设置',
+      'start.dopamina': '多巴胺',
       'start.soundcloud': 'SoundCloud',
       'start.system': '系统',
       'start.terminal': '终端',
@@ -709,6 +717,7 @@
       'desktop.chat': '聊天',
       'desktop.randomgif': '随机 GIF',
       'desktop.feed': '日记',
+      'dopamina.title': '多巴胺',
       'gallery.title': '图片收藏',
       'gallery.info': '空格退出 | ← → 导航（',
       'gallery.infoEnd': '）',

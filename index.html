@@ -362,6 +362,20 @@
                     <div class="window-body" id="gamesBody"></div>
                 </div>
 
+                <!-- ===== DOPAMINA WINDOW ===== -->
+                <div class="window" id="dopaminaWindow" style="display: none">
+                    <div class="title-bar" id="dopaminaDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img src="system/assets/icons/tango2kde/16x16/apps/energy.png" alt="" width="14" height="14" />
+                            </span>
+                            <span data-i18n="dopamina.title">Dopamina</span>
+                        </span>
+                        <script>document.write(createWindowButtons("dopamina"));</script>
+                    </div>
+                    <div class="window-body" id="dopaminaBody"></div>
+                </div>
+
                 <!-- ===== SETTINGS WINDOW ===== -->
                 <div class="window" id="settingsWindow" style="display: none">
                     <div class="title-bar" id="settingsDragHandle">
@@ -957,6 +971,15 @@
                                 >Coleção de imgs</span
                             >
                         </div>
+                        <div class="start-menu-item" data-action="dopamina">
+                            <img
+                                src="system/assets/icons/tango2kde/16x16/apps/energy.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            />
+                            <span data-i18n="start.dopamina">Dopamina</span>
+                        </div>
                         <div class="start-menu-item" data-action="links">
                             <img
                                 src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png"
@@ -1078,6 +1101,7 @@
         <script src="apps/games/games.js"></script>
 
         <script src="apps/soundcloud/soundcloud.js"></script>
+        <script src="apps/dopamina/dopamina.js"></script>
         <!-- <script src="apps/feed/feed.js"></script> -->
 
         <script src="system/js/main.js"></script>

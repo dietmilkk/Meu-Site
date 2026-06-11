@@ -801,7 +801,7 @@
        ADD / REMOVE DESKTOP SHORTCUT
        ================================================================ */
 
-  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','links','settings'];
+  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','links','settings','dopamina'];
 
   var _deskIconMap = {
     terminal: { icon: 'system/assets/icons/tango2kde/48x48/apps/terminal.png', labelKey: 'desktop.terminal' },
@@ -813,6 +813,7 @@
     links: { icon: 'system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png', labelKey: 'desktop.links' },
     settings: { icon: 'system/assets/icons/tango2kde/48x48/categories/redhat-system_tools.png', labelKey: 'desktop.settings' },
     gallery: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.gallery' },
+    dopamina: { icon: 'system/assets/icons/tango2kde/48x48/apps/energy.png', labelKey: 'desktop.dopamina' },
   };
 
   _ensureDynamicIcons();

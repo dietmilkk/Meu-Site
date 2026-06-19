@@ -23,9 +23,9 @@
       'desktop.games': 'Jogos',
       'desktop.soundcloud': 'SoundCloud',
       'desktop.gallery': 'Coleção de imgs',
+      'desktop.pins': 'Pins',
       'desktop.links': 'Links',
       'desktop.settings': 'Config',
-      'desktop.dopamina': 'Dopamina',
 
       /* Start menu */
       'start.label': 'Start',
@@ -35,7 +35,6 @@
       'start.gallery': 'Coleção de imgs',
       'start.links': 'Links',
       'start.settings': 'Configurações',
-      'start.dopamina': 'Dopamina',
       'start.soundcloud': 'SoundCloud',
       'start.system': 'Sistema',
       'start.terminal': 'Terminal',
@@ -66,11 +65,12 @@
 
       /* Links */
       'links.title': 'Links',
-      'links.desc': 'Plataformas onde estou ativo — me segue aí :)',
+      'links.desc': 'Plataformas onde estou ativo :)',
       'links.scDesc': 'Minha página no SoundCloud com playlists e músicas.',
       'links.discordDesc': 'Me adiciona no Discord! (clique para copiar)',
-      'links.biliDesc': 'Meu perfil no Bilibili chinês — é estranho e divertido, não entendo nada, mas é bem intrigante, e honestamente mais divertido que o YouTube, parece um conteúdo mais genuíno.',
-      'links.wakatimeDesc': 'Minhas estatísticas de código — veja o que ando codando.',
+      'links.biliDesc': 'Meu perfil no Bilibili chinês — é bem diferente e divertido, não entendo nada, mas é bem intrigante, e honestamente mais divertido que o YouTube, e mais LGBT do que o proprio yt kkk, amo',
+      'links.wakatimeDesc': 'Minhas estatísticas de código.',
+
 
       /* Games */
       'games.title': 'Jogos',
@@ -140,6 +140,10 @@
       'settings.shortcutClose': 'Fechar janela ativa',
       'settings.shortcutStart': 'Abrir menu iniciar',
       'settings.shortcutFullscreen': 'Alternar tela cheia',
+      'settings.shortcutCrt': 'Alternar modo CRT',
+      'settings.themeColor': 'Cor do Tema',
+      'settings.themeColorDesc': 'Escolha a cor principal do sistema.',
+      'settings.reset': 'Resetar',
       'settings.wallpaper': 'Wallpaper',
       'settings.wallpaperDesc': 'Escolha uma imagem do seu computador para usar como papel de parede.',
       'settings.noWallpaper': 'Nenhum wallpaper personalizado',
@@ -202,8 +206,7 @@
       'start.feed': 'Diário',
       'desktop.chat': 'Bate-papo',
       'desktop.randomgif': 'GIF Aleatório',
-      'desktop.feed': 'Diário',
-      'dopamina.title': 'Dopamina',
+
       'gallery.title': 'Coleção de imgs',
       'gallery.info': 'SPACE para sair | ← → para navegar (',
       'gallery.infoEnd': ')',
@@ -280,8 +283,8 @@
       'desktop.games': 'Games',
       'desktop.soundcloud': 'SoundCloud',
       'desktop.gallery': 'Image Collection',
+      'desktop.pins': 'Pins',
       'desktop.links': 'Links',
-      'desktop.dopamina': 'Dopamina',
       'desktop.settings': 'Settings',
 
       /* Start menu */
@@ -292,7 +295,6 @@
       'start.gallery': 'Image Collection',
       'start.links': 'Links',
       'start.settings': 'Settings',
-      'start.dopamina': 'Dopamina',
       'start.soundcloud': 'SoundCloud',
       'start.system': 'System',
       'start.terminal': 'Terminal',
@@ -323,11 +325,12 @@
 
       /* Links */
       'links.title': 'Links',
-      'links.desc': 'Platforms where I\'m active — follow me :)',
+      'links.desc': 'Platforms where I\'m active :)',
       'links.scDesc': 'My SoundCloud page with playlists and music.',
       'links.discordDesc': 'Add me on Discord! (click to copy)',
-      'links.biliDesc': 'My profile on Chinese Bilibili — it\'s weird and fun, I don\'t understand anything, but it\'s intriguing, and honestly more fun than YouTube, the content feels more genuine.',
-      'links.wakatimeDesc': 'My coding statistics — see what I\'ve been coding.',
+      'links.biliDesc': 'My profile on Chinese Bilibili — it\'s very different and fun, I don\'t understand anything, but it\'s intriguing, and honestly more fun than YouTube, and more LGBT than YouTube itself kkk, love it',
+      'links.wakatimeDesc': 'My coding statistics.',
+
 
       /* Games */
       'games.title': 'Games',
@@ -397,6 +400,10 @@
       'settings.shortcutClose': 'Close active window',
       'settings.shortcutStart': 'Open start menu',
       'settings.shortcutFullscreen': 'Toggle fullscreen',
+      'settings.shortcutCrt': 'Toggle CRT mode',
+      'settings.themeColor': 'Theme Color',
+      'settings.themeColorDesc': 'Choose the main system color.',
+      'settings.reset': 'Reset',
       'settings.wallpaper': 'Wallpaper',
       'settings.wallpaperDesc': 'Choose an image from your computer to use as wallpaper.',
       'settings.noWallpaper': 'No custom wallpaper',
@@ -460,7 +467,6 @@
       'desktop.chat': 'Chat',
       'desktop.randomgif': 'Random GIF',
       'desktop.feed': 'Diary',
-      'dopamina.title': 'Dopamina',
       'gallery.title': 'Image Collection',
       'gallery.info': 'SPACE to exit | ← → to navigate (',
       'gallery.infoEnd': ')',
@@ -537,8 +543,8 @@
       'desktop.games': '游戏',
       'desktop.soundcloud': 'SoundCloud',
       'desktop.gallery': '图片收藏',
+      'desktop.pins': '图钉',
       'desktop.links': '链接',
-      'desktop.dopamina': '多巴胺',
       'desktop.settings': '设置',
 
       /* Start menu */
@@ -549,7 +555,6 @@
       'start.gallery': '图片收藏',
       'start.links': '链接',
       'start.settings': '设置',
-      'start.dopamina': '多巴胺',
       'start.soundcloud': 'SoundCloud',
       'start.system': '系统',
       'start.terminal': '终端',
@@ -580,11 +585,11 @@
 
       /* Links */
       'links.title': '链接',
-      'links.desc': '我的活跃平台 — 关注我吧 :)',
+      'links.desc': '我的活跃平台 :)',
       'links.scDesc': '我的 SoundCloud 页面，包含播放列表和音乐。',
       'links.discordDesc': '在 Discord 上加我！（点击复制）',
-      'links.biliDesc': '我在中国 Bilibili 上的主页 — 又怪又有趣，虽然看不懂但很有意思，说实话比 YouTube 好玩，内容感觉更真实。',
-      'links.wakatimeDesc': '我的编程统计数据 — 看看我在写什么代码。',
+      'links.biliDesc': '我在中国 Bilibili 上的主页 — 很不一样又好玩，虽然看不懂但很有意思，说实话比 YouTube 好玩，也比 YouTube 更 LGBT kkk，超爱',
+      'links.wakatimeDesc': '我的编程统计数据。',
 
       /* Games */
       'games.title': '游戏',
@@ -654,6 +659,10 @@
       'settings.shortcutClose': '关闭活动窗口',
       'settings.shortcutStart': '打开开始菜单',
       'settings.shortcutFullscreen': '切换全屏',
+      'settings.shortcutCrt': '切换 CRT 模式',
+      'settings.themeColor': '主题颜色',
+      'settings.themeColorDesc': '选择系统主色。',
+      'settings.reset': '重置',
       'settings.wallpaper': '壁纸',
       'settings.wallpaperDesc': '从电脑中选择一张图片作为壁纸。',
       'settings.noWallpaper': '无自定义壁纸',
@@ -717,7 +726,6 @@
       'desktop.chat': '聊天',
       'desktop.randomgif': '随机 GIF',
       'desktop.feed': '日记',
-      'dopamina.title': '多巴胺',
       'gallery.title': '图片收藏',
       'gallery.info': '空格退出 | ← → 导航（',
       'gallery.infoEnd': '）',

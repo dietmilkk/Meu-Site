@@ -22,6 +22,7 @@
   var elBtnNext = $("scBtnNext");
   var elBtnPrev = $("scBtnPrev");
   var elBtnShuffle = $("scBtnShuffle");
+  var elBtnHidePl = $("scBtnHidePl");
   var elBtnHideArt = $("scBtnHideArt");
   var elProgressFill = $("scProgressFill");
   var elProgressThumb = $("scProgressThumb");
@@ -32,7 +33,6 @@
   var elPlaylistItems = $("scPlaylistItems");
   var elTrackCounter = $("scTrackCounter");
   var elTrackList = $("scTrackList");
-  var elIframeWrap = $("scIframeWrap");
   var elNowPlaying = $("scNowPlaying");
 
   var currentTrackIndex = 0;
@@ -45,748 +45,293 @@
   var activePlaylistId = null;
   var shuffle = false;
   var dragging = false;
-  var artworkCache = {};
-  var metaCache = {};
-  var currentFullSound = null;
-  var playlistStates = {};
 
-  var playlists = [
-    { id: "br", label: "br", url: "https://soundcloud.com/cu11/sets/lbo" },
-    {
-      id: "soundscape",
-      label: "soundscape",
-      url: "https://soundcloud.com/cu11/sets/zd2",
-    },
-    { id: "bass", label: "bass", url: "https://soundcloud.com/cu11/sets/3mk" },
-    {
-      id: "58v",
-      label: "guitar",
-      url: "https://soundcloud.com/cu11/sets/58v",
-    },
-    {
-      id: "7kp",
-      label: "emotion",
-      url: "https://soundcloud.com/cu11/sets/7kp",
-    },
-    {
-      id: "vv4",
-      label: "energy",
-      url: "https://soundcloud.com/cu11/sets/vv4",
-    },
-  ];
-
-  var widgets = {};
-  var widgetReadies = {};
+  var playlists = [];
+  var playlistData = {};
+  var currentAudioUrl = null;
   var loadingPlaylist = false;
+  var audio = null;
+
   var customPlaylists = [];
   var nextCustomId = 1;
 
-  function plURL(url) {
-    return (
-      "https://w.soundcloud.com/player/?url=" +
-      encodeURIComponent(url) +
-      "&auto_play=false&show_artwork=true&visual=false&hide_related=true&" +
-      "show_comments=false&show_user=false&show_reposts=false&sharing=false&liking=false&download=false"
-    );
-  }
+  var _artModeActive = false;
+  var _artModeTimer = null;
+  var _artHeaderEl = null;
+  var _artBarEl = null;
+  var scPlayer = document.getElementById("scPlayer");
 
-  function artworkSuffix() {
-    var p = document.getElementById("scPlayer");
-    if (p && p.getBoundingClientRect().width >= 700) return "-t250x250";
-    return "-t120x120";
-  }
-
-  /* ===== Compatibility layer for Widget API method names ===== */
-  var wMethods = {};
-
-  function detectMethods(w) {
-    var m = {};
-    var checks = {
-      getIdx: ["getCurrentTrackIndex", "getCurrentSoundIndex"],
-      skip: ["skipTo", "skip"],
-      next: ["next"],
-      prev: ["prev"],
-      play: ["play"],
-      pause: ["pause"],
-      toggle: ["toggle"],
-      seekTo: ["seekTo"],
-      getSounds: ["getSounds"],
-      getCurrentSound: ["getCurrentSound"],
-      getDuration: ["getDuration"],
-      getPosition: ["getPosition"],
-      isPaused: ["isPaused"],
-      bind: ["bind"],
-      toggleShuffle: ["toggleShuffle"],
-      getShuffle: ["getShuffle"],
-    };
-    for (var key in checks) {
-      for (var i = 0; i < checks[key].length; i++) {
-        if (typeof w[checks[key][i]] === "function") {
-          m[key] = checks[key][i];
-          break;
-        }
-      }
-    }
-    wMethods = m;
-  }
-
-  function callWidgetMethod(w, methodKey) {
-    var args = Array.prototype.slice.call(arguments, 2);
-    var methodName = wMethods[methodKey];
-    if (methodName && typeof w[methodName] === "function") {
-      try { return w[methodName].apply(w, args); } catch (e) {}
-      return;
-    }
-    var checks = {
-      getIdx: ["getCurrentTrackIndex", "getCurrentSoundIndex"],
-      skip: ["skipTo", "skip"],
-      next: ["next"],
-      prev: ["prev"],
-      play: ["play"],
-      pause: ["pause"],
-      toggle: ["toggle"],
-      seekTo: ["seekTo"],
-      getSounds: ["getSounds"],
-      getCurrentSound: ["getCurrentSound"],
-      getDuration: ["getDuration"],
-      getPosition: ["getPosition"],
-      isPaused: ["isPaused"],
-      bind: ["bind"],
-      toggleShuffle: ["toggleShuffle"],
-      getShuffle: ["getShuffle"],
-    };
-    var candidates = checks[methodKey] || [methodKey];
-    for (var i = 0; i < candidates.length; i++) {
-      if (typeof w[candidates[i]] === "function") {
-        try { return w[candidates[i]].apply(w, args); } catch (e) {}
-        return;
-      }
-    }
-  }
-
-  function wCall(methodKey) {
-    if (!widgets[activePlaylistId]) return;
-    var w = widgets[activePlaylistId];
-    var args = [w, methodKey];
-    for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
-    callWidgetMethod.apply(null, args);
-  }
-
-  function wCallCb(methodKey, callback) {
-    if (!widgets[activePlaylistId] || typeof callback !== "function") return;
-    var w = widgets[activePlaylistId];
-    var methodName = wMethods[methodKey];
-    if (methodName && typeof w[methodName] === "function") {
-      try { w[methodName](callback); } catch (e) {}
-      return;
-    }
-    var checks = {
-      getIdx: ["getCurrentTrackIndex", "getCurrentSoundIndex"],
-      skip: ["skipTo", "skip"],
-      next: ["next"],
-      prev: ["prev"],
-      play: ["play"],
-      pause: ["pause"],
-      toggle: ["toggle"],
-      seekTo: ["seekTo"],
-      getSounds: ["getSounds"],
-      getCurrentSound: ["getCurrentSound"],
-      getDuration: ["getDuration"],
-      getPosition: ["getPosition"],
-      isPaused: ["isPaused"],
-      bind: ["bind"],
-      toggleShuffle: ["toggleShuffle"],
-      getShuffle: ["getShuffle"],
-    };
-    var candidates = checks[methodKey] || [methodKey];
-    for (var i = 0; i < candidates.length; i++) {
-      if (typeof w[candidates[i]] === "function") {
-        try { w[candidates[i]](callback); } catch (e) {}
-        return;
-      }
-    }
-  }
-
-  function _loadSCAPI(cb) {
-    if (typeof SC !== "undefined") { cb(); return; }
-    var s = document.createElement("script");
-    s.src = "https://w.soundcloud.com/player/api.js";
-    s.onload = cb;
-    s.onerror = cb;
-    document.head.appendChild(s);
-  }
+  var INDEX_URL = "assets/music/index.json";
+  var BASE_MUSIC = "assets/music";
 
   function showStatus(msg) {
-    if (elStatus) elStatus.textContent = msg;
-  }
-  function hideStatus() {
-    if (elStatus) elStatus.textContent = "";
+    if (elStatus) { elStatus.textContent = msg; elStatus.style.display = "block"; }
   }
 
-  function fmt(ms) {
-    if (!ms || ms < 0) return "0:00";
-    var s = Math.floor(ms / 1000);
-    var m = Math.floor(s / 60);
-    s = s % 60;
+  function hideStatus() {
+    if (elStatus) { elStatus.style.display = "none"; }
+  }
+
+  function fmt(secs) {
+    if (isNaN(secs) || secs < 0) return "0:00";
+    var m = Math.floor(secs / 60);
+    var s = Math.floor(secs % 60);
     return m + ":" + (s < 10 ? "0" : "") + s;
   }
 
-  /* ===== Playlist sidebar ===== */
-  function renderPlaylists() {
-    if (!elPlaylistItems) return;
-    elPlaylistItems.innerHTML = "";
-
-    for (var i = 0; i < playlists.length; i++) {
-      (function (pl) {
-        var e = document.createElement("div");
-        e.className =
-          "sc-playlist-item" +
-          (pl.id === activePlaylistId ? " sc-playlist-item-active" : "");
-        var label = document.createElement("span");
-        label.className = "sc-playlist-item-label";
-        label.textContent = pl.label;
-        e.appendChild(label);
-        var rm = document.createElement("span");
-        rm.className = "sc-playlist-remove";
-        rm.innerHTML =
-          '<svg viewBox="0 0 10 10" width="10" height="10"><line x1="2" y1="2" x2="8" y2="8" stroke="currentColor" stroke-width="1.2"/><line x1="8" y1="2" x2="2" y2="8" stroke="currentColor" stroke-width="1.2"/></svg>';
-        rm.addEventListener("click", function (e) {
-          e.stopPropagation();
-          removePlaylist(pl.id);
-        });
-        if (pl.id && pl.id.indexOf("custom_") === 0) {
-          e.appendChild(rm);
-        }
-        e.addEventListener("click", function () {
-          if (typeof playClickSnd === 'function') playClickSnd();
-          switchPlaylist(pl.id);
-        });
-        elPlaylistItems.appendChild(e);
-      })(playlists[i]);
-    }
-
-    var addBtn = document.createElement("button");
-    addBtn.className = "sc-playlist-add";
-    addBtn.title = __('soundcloud.addPlaylist');
-    addBtn.innerHTML =
-      '<svg viewBox="0 0 10 10" width="10" height="10"><line x1="5" y1="1" x2="5" y2="9" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.5"/></svg>';
-    addBtn.addEventListener("click", showAddDialog);
-    elPlaylistItems.appendChild(addBtn);
-
-    renderMobilePlaylists();
+  function __(key) {
+    if (typeof window._t === "function") return window._t(key);
+    var fallback = {
+      "soundcloud.title": "SoundCloud",
+      "soundcloud.loading": "Loading...",
+      "soundcloud.failed": "Failed to load",
+      "soundcloud.loadingTrack": "Loading track...",
+      "soundcloud.failedTrack": "Failed to load track",
+      "soundcloud.defaultArtist": "Unknown artist",
+      "soundcloud.trackPrefix": "Track ",
+      "soundcloud.addPlaylist": "+ Add Playlist",
+      "soundcloud.deletePlaylist": "Delete",
+    };
+    return fallback[key] || key;
   }
 
-  function renderMobilePlaylists() {
-    var bar = document.querySelector(".sc-mobile-playlist-bar");
-    if (!bar) return;
-    bar.innerHTML = "";
-    var isMob = document.body.classList.contains("mobile-mode");
-    bar.style.display = isMob ? "flex" : "none";
-    if (!isMob) return;
+  /* ===== Audio element setup ===== */
+  function initAudio() {
+    audio = document.createElement("audio");
+    audio.preload = "auto";
+    audio.style.display = "none";
+    body.appendChild(audio);
 
-    for (var i = 0; i < playlists.length; i++) {
-      (function (pl) {
-        var btn = document.createElement("button");
-        btn.className =
-          "sc-mobile-playlist-btn" +
-          (pl.id === activePlaylistId ? " sc-mobile-playlist-btn-active" : "");
-        btn.textContent = pl.label;
-        btn.addEventListener("click", function () {
-          if (typeof playClickSnd === 'function') playClickSnd();
-          switchPlaylist(pl.id);
-        });
-        bar.appendChild(btn);
-      })(playlists[i]);
-    }
-
-    var addBtn = document.createElement("button");
-    addBtn.className = "sc-mobile-playlist-btn sc-mobile-playlist-add";
-    addBtn.innerHTML = '+';
-    addBtn.title = __('soundcloud.addPlaylist');
-    addBtn.addEventListener("click", showAddDialog);
-    bar.appendChild(addBtn);
-  }
-
-  function showAddDialog() {
-    xpDialog({
-      title: __('soundcloud.addTitle'),
-      icon: '<img src="system/assets/icons/tango2kde/32x32/filesystems/folder_sound_blue.png" alt="" width="32" height="32">',
-      type: "prompt",
-      message: __('soundcloud.addMsg'),
-      defaultValue: "",
-      width: "400px",
-      callback: function (val) {
-        if (val) {
-          var safe = false;
-          try {
-            var u = new URL(val);
-            safe = u.protocol === "https:" && u.hostname === "soundcloud.com";
-          } catch (e) {}
-          if (safe) addPlaylist(val);
-        }
-      },
+    audio.addEventListener("timeupdate", function () {
+      position = audio.currentTime;
+      elTimeCurrent.textContent = fmt(position);
+      updateBar();
     });
-  }
 
-  function addPlaylist(url) {
-    var id = "custom_" + nextCustomId++;
-    var label =
-      url.split("/sets/")[1] ||
-      url.split("/").pop() ||
-      __('soundcloud.playlistPrefix') + nextCustomId;
-    if (label.length > 20) label = label.substring(0, 20);
-    var pl = { id: id, label: label, url: url, "default": false };
-    customPlaylists.push(pl);
-    playlists.push(pl);
-    saveCustomPlaylists();
-    createWidgetForPlaylist(pl);
-    renderPlaylists();
-  }
-
-  function removePlaylist(id) {
-    var pl = null;
-    var idx = -1;
-    for (var i = 0; i < playlists.length; i++) {
-      if (playlists[i].id === id) {
-        pl = playlists[i];
-        idx = i;
-        break;
-      }
-    }
-    if (!pl) return;
-    if (pl.default !== false) {
-      for (var i = 0; i < customPlaylists.length; i++) {
-        if (customPlaylists[i].id === id) {
-          customPlaylists.splice(i, 1);
-          break;
-        }
-      }
-    }
-    playlists.splice(idx, 1);
-    if (widgets[id]) {
-      var iframe =
-        elIframeWrap &&
-        elIframeWrap.querySelector('iframe[data-pl-id="' + id + '"]');
-      if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe);
-      delete widgets[id];
-      delete widgetReadies[id];
-    }
-    if (id === activePlaylistId) {
-      activePlaylistId = null;
-      for (var i = 0; i < playlists.length; i++) {
-        if (widgets[playlists[i].id] && widgetReadies[playlists[i].id]) {
-          switchPlaylist(playlists[i].id);
-          break;
-        }
-      }
-    }
-    if (pl.default === false) saveCustomPlaylists();
-    renderPlaylists();
-  }
-
-  function saveCustomPlaylists() {
-    try {
-      localStorage.setItem(
-        "scCustomPlaylists",
-        JSON.stringify({ list: customPlaylists, nextId: nextCustomId }),
-      );
-    } catch (e) {}
-  }
-
-  function createWidgetForPlaylist(pl) {
-    if (!elIframeWrap) return;
-    var iframe = document.createElement("iframe");
-    iframe.src = plURL(pl.url);
-    iframe.width = "100%";
-    iframe.height = "166";
-    iframe.frameBorder = "no";
-    iframe.scrolling = "no";
-    iframe.style.position = "absolute";
-    iframe.style.left = "0";
-    iframe.style.top = "0";
-    iframe.style.width = "400px";
-    iframe.style.height = "166px";
-    iframe.dataset.plId = pl.id;
-    elIframeWrap.appendChild(iframe);
-    detectMethods(SC.Widget(iframe));
-    var w = SC.Widget(iframe);
-    widgets[pl.id] = w;
-    widgetReadies[pl.id] = false;
-    w.bind(SC.Widget.Events.READY, function () {
-      widgetReadies[pl.id] = true;
-      applyVolumeToWidget(pl.id);
-      (function poll() {
-        var tries = arguments[0] || 0;
-        w.getSounds(function (sounds) {
-          if (sounds && sounds.length > 0) {
-            playlistStates[pl.id] = {
-              trackList: sounds,
-              currentTrackIndex: 0,
-              currentFullSound: null,
-              metaCache: {},
-              artworkCache: {},
-              isPlaying: false,
-            };
-            if (pl.id === activePlaylistId) {
-              trackList = sounds;
-              totalTracks = sounds.length;
-              updateCounter();
-              renderTrackList();
-              preloadArtwork();
-              hideStatus();
-              setTimeout(refreshFromWidget, 500);
-              w.getCurrentSound(function (s) {
-                if (s && s.title) updateFromSound(s);
-              });
-            }
-          } else if (tries < 30) {
-            setTimeout(function () {
-              poll(tries + 1);
-            }, 500);
-          }
-        });
-      })(0);
+    audio.addEventListener("loadedmetadata", function () {
+      duration = audio.duration;
+      elTimeTotal.textContent = fmt(duration);
     });
-    w.bind(SC.Widget.Events.PLAY, function () {
-      if (pl.id !== activePlaylistId) return;
+
+    audio.addEventListener("play", function () {
       isPlaying = true;
       updatePlayBtn();
       startPoll();
-      applyVolumeToWidget(pl.id);
-      w.getCurrentSound(function (s) {
-        if (s && s.title) updateFromSound(s);
-      });
-      setTimeout(refreshFromWidget, 200);
-      setTimeout(function () { applyVolumeToWidget(pl.id); }, 100);
-      setTimeout(function () { applyVolumeToWidget(pl.id); }, 500);
     });
-    try { w.bind(SC.Widget.Events.ERROR, function (e) {
-      if (pl.id !== activePlaylistId) return;
-    }); } catch (e) {}
-    try { w.bind(SC.Widget.Events.LOAD_PROGRESS, function () {
-      if (pl.id !== activePlaylistId) return;
-      applyVolumeToWidget(pl.id);
-    }); } catch (e) {}
-    w.bind(SC.Widget.Events.PAUSE, function () {
-      if (pl.id !== activePlaylistId) return;
+
+    audio.addEventListener("pause", function () {
       isPlaying = false;
       updatePlayBtn();
       stopPoll();
     });
-    w.bind(SC.Widget.Events.FINISH, function () {
-      if (pl.id !== activePlaylistId) return;
-      applyVolumeToWidget(pl.id);
-      if (shuffle) {
-        skipTrack(Math.floor(Math.random() * totalTracks));
-      } else {
-        currentTrackIndex = (currentTrackIndex + 1) % totalTracks;
-        currentFullSound = null;
-        displayTrack();
-      }
+
+    audio.addEventListener("ended", function () {
+      nextTrack();
+    });
+
+    audio.addEventListener("error", function () {
+      isPlaying = false;
+      updatePlayBtn();
+      stopPoll();
+    });
+
+    // Connect equalizer if available
+    if (typeof window._eqConnect === "function") {
+      window._eqConnect(audio);
+    }
+  }
+
+  /* ===== Playback ===== */
+
+  async function playTrack(index) {
+    if (!trackList[index]) return;
+
+    var track = trackList[index];
+    currentTrackIndex = index;
+    displayTrack();
+    updateCounter();
+
+    audio.src = track.file;
+    audio.currentTime = 0;
+    try { await audio.play(); } catch (e) {}
+  }
+
+  /* ===== Load index ===== */
+  function processIndexData(data) {
+    playlistData = data;
+    playlists = [];
+    for (var id in data) {
+      playlists.push({ id: id, label: data[id].label, url: data[id].url });
+    }
+
+    for (var i = 0; i < customPlaylists.length; i++) {
+      playlists.push(customPlaylists[i]);
+    }
+
+    renderPlaylists();
+    hideStatus();
+
+    if (playlists.length > 0) {
+      switchPlaylist(playlists[0].id);
+    }
+  }
+
+  async function loadIndexViaFetch() {
+    var resp = await fetch(INDEX_URL);
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    return await resp.json();
+  }
+
+  function loadIndexViaScript() {
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement("script");
+      script.src = INDEX_URL.replace(".json", ".js");
+      script.onload = function () {
+        var data = window.__MUSIC_INDEX;
+        delete window.__MUSIC_INDEX;
+        if (data) resolve(data);
+        else reject(new Error("Script loaded but no data"));
+      };
+      script.onerror = function () {
+        reject(new Error("Failed to load script"));
+      };
+      document.head.appendChild(script);
     });
   }
 
-  function switchPlaylist(id) {
-    if (id === activePlaylistId) return;
-    if (loadingPlaylist) return;
-    if (!widgets[id] || !widgetReadies[id]) {
-      loadingPlaylist = true;
-      showStatus(__('soundcloud.loading'));
-      var checkTimer = setInterval(function () {
-        if (widgets[id] && widgetReadies[id]) {
-          clearInterval(checkTimer);
-          loadingPlaylist = false;
-          hideStatus();
-          switchPlaylist(id);
-        }
-      }, 200);
-      setTimeout(function () {
-        clearInterval(checkTimer);
-        loadingPlaylist = false;
-        hideStatus();
-        if (!widgets[id] || !widgetReadies[id]) {
-          showStatus(__('soundcloud.failed'));
-        }
-      }, 10000);
-      return;
+  async function loadIndex() {
+    showStatus(__("soundcloud.loading"));
+    try {
+      var data = await loadIndexViaFetch();
+      processIndexData(data);
+    } catch (e) {
+      console.warn("Fetch failed, trying script fallback:", e);
+      try {
+        var data = await loadIndexViaScript();
+        processIndexData(data);
+      } catch (e2) {
+        console.error("Failed to load index (both methods):", e, e2);
+        showStatus(__("soundcloud.failed"));
+      }
     }
+  }
 
-    if (activePlaylistId) {
-      playlistStates[activePlaylistId] = {
-        trackList: trackList.slice(),
-        currentTrackIndex: currentTrackIndex,
-        currentFullSound: currentFullSound,
-        metaCache: Object.assign({}, metaCache),
-        artworkCache: Object.assign({}, artworkCache),
-        isPlaying: isPlaying,
-      };
+  /* ===== Playlist switching ===== */
+  function switchPlaylist(id) {
+    if (loadingPlaylist) return;
+
+    if (activePlaylistId && activePlaylistId !== id) {
+      if (audio) {
+        audio.pause();
+        audio.src = "";
+      }
+      currentAudioUrl = null;
+      isPlaying = false;
+      updatePlayBtn();
+      stopPoll();
     }
 
     activePlaylistId = id;
-    syncActiveVolume();
     renderPlaylists();
-    stopPoll();
-    showAllIframes();
-    detectMethods(widgets[activePlaylistId]);
 
-    var saved = playlistStates[id];
-    if (saved) {
-      trackList = saved.trackList;
-      currentTrackIndex = saved.currentTrackIndex;
-      currentFullSound = saved.currentFullSound;
-      metaCache = saved.metaCache;
-      artworkCache = saved.artworkCache;
+    var pl = playlistData[id];
+    if (pl && pl.tracks) {
+      trackList = pl.tracks;
       totalTracks = trackList.length;
-      renderTrackList();
-      displayTrack();
-      updateCounter();
-      preloadArtwork();
-      refreshHighlight();
-      isPlaying = saved.isPlaying || false;
-      updatePlayBtn();
-      if (isPlaying) startPoll();
-
-      wCallCb("isPaused", function (paused) {
-        if (paused === false) {
-          if (!isPlaying) {
-            isPlaying = true;
-            updatePlayBtn();
-            startPoll();
-          }
-        } else if (paused === true) {
-          if (isPlaying) {
-            isPlaying = false;
-            updatePlayBtn();
-            stopPoll();
-          }
-        }
-      });
-      wCallCb("getPosition", function (p) {
-        if (p >= 0) {
-          position = p;
-          elTimeCurrent.textContent = fmt(p);
-        }
-      });
-      wCallCb("getDuration", function (d) {
-        if (d > 0) {
-          duration = d;
-          elTimeTotal.textContent = fmt(d);
-        }
-      });
-      wCallCb("getCurrentSound", function (s) {
-        if (s && s.title) updateFromSound(s);
-      });
-      wCallCb("getIdx", function (idx) {
-        if (idx >= 0 && idx < totalTracks) {
-          currentTrackIndex = idx;
-          displayTrack();
-          refreshHighlight();
-          updateCounter();
-        }
-      });
-    } else {
-      trackList = [];
-      totalTracks = 0;
-      currentTrackIndex = -1;
-      artworkCache = {};
-      metaCache = {};
-      currentFullSound = null;
-      isPlaying = false;
-      updatePlayBtn();
+      currentTrackIndex = 0;
       position = 0;
       duration = 0;
       elTimeCurrent.textContent = "0:00";
       elTimeTotal.textContent = "0:00";
       updateBar();
       renderTrackList();
+      displayTrack();
       updateCounter();
-      elTrackName.textContent = __('soundcloud.loadingTrack');
+      refreshHighlight();
+      hideStatus();
+    } else {
+      trackList = [];
+      totalTracks = 0;
+      currentTrackIndex = -1;
+      renderTrackList();
+      updateCounter();
+      elTrackName.textContent = __("soundcloud.loadingTrack");
       elArtistName.textContent = "";
       setArt(null);
-      refreshHighlight();
-      var tries = 0;
-      var loadTimer = setTimeout(function () {
-        elTrackName.textContent = __('soundcloud.failedTrack');
-      }, 15000);
-
-      (function poll() {
-        tries++;
-        wCallCb("getSounds", function (sounds) {
-          if (sounds && sounds.length > 0) {
-            clearTimeout(loadTimer);
-            trackList = sounds;
-            totalTracks = sounds.length;
-            currentTrackIndex = 0;
-            updateCounter();
-            renderTrackList();
-            preloadArtwork();
-            displayTrack();
-          } else if (tries < 30) {
-            setTimeout(poll, 500);
-          }
-        });
-      })();
     }
   }
 
   /* ===== Volume sync ===== */
-  function syncActiveVolume() {
-    applyVolumeToWidget(activePlaylistId);
-  }
-
   window.setSoundCloudVolume = function (v) {
     if (typeof v !== "number" || isNaN(v)) return;
-    var boost = 5.0;
-    v = Math.max(0, Math.min(boost, v * boost));
-    for (var id in widgets) {
-      if (widgets[id]) {
-        try {
-          widgets[id].setVolume(v);
-        } catch (e) {}
-      }
-    }
+    v = Math.max(0, Math.min(1, v));
+    if (audio) audio.volume = v;
   };
 
-  function applyVolumeToWidget(id) {
-    if (!widgets[id]) return;
+  function syncActiveVolume() {
     var v = typeof window.getPageVolume === "function" ? window.getPageVolume() : 1;
     if (typeof v !== "number" || isNaN(v)) v = 1;
-    var boost = 5.0;
-    try {
-      widgets[id].setVolume(Math.max(0, Math.min(boost, v * boost)));
-    } catch (e) {}
+    v = Math.max(0, Math.min(1, v));
+    if (audio) audio.volume = v;
   }
 
-  setInterval(function () { syncActiveVolume(); }, 500);
-
-  function showAllIframes() {
-    if (!elIframeWrap) return;
-    for (var i = 0; i < elIframeWrap.children.length; i++) {
-      var c = elIframeWrap.children[i];
-      if (c.tagName === "IFRAME") {
-        c.style.visibility =
-          c.dataset.plId === activePlaylistId ? "visible" : "hidden";
-      }
+  var _volInterval = null;
+  function _startVolSync() {
+    if (_volInterval) return;
+    _volInterval = setInterval(function () { syncActiveVolume(); }, 500);
+  }
+  function _stopVolSync() {
+    if (_volInterval) {
+      clearInterval(_volInterval);
+      _volInterval = null;
     }
   }
+  _startVolSync();
 
-  function initWidgets() {
-    _loadSCAPI(function() {
-    if (typeof SC === "undefined") {
-      setTimeout(initWidgets, 500);
-      return;
-    }
-    elIframeWrap = elIframeWrap || document.getElementById("scIframeWrap");
-    if (!elIframeWrap) {
-      setTimeout(initWidgets, 500);
-      return;
-    }
+  /* ===== Playlist sidebar ===== */
+  function renderPlaylists() {
+    if (!elPlaylistItems) return;
+    var items = elPlaylistItems.querySelectorAll(".sc-pl-item");
+    for (var i = items.length - 1; i >= 0; i--) items[i].remove();
 
-    var anyReady = false;
     for (var i = 0; i < playlists.length; i++) {
       (function (pl) {
-        var iframe = document.createElement("iframe");
-        iframe.src = plURL(pl.url);
-        iframe.width = "100%";
-        iframe.height = "166";
-        iframe.frameBorder = "no";
-        iframe.scrolling = "no";
-        iframe.style.position = "absolute";
-        iframe.style.left = "0";
-        iframe.style.top = "0";
-        iframe.style.width = "400px";
-        iframe.style.height = "166px";
-        iframe.dataset.plId = pl.id;
-        elIframeWrap.appendChild(iframe);
-
-        var w = SC.Widget(iframe);
-        widgets[pl.id] = w;
-        widgetReadies[pl.id] = false;
-
-        w.bind(SC.Widget.Events.READY, function () {
-          widgetReadies[pl.id] = true;
-          applyVolumeToWidget(pl.id);
-          if (!anyReady) {
-            anyReady = true;
-            activePlaylistId = pl.id;
-            renderPlaylists();
-            (function poll() {
-              var tries = arguments[0] || 0;
-              w.getSounds(function (sounds) {
-                if (sounds && sounds.length > 0) {
-                  trackList = sounds;
-                  totalTracks = sounds.length;
-                  updateCounter();
-                  renderTrackList();
-                  preloadArtwork();
-                  hideStatus();
-                  setTimeout(refreshFromWidget, 500);
-                } else if (tries < 30) {
-                  setTimeout(function () {
-                    poll(tries + 1);
-                  }, 500);
-                }
-              });
-            })(0);
-            w.getCurrentSound(function (s) {
-              if (s && s.title) updateFromSound(s);
-            });
-          }
+        var e = document.createElement("div");
+        e.className = "sc-pl-item";
+        if (pl.id === activePlaylistId) e.classList.add("sc-pl-item-active");
+        e.textContent = pl.label;
+        e.addEventListener("click", function () {
+          if (typeof playClickSnd === "function") playClickSnd();
+          switchPlaylist(pl.id);
         });
-
-    w.bind(SC.Widget.Events.PLAY, function () {
-      if (pl.id !== activePlaylistId) return;
-      isPlaying = true;
-      updatePlayBtn();
-      startPoll();
-      syncActiveVolume();
-      w.getCurrentSound(function (s) {
-        if (s && s.title) updateFromSound(s);
-      });
-      setTimeout(refreshFromWidget, 200);
-      setTimeout(function () { syncActiveVolume(); }, 100);
-      setTimeout(function () { syncActiveVolume(); }, 500);
-    });
-    try { w.bind(SC.Widget.Events.ERROR, function (e) {
-      if (pl.id !== activePlaylistId) return;
-    }); } catch (e) {}
-    try { w.bind(SC.Widget.Events.LOAD_PROGRESS, function () {
-      if (pl.id !== activePlaylistId) return;
-      syncActiveVolume();
-    }); } catch (e) {}
-    w.bind(SC.Widget.Events.PAUSE, function () {
-      if (pl.id !== activePlaylistId) return;
-      isPlaying = false;
-      updatePlayBtn();
-      stopPoll();
-    });
-    w.bind(SC.Widget.Events.FINISH, function () {
-      if (pl.id !== activePlaylistId) return;
-      syncActiveVolume();
-      if (shuffle) {
-        skipTrack(Math.floor(Math.random() * totalTracks));
-      } else {
-        currentTrackIndex = (currentTrackIndex + 1) % totalTracks;
-        currentFullSound = null;
-        displayTrack();
-      }
-    });
+        elPlaylistItems.appendChild(e);
       })(playlists[i]);
     }
+    renderMobilePlaylists();
+  }
 
-    // Timeout fallback
-    var checkReady = setInterval(function () {
-      for (var k in widgetReadies) {
-        if (widgetReadies[k]) {
-          clearInterval(checkReady);
-          return;
-        }
-      }
-    }, 1000);
-    setTimeout(function () {
-      clearInterval(checkReady);
-    }, 30000);
-  });
+  function renderMobilePlaylists() {
+    var existing = document.querySelectorAll(".sc-mobile-pl-item");
+    for (var i = existing.length - 1; i >= 0; i--) existing[i].remove();
+
+    var bar = document.querySelector(".sc-mobile-playlist-bar");
+    if (!bar) return;
+    var isMobile = document.body.classList.contains("mobile-mode");
+    bar.style.display = isMobile ? "flex" : "none";
+    if (!isMobile) return;
+
+    for (var i = 0; i < playlists.length; i++) {
+      (function (pl) {
+        var e = document.createElement("span");
+        e.className = "sc-mobile-pl-item";
+        if (pl.id === activePlaylistId) e.classList.add("sc-mobile-pl-item-active");
+        e.textContent = pl.label;
+        e.addEventListener("click", function () {
+          switchPlaylist(pl.id);
+        });
+        bar.appendChild(e);
+      })(playlists[i]);
+    }
   }
 
   /* ===== Track list ===== */
@@ -802,33 +347,22 @@
       (function (idx) {
         var e = document.createElement("div");
         var t = trackList[idx].title;
-        if (!t && metaCache[idx]) t = metaCache[idx].title;
-        e.textContent = t || __('soundcloud.trackPrefix') + (idx + 1);
+        e.textContent = t || __("soundcloud.trackPrefix") + (idx + 1);
         e.className = "sc-track-item";
         if (idx === currentTrackIndex) e.classList.add("sc-track-item-active");
         e.addEventListener("click", function () {
-          if (typeof playClickSnd === 'function') playClickSnd();
+          if (typeof playClickSnd === "function") playClickSnd();
           skipTrack(idx);
         });
         e.addEventListener("dblclick", function () {
-          if (typeof playLaunchSnd === 'function') playLaunchSnd();
+          if (typeof playLaunchSnd === "function") playLaunchSnd();
           skipTrack(idx);
-          wCall("play");
+          audio.play();
         });
         elTrackList.appendChild(e);
       })(i);
     }
     scrollActive();
-  }
-
-  function updateTrackItem(idx) {
-    if (!elTrackList || idx < 0) return;
-    var items = elTrackList.querySelectorAll(".sc-track-item");
-    if (idx < items.length) {
-      var t = trackList[idx] && trackList[idx].title;
-      if (!t && metaCache[idx]) t = metaCache[idx].title;
-      items[idx].textContent = t || __('soundcloud.trackPrefix') + (idx + 1);
-    }
   }
 
   function centerCurrentTrack() {
@@ -851,10 +385,7 @@
     if (!elTrackList) return;
     var items = elTrackList.querySelectorAll(".sc-track-item");
     for (var i = 0; i < items.length; i++) {
-      items[i].classList.toggle(
-        "sc-track-item-active",
-        i === currentTrackIndex,
-      );
+      items[i].classList.toggle("sc-track-item-active", i === currentTrackIndex);
     }
   }
 
@@ -865,219 +396,73 @@
     }
   }
 
-  /* ===== Display current track from trackList ===== */
+  /* ===== Display current track ===== */
   function displayTrack() {
     if (!trackList || !trackList[currentTrackIndex]) {
       setTimeout(displayTrack, 500);
       return;
     }
-    var s = currentFullSound || trackList[currentTrackIndex];
-    var mc = metaCache[currentTrackIndex];
-    var title = s.title;
-    if (!title && mc && mc.title) title = mc.title;
-    elTrackName.textContent = title || __('soundcloud.trackPrefix') + (currentTrackIndex + 1);
-    var artist = s.user && s.user.username;
-    if (!artist && mc && mc.author_name) artist = mc.author_name;
-    elArtistName.textContent = artist || __('soundcloud.defaultArtist');
+    var s = trackList[currentTrackIndex];
+    elTrackName.textContent = s.title || __("soundcloud.trackPrefix") + (currentTrackIndex + 1);
+    elArtistName.textContent = s.artist || __("soundcloud.defaultArtist");
     updateCounter();
     refreshHighlight();
     scrollActive();
     hideStatus();
     loadArt(currentTrackIndex);
     _updateNowPlaying();
+    updateArtUI();
   }
 
-  function updateFromSound(s) {
-    if (!s) return;
-    currentFullSound = s;
-    if (s.title) {
-      elTrackName.textContent = s.title;
-    }
-    if (s.user && s.user.username) {
-      elArtistName.textContent = s.user.username;
-    }
-    if (s.artwork_url) {
-      var originalUrl = s.artwork_url;
-      var n = s.artwork_url.replace(
-        /-(large|t\d+x\d+)(\.\w+)$/,
-        artworkSuffix() + "$2",
-      );
-      setArt(n, originalUrl);
-      artworkCache[s.id || n] = n;
-    }
-    _updateNowPlaying();
-  }
-
-  function refreshFromWidget() {
-    if (!widgets[activePlaylistId] || !widgetReadies[activePlaylistId]) {
-      setTimeout(refreshFromWidget, 500);
-      return;
-    }
-    detectMethods(widgets[activePlaylistId]);
-    wCallCb("getIdx", function (idx) {
-      if (idx !== null && idx !== undefined && idx !== currentTrackIndex) {
-        currentTrackIndex = idx;
-        currentFullSound = null;
-        displayTrack();
-      }
-    });
-    wCallCb("getDuration", function (d) {
-      if (d > 0) {
-        duration = d;
-        elTimeTotal.textContent = fmt(d);
-      }
-    });
-    wCallCb("getPosition", function (p) {
-      if (p >= 0) {
-        position = p;
-        elTimeCurrent.textContent = fmt(p);
-      }
-    });
-  }
-
-  /* ===== Manual track tracking ===== */
+  /* ===== Navigation ===== */
   function nextTrack() {
     if (totalTracks === 0) return;
+    var idx;
     if (shuffle) {
-      skipTrack(Math.floor(Math.random() * totalTracks));
-      return;
+      idx = Math.floor(Math.random() * totalTracks);
+    } else {
+      idx = (currentTrackIndex + 1) % totalTracks;
     }
-    currentTrackIndex = (currentTrackIndex + 1) % totalTracks;
-    currentFullSound = null;
-    wCall("next");
-    displayTrack();
+    playTrack(idx);
   }
 
   function prevTrack() {
     if (totalTracks === 0) return;
+    var idx;
     if (shuffle) {
-      skipTrack(Math.floor(Math.random() * totalTracks));
-      return;
+      idx = Math.floor(Math.random() * totalTracks);
+    } else {
+      idx = (currentTrackIndex - 1 + totalTracks) % totalTracks;
     }
-    currentTrackIndex = (currentTrackIndex - 1 + totalTracks) % totalTracks;
-    currentFullSound = null;
-    wCall("prev");
-    displayTrack();
+    playTrack(idx);
   }
 
   function skipTrack(idx) {
     if (idx < 0 || idx >= totalTracks) return;
-    currentTrackIndex = idx;
-    currentFullSound = null;
-    detectMethods(widgets[activePlaylistId]);
-    wCall("skip", idx);
-    displayTrack();
+    playTrack(idx);
   }
 
-  /* ===== Artwork & Metadata ===== */
-  function trackPermalink(s) {
-    if (!s) return null;
-    if (s.permalink_url) return s.permalink_url;
-    if (s.user && s.user.username && s.permalink)
-      return "https://soundcloud.com/" + s.user.username + "/" + s.permalink;
-    if (s.id) return "https://api.soundcloud.com/tracks/" + s.id;
-    return null;
-  }
-
-  function oembedJsonp(trackId, idx) {
-    var cb = "sco" + idx;
-    window[cb] = function (d) {
-      delete window[cb];
-      if (!d || !d.title) return;
-      if (!metaCache[idx]) metaCache[idx] = {};
-      metaCache[idx].title = d.title;
-      if (d.author_name) metaCache[idx].author_name = d.author_name;
-      updateTrackItem(idx);
-      if (idx === currentTrackIndex) displayTrack();
-    };
-    var s = document.createElement("script");
-    s.src =
-      "https://soundcloud.com/oembed?format=js&callback=" +
-      cb +
-      "&url=" +
-      encodeURIComponent("https://api.soundcloud.com/tracks/" + trackId);
-    document.head.appendChild(s);
-  }
-
-  function preloadArtwork() {
-    if (!trackList) return;
-    for (var pi = 0; pi < trackList.length; pi++) {
-      var snd = trackList[pi];
-      var pl = trackPermalink(snd);
-      if (!pl || artworkCache[pl]) continue;
-      var au = snd.artwork_url;
-      if (au) {
-        var n = au.replace(/-(large|t\d+x\d+)(\.\w+)$/, artworkSuffix() + "$2");
-        artworkCache[pl] = n;
-      }
-      if (snd.title) {
-        if (!metaCache[pi]) metaCache[pi] = {};
-        metaCache[pi].title = snd.title;
-      } else if (snd.id) {
-        oembedJsonp(snd.id, pi);
-      }
-    }
-  }
-
+  /* ===== Artwork ===== */
   function loadArt(idx) {
-    var sound = currentFullSound || (trackList && trackList[idx]) || null;
-    if (!sound) {
-      if (trackList && trackList.length === 0) {
-        setTimeout(function () {
-          loadArt(idx);
-        }, 800);
-      }
+    var track = trackList && trackList[idx];
+    if (!track || !track.artwork) {
       elArtImg.style.display = "none";
       return;
     }
-
-    if (sound.id && artworkCache[sound.id]) {
-      setArt(artworkCache[sound.id]);
-      return;
-    }
-
-    var pl = trackPermalink(sound);
-    if (pl && artworkCache[pl]) {
-      setArt(artworkCache[pl]);
-      return;
-    }
-
-    var artUrl = sound.artwork_url;
-    if (artUrl) {
-      var originalUrl = artUrl;
-      var norm = artUrl.replace(
-        /-(large|t\d+x\d+)(\.\w+)$/,
-        artworkSuffix() + "$2",
-      );
-      if (sound.id) artworkCache[sound.id] = norm;
-      else if (pl) artworkCache[pl] = norm;
-      setArt(norm, originalUrl);
-      return;
-    }
-
-    if (!currentFullSound) {
-      setTimeout(function () { loadArt(idx); }, 600);
-      return;
-    }
-
-    elArtImg.style.display = "none";
+    elArtImg.onload = function () {};
+    elArtImg.onerror = function () {
+      elArtImg.style.display = "none";
+    };
+    elArtImg.src = track.artwork;
+    elArtImg.style.display = "block";
   }
 
-  var _artFallbackSrc = null;
-  function setArt(src, fallback) {
+  function setArt(src) {
     if (!src) {
       elArtImg.style.display = "none";
       return;
     }
-    _artFallbackSrc = fallback || null;
     elArtImg.onerror = function () {
-      if (_artFallbackSrc) {
-        var fb = _artFallbackSrc;
-        _artFallbackSrc = null;
-        elArtImg.onerror = null;
-        setArt(fb);
-        return;
-      }
       elArtImg.style.display = "none";
     };
     elArtImg.onload = function () {};
@@ -1089,21 +474,11 @@
   function startPoll() {
     stopPoll();
     pollTimer = setInterval(function () {
-      if (!widgets[activePlaylistId] || !widgetReadies[activePlaylistId])
-        return;
-      detectMethods(widgets[activePlaylistId]);
-      wCallCb("getPosition", function (p) {
-        if (p >= 0) {
-          position = p;
-          elTimeCurrent.textContent = fmt(p);
-        }
-      });
-      wCallCb("getDuration", function (d) {
-        if (d > 0) {
-          duration = d;
-          elTimeTotal.textContent = fmt(d);
-        }
-      });
+      if (!audio) return;
+      position = audio.currentTime;
+      elTimeCurrent.textContent = fmt(position);
+      duration = audio.duration || 0;
+      elTimeTotal.textContent = fmt(duration);
       updateBar();
     }, 150);
   }
@@ -1124,23 +499,13 @@
   }
 
   function seekPct(pct) {
-    if (
-      !widgets[activePlaylistId] ||
-      !widgetReadies[activePlaylistId] ||
-      duration <= 0
-    )
-      return;
-    wCall("seekTo", pct * duration);
+    if (!audio || duration <= 0) return;
+    audio.currentTime = pct * duration;
   }
 
   /* ===== Draggable seek ===== */
   function seekFromEvent(e) {
-    if (
-      !widgets[activePlaylistId] ||
-      !widgetReadies[activePlaylistId] ||
-      duration <= 0
-    )
-      return;
+    if (!audio || duration <= 0) return;
     var r = elProgressBar.getBoundingClientRect();
     var pct = (e.clientX - r.left) / r.width;
     seekPct(pct);
@@ -1164,40 +529,46 @@
     dragging = false;
   });
 
-  /* ===== Force button press/release (reliable :active replacement) ===== */
+  /* ===== Force button press/release ===== */
   function wirePress(el) {
     if (!el) return;
-    el.addEventListener('mousedown', function() { el.classList.add('sc-pressed'); });
-    el.addEventListener('mouseup', function() { el.classList.remove('sc-pressed'); });
-    el.addEventListener('mouseleave', function() { el.classList.remove('sc-pressed'); });
-    el.addEventListener('touchstart', function() { el.classList.add('sc-pressed'); }, { passive: true });
-    el.addEventListener('touchend', function() { el.classList.remove('sc-pressed'); });
-    el.addEventListener('touchcancel', function() { el.classList.remove('sc-pressed'); });
+    el.addEventListener("mousedown", function () { el.classList.add("sc-pressed"); });
+    el.addEventListener("mouseup", function () { el.classList.remove("sc-pressed"); });
+    el.addEventListener("mouseleave", function () { el.classList.remove("sc-pressed"); });
+    el.addEventListener("touchstart", function () { el.classList.add("sc-pressed"); }, { passive: true });
+    el.addEventListener("touchend", function () { el.classList.remove("sc-pressed"); });
+    el.addEventListener("touchcancel", function () { el.classList.remove("sc-pressed"); });
   }
   wirePress(elBtnPlay);
   wirePress(elBtnNext);
   wirePress(elBtnPrev);
   if (elBtnShuffle) wirePress(elBtnShuffle);
+  if (elBtnHidePl) wirePress(elBtnHidePl);
   if (elBtnHideArt) wirePress(elBtnHideArt);
 
   /* ===== Buttons ===== */
   elBtnPlay.addEventListener("click", function () {
-    if (!widgets[activePlaylistId] || !widgetReadies[activePlaylistId]) return;
-    detectMethods(widgets[activePlaylistId]);
-    if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
-    wCall("toggle");
+    if (!audio) return;
+    if (typeof playToggleOnSnd === "function") playToggleOnSnd();
+    if (audio.paused) {
+      if (!audio.src && trackList[currentTrackIndex]) {
+        playTrack(currentTrackIndex);
+      } else {
+        audio.play();
+      }
+    } else {
+      audio.pause();
+    }
     syncActiveVolume();
   });
 
   elBtnNext.addEventListener("click", function () {
-    if (!widgets[activePlaylistId] || !widgetReadies[activePlaylistId]) return;
-    if (typeof playClickSnd === 'function') playClickSnd();
+    if (typeof playClickSnd === "function") playClickSnd();
     nextTrack();
   });
 
   elBtnPrev.addEventListener("click", function () {
-    if (!widgets[activePlaylistId] || !widgetReadies[activePlaylistId]) return;
-    if (typeof playClickSnd === 'function') playClickSnd();
+    if (typeof playClickSnd === "function") playClickSnd();
     prevTrack();
   });
 
@@ -1205,30 +576,141 @@
     elBtnShuffle.addEventListener("click", function () {
       shuffle = !shuffle;
       elBtnShuffle.classList.toggle("sc-btn-shuffle-active", shuffle);
-      if (typeof playToggleOnSnd === 'function') {
+      if (typeof playToggleOnSnd === "function") {
         shuffle ? playToggleOnSnd() : playToggleOffSnd();
+      }
+    });
+  }
+
+  if (elBtnHidePl) {
+    elBtnHidePl.addEventListener("click", function () {
+      var hidden = scPlayer.classList.toggle("sc-hide-playlists");
+      elBtnHidePl.classList.toggle("sc-btn-hidepl-active", hidden);
+      if (typeof playToggleOnSnd === "function") {
+        hidden ? playToggleOnSnd() : playToggleOffSnd();
       }
     });
   }
 
   if (elBtnHideArt) {
     elBtnHideArt.addEventListener("click", function () {
-      var scPlayer = document.getElementById("scPlayer");
-      var hidden = scPlayer.classList.toggle("sc-hide-artwork");
-      elBtnHideArt.classList.toggle("sc-btn-hideart-active", hidden);
-      if (typeof playToggleOnSnd === 'function') {
-        hidden ? playToggleOnSnd() : playToggleOffSnd();
+      if (scPlayer.classList.contains("sc-art-mode")) {
+        exitArtMode();
+      } else if (win.classList.contains("window-maximized")) {
+        enterArtMode();
+      } else {
+        var hidden = scPlayer.classList.toggle("sc-hide-artwork");
+        elBtnHideArt.classList.toggle("sc-btn-hideart-active", hidden);
+        if (typeof playToggleOnSnd === "function") {
+          hidden ? playToggleOnSnd() : playToggleOffSnd();
+        }
       }
     });
   }
 
   if (elArtOv) {
     elArtOv.addEventListener("click", function () {
-      if (!widgets[activePlaylistId] || !widgetReadies[activePlaylistId])
-        return;
-      wCall("toggle");
-      if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
+      if (!audio) return;
+      if (typeof playToggleOnSnd === "function") playToggleOnSnd();
+      if (audio.paused) {
+        if (!audio.src && trackList[currentTrackIndex]) {
+          playTrack(currentTrackIndex);
+        } else {
+          audio.play();
+        }
+      } else {
+        audio.pause();
+      }
     });
+  }
+
+  /* ===== Art mode (fullscreen album art view) ===== */
+  function enterArtMode() {
+    _artModeActive = true;
+    scPlayer.classList.add("sc-art-mode");
+    elBtnHideArt.classList.add("sc-btn-hideart-active");
+    createArtUI();
+    showArtControlsTemporarily();
+    if (typeof playToggleOnSnd === "function") playToggleOnSnd();
+  }
+
+  function exitArtMode() {
+    _artModeActive = false;
+    scPlayer.classList.remove("sc-art-mode");
+    scPlayer.classList.remove("sc-art-controls-show");
+    elBtnHideArt.classList.remove("sc-btn-hideart-active");
+    removeArtUI();
+    clearTimeout(_artModeTimer);
+    if (typeof playToggleOffSnd === "function") playToggleOffSnd();
+  }
+
+  function createArtUI() {
+    removeArtUI();
+
+    _artHeaderEl = document.createElement("div");
+    _artHeaderEl.className = "sc-art-mode-header";
+    _artHeaderEl.textContent = elTrackName ? elTrackName.textContent : "";
+    scPlayer.appendChild(_artHeaderEl);
+
+    _artBarEl = document.createElement("div");
+    _artBarEl.className = "sc-art-mode-bar";
+    _artBarEl.innerHTML =
+      '<button class="sc-btn sc-btn-sm sc-art-prev" id="artBtnPrev">' +
+      '<svg viewBox="0 0 16 16" width="11" height="11"><polygon points="3,8 13,2 13,14" fill="currentColor"/></svg></button>' +
+      '<button class="sc-btn sc-btn-play" id="artBtnPlay">' +
+      '<svg class="sc-np-play-icon" viewBox="0 0 16 16" width="13" height="13"><polygon points="4,2 14,8 4,14" fill="currentColor"/></svg>' +
+      '<svg class="sc-np-pause-icon" viewBox="0 0 16 16" width="13" height="13" style="display:none"><rect x="3" y="2" width="4" height="12" fill="currentColor"/><rect x="9" y="2" width="4" height="12" fill="currentColor"/></svg></button>' +
+      '<button class="sc-btn sc-btn-sm sc-art-next" id="artBtnNext">' +
+      '<svg viewBox="0 0 16 16" width="11" height="11"><polygon points="13,8 3,2 3,14" fill="currentColor"/></svg></button>';
+    scPlayer.appendChild(_artBarEl);
+
+    var prevBtn = document.getElementById("artBtnPrev");
+    var playBtn = document.getElementById("artBtnPlay");
+    var nextBtn = document.getElementById("artBtnNext");
+
+    if (prevBtn) { prevBtn.addEventListener("click", prevTrack); wirePress(prevBtn); }
+    if (playBtn) {
+      playBtn.addEventListener("click", function () {
+        if (typeof playToggleOnSnd === "function") playToggleOnSnd();
+        if (audio.paused) {
+          if (!audio.src && trackList[currentTrackIndex]) {
+            playTrack(currentTrackIndex);
+          } else { audio.play(); }
+        } else { audio.pause(); }
+        syncActiveVolume();
+      });
+      wirePress(playBtn);
+    }
+    if (nextBtn) { nextBtn.addEventListener("click", nextTrack); wirePress(nextBtn); }
+
+    updateArtUI();
+  }
+
+  function removeArtUI() {
+    if (_artHeaderEl) { _artHeaderEl.remove(); _artHeaderEl = null; }
+    if (_artBarEl) { _artBarEl.remove(); _artBarEl = null; }
+  }
+
+  function updateArtUI() {
+    if (!_artModeActive) return;
+    if (_artHeaderEl) {
+      _artHeaderEl.textContent = elTrackName ? elTrackName.textContent : "";
+    }
+    if (_artBarEl) {
+      var playIcon = _artBarEl.querySelector(".sc-np-play-icon");
+      var pauseIcon = _artBarEl.querySelector(".sc-np-pause-icon");
+      if (playIcon) playIcon.style.display = isPlaying ? "none" : "block";
+      if (pauseIcon) pauseIcon.style.display = isPlaying ? "block" : "none";
+    }
+  }
+
+  function showArtControlsTemporarily() {
+    if (!_artModeActive) return;
+    scPlayer.classList.add("sc-art-controls-show");
+    clearTimeout(_artModeTimer);
+    _artModeTimer = setTimeout(function () {
+      scPlayer.classList.remove("sc-art-controls-show");
+    }, 3000);
   }
 
   /* ===== Wide layout detection ===== */
@@ -1250,26 +732,36 @@
     checkWidth();
   })();
 
-  /* ===== Keyboard ===== */
+  /* ===== Keyboard (works when SC is the active window) ===== */
   document.addEventListener("keydown", function (e) {
     if (win.style.display === "none") return;
     if (!win.classList.contains("active")) return;
-    if (!e.target.closest || !e.target.closest("#scWindow")) return;
     var k = e.key;
-    if (k === " " || k === "Space") {
+    if (k === " " || k === "Space" || k === "k" || k === "K") {
       e.preventDefault();
-      if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
-      wCall("toggle");
+      if (typeof playToggleOnSnd === "function") playToggleOnSnd();
+      if (audio.paused) {
+        if (!audio.src && trackList[currentTrackIndex]) {
+          playTrack(currentTrackIndex);
+        } else {
+          audio.play();
+        }
+      } else {
+        audio.pause();
+      }
+      return;
     }
-    if (k === "ArrowRight") {
+    if (k === "ArrowRight" || k === "l" || k === "L") {
       e.preventDefault();
-      if (typeof playClickSnd === 'function') playClickSnd();
+      if (typeof playClickSnd === "function") playClickSnd();
       nextTrack();
+      return;
     }
-    if (k === "ArrowLeft") {
+    if (k === "ArrowLeft" || k === "j" || k === "J") {
       e.preventDefault();
-      if (typeof playClickSnd === 'function') playClickSnd();
+      if (typeof playClickSnd === "function") playClickSnd();
       prevTrack();
+      return;
     }
   });
 
@@ -1284,61 +776,40 @@
     minH: 400,
     taskbarIcon:
       '<img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="14" height="14" style="flex-shrink:0;">',
-    taskbarLabel: __('soundcloud.title'),
-    taskbarAction: 'soundcloud',
-    appId: 'soundcloud',
+    taskbarLabel: __("soundcloud.title"),
+    taskbarAction: "soundcloud",
+    appId: "soundcloud",
     onShow: function () {
-      if (!window._scWidgetsReady) {
-        window._scWidgetsReady = true;
-        initWidgets();
+      if (!audio) {
+        initAudio();
+        loadIndex();
       }
       if (_scFirstShow) {
         _scFirstShow = false;
         if (!win.style.width || win.style.width === "") win.style.width = "444.5px";
-        if (!win.style.height || win.style.height === "") win.style.height = "666px";
+        if (!win.style.height || win.style.height === "") win.style.height = "800px";
       }
-      showAllIframes();
-      if (typeof window.setSoundCloudVolume === 'function') {
-        window.setSoundCloudVolume(typeof window.getPageVolume === 'function' ? window.getPageVolume() : 1);
+      if (typeof window.setSoundCloudVolume === "function") {
+        window.setSoundCloudVolume(
+          typeof window.getPageVolume === "function" ? window.getPageVolume() : 1
+        );
       }
-      if (activePlaylistId && widgets[activePlaylistId] && widgetReadies[activePlaylistId]) {
-        if (isPlaying) startPoll();
-        setTimeout(refreshFromWidget, 500);
-        return;
-      }
-      if (!activePlaylistId) {
-        for (var i = 0; i < playlists.length; i++) {
-          if (widgetReadies[playlists[i].id]) {
-            switchPlaylist(playlists[i].id);
-            return;
-          }
-        }
-      }
-      setTimeout(refreshFromWidget, 500);
     },
     onHide: function () {
       stopPoll();
+      if (_artModeActive) exitArtMode();
       if (elNowPlaying) elNowPlaying.classList.remove("visible");
-      for (var _id in widgets) {
-        if (widgets[_id] && widgetReadies[_id]) {
-          try {
-            var _w = widgets[_id];
-            var _p = wMethods.pause || "pause";
-            if (typeof _w[_p] === "function") _w[_p]();
-            var _v = wMethods.setVolume || "setVolume";
-            if (typeof _w[_v] === "function") _w[_v](0);
-          } catch (e) {}
-        }
+      if (audio) {
+        audio.pause();
+        isPlaying = false;
+        if (typeof updatePlayBtn === "function") updatePlayBtn();
       }
-      isPlaying = false;
-      if (typeof updatePlayBtn === 'function') updatePlayBtn();
     },
-
   });
 
   if (W2K && W2K.AppRegistry) {
     W2K.AppRegistry.register("soundcloud", {
-      label: __('soundcloud.title'),
+      label: __("soundcloud.title"),
       show: function () {
         behavior.show();
       },
@@ -1362,31 +833,50 @@
       elBtnPlay.classList.remove("sc-btn-play-active");
     }
     _updateNowPlaying();
+    updateArtUI();
   }
 
   function _updateNowPlaying() {
     if (!elNowPlaying) return;
-    if (isPlaying && elTrackName && elTrackName.textContent && elTrackName.textContent !== __('soundcloud.defaultTrack')) {
-      var artSrc = elArtImg.style.display !== "none" ? elArtImg.src : '';
+    var hasTrack = audio && audio.src && trackList && trackList[currentTrackIndex];
+    if (
+      hasTrack &&
+      elTrackName &&
+      elTrackName.textContent
+    ) {
+      var artSrc =
+        elArtImg.style.display !== "none" ? elArtImg.src : "";
       elNowPlaying.innerHTML =
-        '<span class="sc-now-playing-label">' + elTrackName.textContent + '</span>' +
+        '<span class="sc-now-playing-label">' +
+        elTrackName.textContent +
+        '</span>' +
         '<div class="sc-now-playing-menu" id="scNpMenu">' +
-          (artSrc ? '<img class="sc-np-art" src="' + artSrc + '" alt="">' : '') +
-          '<div class="sc-np-body">' +
-            '<div class="sc-np-track" id="scNpTrack">' + elTrackName.textContent + '</div>' +
-            '<div class="sc-np-buttons">' +
-              '<button class="sc-np-btn" id="scNpPrev"><svg viewBox="0 0 16 16"><polygon points="3,8 13,2 13,14" fill="currentColor"/></svg></button>' +
-              '<button class="sc-np-btn" id="scNpToggle">' +
-                '<svg class="sc-np-play-icon" viewBox="0 0 16 16" style="display:' + (isPlaying ? 'none' : 'block') + '"><polygon points="4,2 14,8 4,14" fill="currentColor"/></svg>' +
-                '<svg class="sc-np-pause-icon" viewBox="0 0 16 16" style="display:' + (isPlaying ? 'block' : 'none') + '"><rect x="3" y="2" width="4" height="12" fill="currentColor"/><rect x="9" y="2" width="4" height="12" fill="currentColor"/></svg>' +
-              '</button>' +
-              '<button class="sc-np-btn" id="scNpNext"><svg viewBox="0 0 16 16"><polygon points="13,8 3,2 3,14" fill="currentColor"/></svg></button>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
+        (artSrc
+          ? '<img class="sc-np-art" src="' +
+            artSrc +
+            '" alt="">'
+          : "") +
+        '<div class="sc-np-body">' +
+        '<div class="sc-np-track" id="scNpTrack">' +
+        elTrackName.textContent +
+        "</div>" +
+        '<div class="sc-np-buttons">' +
+        '<button class="sc-np-btn" id="scNpPrev"><svg viewBox="0 0 16 16"><polygon points="3,8 13,2 13,14" fill="currentColor"/></svg></button>' +
+        '<button class="sc-np-btn" id="scNpToggle">' +
+        '<svg class="sc-np-play-icon" viewBox="0 0 16 16" style="display:' +
+        (isPlaying ? "none" : "block") +
+        '"><polygon points="4,2 14,8 4,14" fill="currentColor"/></svg>' +
+        '<svg class="sc-np-pause-icon" viewBox="0 0 16 16" style="display:' +
+        (isPlaying ? "block" : "none") +
+        '"><rect x="3" y="2" width="4" height="12" fill="currentColor"/><rect x="9" y="2" width="4" height="12" fill="currentColor"/></svg>' +
+        "</button>" +
+        '<button class="sc-np-btn" id="scNpNext"><svg viewBox="0 0 16 16"><polygon points="13,8 3,2 3,14" fill="currentColor"/></svg></button>' +
+        "</div>" +
+        "</div>" +
+        "</div>";
       elNowPlaying.classList.add("visible");
     } else {
-      elNowPlaying.innerHTML = '';
+      elNowPlaying.innerHTML = "";
       elNowPlaying.classList.remove("visible");
     }
   }
@@ -1397,14 +887,22 @@
       var btn = e.target.closest("button");
       if (btn) {
         if (btn.id === "scNpToggle") {
-          if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
-          wCall("toggle");
+          if (typeof playToggleOnSnd === "function") playToggleOnSnd();
+          if (audio.paused) {
+            if (!audio.src && trackList[currentTrackIndex]) {
+              playTrack(currentTrackIndex);
+            } else {
+              audio.play();
+            }
+          } else {
+            audio.pause();
+          }
           syncActiveVolume();
         } else if (btn.id === "scNpNext") {
-          if (typeof playClickSnd === 'function') playClickSnd();
+          if (typeof playClickSnd === "function") playClickSnd();
           nextTrack();
         } else if (btn.id === "scNpPrev") {
-          if (typeof playClickSnd === 'function') playClickSnd();
+          if (typeof playClickSnd === "function") playClickSnd();
           prevTrack();
         }
         return;
@@ -1415,12 +913,18 @@
         menu.classList.toggle("visible");
         if (willShow) {
           var cp = document.getElementById("calendarPanel");
-          if (cp) { cp.style.display = "none"; cp.classList.remove("cal-in", "cal-out"); }
+          if (cp) {
+            cp.style.display = "none";
+            cp.classList.remove("cal-in", "cal-out");
+          }
           var vp = document.getElementById("volumePanel");
-          if (vp) { vp.style.display = "none"; vp.classList.remove("vol-in", "vol-out"); }
+          if (vp) {
+            vp.style.display = "none";
+            vp.classList.remove("vol-in", "vol-out");
+          }
         }
       }
-      if (typeof playClickSnd === 'function') playClickSnd();
+      if (typeof playClickSnd === "function") playClickSnd();
     });
     var _scObserver = new MutationObserver(function () {
       if (win.style.display === "none") {
@@ -1431,15 +935,17 @@
     _scObserver.observe(win, { attributes: true, attributeFilter: ["style"] });
     document.addEventListener("click", function (e) {
       var menu = document.getElementById("scNpMenu");
-      if (menu && menu.classList.contains("visible") && !elNowPlaying.contains(e.target)) {
+      if (
+        menu &&
+        menu.classList.contains("visible") &&
+        !elNowPlaying.contains(e.target)
+      ) {
         if (win.style.display === "none") {
           menu.classList.remove("visible");
         }
       }
     });
   }
-
-  /* ===== Taskbar popup menu (removed — menu now lives in tray widget) ===== */
 
   /* ===== Custom playlists persistence ===== */
   function loadCustomPlaylists() {
@@ -1450,9 +956,6 @@
         nextCustomId = d.nextId || 1;
       }
     } catch (e) {}
-    for (var i = 0; i < customPlaylists.length; i++) {
-      playlists.push(customPlaylists[i]);
-    }
   }
   loadCustomPlaylists();
 
@@ -1469,6 +972,21 @@
   renderPlaylists();
   _setupNowPlaying();
 
+  /* ---- Art mode mouse move handler ---- */
+  if (scPlayer) {
+    scPlayer.addEventListener("mousemove", function () {
+      if (_artModeActive) showArtControlsTemporarily();
+    });
+  }
+
+  /* ---- Exit art mode when window is un-maximized ---- */
+  var _artModeObserver = new MutationObserver(function () {
+    if (_artModeActive && !win.classList.contains("window-maximized")) {
+      exitArtMode();
+    }
+  });
+  _artModeObserver.observe(win, { attributes: true, attributeFilter: ["class"] });
+
   /* Watch for mobile-mode toggle and re-render mobile playlists */
   var _scPrevMob = document.body.classList.contains("mobile-mode");
   var _scMobObserver = new MutationObserver(function () {
@@ -1478,5 +996,5 @@
       renderMobilePlaylists();
     }
   });
-  _scMobObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  _scMobObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
 })();

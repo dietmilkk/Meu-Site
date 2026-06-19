@@ -110,7 +110,10 @@
     border-color: #fff #5a5a5a #5a5a5a #fff;
     box-shadow: 0 6px 32px rgba(0, 0, 0, 0.4);
     padding: 22px 24px 18px;
-    width: 380px;
+    width: 90vw;
+    max-width: 420px;
+    max-height: 85vh;
+    overflow-y: auto;
     gap: 10px;
 }
 

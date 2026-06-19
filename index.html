@@ -27,6 +27,7 @@
         </script>
     </head>
     <body>
+        <div id="crtScanlines"></div>
         <div id="ambientOverlay"></div>
         <div id="bootScreen">
             <div class="boot-center" id="bootCenter">
@@ -43,7 +44,7 @@
             <!-- ===== WELCOME (inside boot, after boot bar completes) ===== -->
             <div class="boot-welcome" id="bootWelcome" style="display: none">
                 <div class="welcome-layout">
-                    <div class="welcome-top">
+                    <div class="welcome-header">
                         <div class="welcome-avatar">
                             <img
                                 src="system/assets/icons/tango2kde/48x48/apps/dolphin.png"
@@ -82,64 +83,29 @@
 
                     <div class="welcome-divider"></div>
 
-                    <div class="welcome-section">
-                        <label
-                            class="welcome-label"
-                            id="welcomeLangLabel"
-                            data-i18n="welcome.langLabel"
-                            >Idioma</label
-                        >
-                        <div class="welcome-lang-toggle">
-                            <button
-                                class="welcome-lang-btn active"
-                                data-lang="pt"
-                                id="welcomeLangPt"
-                            >
-                                PT-BR
-                            </button>
-                            <button
-                                class="welcome-lang-btn"
-                                data-lang="en"
-                                id="welcomeLangEn"
-                            >
-                                EN
-                            </button>
-                            <button
-                                class="welcome-lang-btn"
-                                data-lang="zh"
-                                id="welcomeLangZh"
-                            >
-                                中文
-                            </button>
+                    <div class="welcome-prefs">
+                        <div class="welcome-pref-col">
+                            <span class="welcome-label"
+                                id="welcomeLangLabel"
+                                data-i18n="welcome.langLabel">Idioma</span>
+                            <div class="welcome-lang-toggle">
+                                <button class="welcome-lang-btn active" data-lang="pt" id="welcomeLangPt">PT-BR</button>
+                                <button class="welcome-lang-btn" data-lang="en" id="welcomeLangEn">EN</button>
+                                <button class="welcome-lang-btn" data-lang="zh" id="welcomeLangZh">中文</button>
+                            </div>
+                            <p class="welcome-translation-note" id="welcomeTranslationNote" data-i18n="welcome.translationNote"></p>
                         </div>
-                        <p
-                            class="welcome-translation-note"
-                            id="welcomeTranslationNote"
-                            data-i18n="welcome.translationNote"
-                        ></p>
-                    </div>
-
-                    <div class="welcome-divider"></div>
-
-                    <div class="welcome-section">
-                        <label
-                            class="welcome-label"
-                            data-i18n="welcome.modeLabel"
-                            >Modo</label
-                        >
-                        <div class="welcome-lang-toggle">
-                            <button
-                                class="welcome-lang-btn active"
-                                id="welcomeModeDesktop"
-                            >
-                                <span data-i18n="welcome.desktopMode">Desktop</span>
-                            </button>
-                            <button
-                                class="welcome-lang-btn"
-                                id="welcomeModeMobile"
-                            >
-                                <span data-i18n="welcome.mobileMode">Mobile</span>
-                            </button>
+                        <div class="welcome-pref-sep"></div>
+                        <div class="welcome-pref-col">
+                            <span class="welcome-label" data-i18n="welcome.modeLabel">Modo</span>
+                            <div class="welcome-lang-toggle">
+                                <button class="welcome-lang-btn active" id="welcomeModeDesktop">
+                                    <span data-i18n="welcome.desktopMode">Desktop</span>
+                                </button>
+                                <button class="welcome-lang-btn" id="welcomeModeMobile">
+                                    <span data-i18n="welcome.mobileMode">Mobile</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -148,18 +114,10 @@
                     <div class="welcome-footer">
                         <label class="welcome-check-label">
                             <input type="checkbox" id="welcomeDontShow" />
-                            <span
-                                id="welcomeDontShowText"
-                                data-i18n="welcome.dontShow"
-                                >Não mostrar na inicialização</span
-                            >
+                            <span id="welcomeDontShowText" data-i18n="welcome.dontShow">Não mostrar na inicialização</span>
                         </label>
                         <button class="welcome-start-btn" id="welcomeStartBtn">
-                            <span
-                                id="welcomeStartText"
-                                data-i18n="welcome.startBtn"
-                                >Começar</span
-                            >
+                            <span id="welcomeStartText" data-i18n="welcome.startBtn">Começar</span>
                         </button>
                     </div>
                 </div>
@@ -197,6 +155,12 @@
                         >
                     </div>
 
+                    <div class="desk-icon" data-action="pins">
+                        <span class="di-icon">
+                            <img src="system/assets/icons/tango2kde/48x48/apps/gwenview.png" alt="" width="36" height="36">
+                        </span>
+                        <span class="di-label" data-i18n="desktop.pins">Pins</span>
+                    </div>
                     <div class="desk-icon" data-action="settings">
                         <span class="di-icon">
                             <img
@@ -231,111 +195,27 @@
                         </script>
                     </div>
 
-                    <div class="window-body">
-                        <div class="content-area">
-                            <p
-                                data-i18n="links.desc"
-                                style="
-                                    margin: 0 0 16px;
-                                    line-height: 1.5;
-                                    font-size: 13px;
-                                    color: #111;
-                                "
-                            >
-                                Plataformas onde estou ativo — me segue aí :)
-                            </p>
-                            <div class="projects-grid">
-                                <div
-                                    class="project-card"
-                                    onclick="window.open('https://soundcloud.com/cu11','_blank')"
-                                    style="cursor: pointer"
-                                >
-                                    <div class="project-img">
-                                        <img
-                                            src="system/assets/icons/tango2kde/48x48/apps/kaudiocreator.png"
-                                            alt="SoundCloud"
-                                            style="background:#ff5500;object-fit:contain;padding:8px;"
-                                        />
-                                    </div>
-                                    <div class="project-body">
-                                        <h3>SoundCloud</h3>
-                                        <p style="color:#666;font-size:12px;margin:0 0 4px;">
-                                            soundcloud.com/cu11
-                                        </p>
-                                        <p data-i18n="links.scDesc">
-                                            Minha página no SoundCloud com playlists e músicas.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="project-card"
-                                    onclick="navigator.clipboard.writeText('@sillllky').then(function(){if(typeof playToggleOnSnd==='function')playToggleOnSnd();})"
-                                    style="cursor: pointer"
-                                >
-                                    <div class="project-img">
-                                        <img
-                                            src="system/assets/icons/tango2kde/48x48/apps/internet-group-chat.png"
-                                            alt="Discord"
-                                            style="background:#5865f2;object-fit:contain;padding:8px;"
-                                        />
-                                    </div>
-                                    <div class="project-body">
-                                        <h3>Discord</h3>
-                                        <p style="color:#666;font-size:12px;margin:0 0 4px;">
-                                            @sillllky
-                                        </p>
-                                        <p data-i18n="links.discordDesc">
-                                            Me adiciona no Discord! (clique para copiar)
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="project-card"
-                                    onclick="window.open('https://space.bilibili.com/3706931485084517/dynamic','_blank')"
-                                    style="cursor: pointer"
-                                >
-                                    <div class="project-img">
-                                        <img
-                                            src="system/assets/icons/tango2kde/48x48/apps/internet-web-browser.png"
-                                            alt="Bilibili"
-                                            style="background:#00a1d6;object-fit:contain;padding:8px;"
-                                        />
-                                    </div>
-                                    <div class="project-body">
-                                        <h3>Bilibili</h3>
-                                        <p style="color:#666;font-size:12px;margin:0 0 4px;">
-                                            b23.tv/T4CMrOw
-                                        </p>
-                                        <p data-i18n="links.biliDesc">
-                                            Meu perfil no Bilibili chinês — é estranho e divertido, não entendo nada, mas é bem intrigante, e honestamente mais divertido que o YouTube, parece um conteúdo mais genuíno.
-                                        </p>
-                                </div>
-                                </div>
-
-                                <div
-                                    class="project-card"
-                                    onclick="window.open('https://wakatime.com/@pepsicoca','_blank')"
-                                    style="cursor: pointer"
-                                >
-                                    <div class="project-img">
-                                        <img
-                                            src="system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png"
-                                            alt="WakaTime"
-                                            style="background:#4a9;object-fit:contain;padding:8px;"
-                                        />
-                                    </div>
-                                    <div class="project-body">
-                                        <h3>WakaTime</h3>
-                                        <p style="color:#666;font-size:12px;margin:0 0 4px;">
-                                            wakatime.com/@pepsicoca
-                                        </p>
-                                        <p data-i18n="links.wakatimeDesc">
-                                            Minhas estatísticas de código — veja o que ando codando.
-                                        </p>
-                                    </div>
-                                </div>
+                    <div class="window-body" style="padding:0;">
+                        <div class="links-grid">
+                            <div class="links-item" onclick="window.open('https://soundcloud.com/cu11','_blank')" title="soundcloud.com/cu11">
+                                <img src="system/assets/icons/tango2kde/48x48/apps/kaudiocreator.png" alt="">
+                                <span>SoundCloud</span>
+                            </div>
+                            <div class="links-item" onclick="navigator.clipboard.writeText('@sillllky').then(function(){if(typeof playToggleOnSnd==='function')playToggleOnSnd();})" title="@sillllky">
+                                <img src="system/assets/icons/tango2kde/48x48/apps/internet-group-chat.png" alt="">
+                                <span>Discord</span>
+                            </div>
+                            <div class="links-item" onclick="window.open('https://space.bilibili.com/3706931485084517/dynamic','_blank')" title="b23.tv/T4CMrOw">
+                                <img src="system/assets/icons/tango2kde/48x48/apps/internet-web-browser.png" alt="">
+                                <span>Bilibili</span>
+                            </div>
+                            <div class="links-item" onclick="window.open('https://wakatime.com/@pepsicoca','_blank')" title="wakatime.com/@pepsicoca">
+                                <img src="system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png" alt="">
+                                <span>WakaTime</span>
+                            </div>
+                            <div class="links-item" onclick="window.open('https://pinterest.com/sillky786/','_blank')" title="pinterest.com/sillky786">
+                                <img src="system/assets/icons/tango2kde/48x48/apps/gwenview.png" alt="">
+                                <span>Pinterest</span>
                             </div>
                         </div>
                     </div>
@@ -360,20 +240,6 @@
                         </script>
                     </div>
                     <div class="window-body" id="gamesBody"></div>
-                </div>
-
-                <!-- ===== DOPAMINA WINDOW ===== -->
-                <div class="window" id="dopaminaWindow" style="display: none">
-                    <div class="title-bar" id="dopaminaDragHandle">
-                        <span class="title-bar-text">
-                            <span class="icon">
-                                <img src="system/assets/icons/tango2kde/16x16/apps/energy.png" alt="" width="14" height="14" />
-                            </span>
-                            <span data-i18n="dopamina.title">Dopamina</span>
-                        </span>
-                        <script>document.write(createWindowButtons("dopamina"));</script>
-                    </div>
-                    <div class="window-body" id="dopaminaBody"></div>
                 </div>
 
                 <!-- ===== SETTINGS WINDOW ===== -->
@@ -457,64 +323,98 @@
                                 </div>
                             </div>
                             <div class="settings-content">
-                                <div
-                                    class="settings-panel active"
-                                    data-category="appearance"
-                                >
                                     <div
-                                        class="settings-panel-header"
-                                        data-i18n="settings.wallpaper"
+                                        class="settings-panel active"
+                                        data-category="appearance"
                                     >
-                                        Wallpaper
-                                    </div>
-                                    <p
-                                        class="settings-desc"
-                                        data-i18n="settings.wallpaperDesc"
-                                    >
-                                        Escolha uma imagem do seu computador
-                                        para usar como papel de parede.
-                                    </p>
-                                    <div
-                                        class="settings-wallpaper-preview"
-                                        id="wallpaperPreview"
-                                    >
-                                        <span
-                                            class="settings-no-wallpaper"
-                                            data-i18n="settings.noWallpaper"
-                                            >Nenhum wallpaper
-                                            personalizado</span
+                                        <div
+                                            class="settings-panel-header"
+                                            data-i18n="settings.themeColor"
                                         >
-                                    </div>
-                                    <div class="settings-file-row">
-                                        <input
-                                            type="file"
-                                            id="wallpaperInput"
-                                            accept="image/*"
-                                            class="settings-file-input"
-                                        />
-                                        <label
-                                            for="wallpaperInput"
-                                            class="settings-file-btn"
-                                            data-i18n="settings.selectImage"
-                                            >Selecionar Imagem</label
+                                            Cor do Tema
+                                        </div>
+                                        <p
+                                            class="settings-desc"
+                                            data-i18n="settings.themeColorDesc"
                                         >
-                                        <span
+                                            Escolha a cor principal do sistema.
+                                        </p>
+                                        <div class="settings-theme-row">
+                                            <input
+                                                type="color"
+                                                id="themeColorPicker"
+                                                value="#000080"
+                                                class="settings-color-input"
+                                            />
+                                            <button
+                                                class="settings-btn"
+                                                id="themeApplyBtn"
+                                                data-i18n="settings.apply"
+                                            >
+                                                Aplicar
+                                            </button>
+                                            <button
+                                                class="settings-btn"
+                                                id="themeResetBtn"
+                                                data-i18n="settings.reset"
+                                            >
+                                                Resetar
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="settings-panel-header"
+                                            data-i18n="settings.wallpaper"
+                                        >
+                                            Wallpaper
+                                        </div>
+                                        <p
+                                            class="settings-desc"
+                                            data-i18n="settings.wallpaperDesc"
+                                        >
+                                            Escolha uma imagem do seu computador
+                                            para usar como papel de parede.
+                                        </p>
+                                        <div
+                                            class="settings-wallpaper-preview"
+                                            id="wallpaperPreview"
+                                        >
+                                            <span
+                                                class="settings-no-wallpaper"
+                                                data-i18n="settings.noWallpaper"
+                                                >Nenhum wallpaper
+                                                personalizado</span
+                                            >
+                                        </div>
+                                        <div class="settings-file-row">
+                                            <input
+                                                type="file"
+                                                id="wallpaperInput"
+                                                accept="image/*"
+                                                class="settings-file-input"
+                                            />
+                                            <label
+                                                for="wallpaperInput"
+                                                class="settings-file-btn"
+                                                data-i18n="settings.selectImage"
+                                                >Selecionar Imagem</label
+                                            >
+                                            <span
                                             class="settings-file-name"
                                             id="wallpaperFileName"
                                             data-i18n="settings.noFile"
                                             >Nenhum arquivo selecionado</span
                                         >
+                                        <div class="settings-panel-footer">
+                                            <button
+                                                class="settings-btn"
+                                                id="settingsApplyBtn"
+                                                data-i18n="settings.apply"
+                                            >
+                                                Aplicar
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="settings-panel-footer">
-                                        <button
-                                            class="settings-btn"
-                                            id="settingsApplyBtn"
-                                            data-i18n="settings.apply"
-                                        >
-                                            Aplicar
-                                        </button>
                                     </div>
-                                </div>
                                 <div
                                     class="settings-panel"
                                     data-category="system"
@@ -525,7 +425,7 @@
                                     >
                                         Sistema
                                     </div>
-                                    <div
+                                        <div
                                         class="settings-desc"
                                         id="systemInfoContent"
                                         style="
@@ -534,6 +434,24 @@
                                             font-size: 16px;
                                         "
                                     ></div>
+                                    <div class="settings-divider"></div>
+                                    <div class="settings-panel-header" style="margin-top:6px;">Equalizador</div>
+                                    <div class="eq-wrap" id="eqWrap">
+                                        <div class="eq-sliders" id="eqSliders"></div>
+                                        <div class="eq-footer">
+                                            <div class="eq-presets">
+                                                <select class="eq-select" id="eqPresetSelect"></select>
+                                                <button class="settings-btn" id="eqApplyPreset">Aplicar</button>
+                                            </div>
+                                            <div class="eq-actions">
+                                                <label class="eq-bypass-label">
+                                                    <input type="checkbox" id="eqBypass">
+                                                    <span>Desligado</span>
+                                                </label>
+                                                <button class="settings-btn" id="eqResetBtn">Resetar</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div
                                     class="settings-panel"
@@ -561,6 +479,11 @@
                                         <span
                                             data-i18n="settings.shortcutFullscreen"
                                             >Alternar tela cheia</span
+                                        ><br />
+                                        <kbd>Ctrl + Shift + T</kbd> &mdash;
+                                        <span
+                                            data-i18n="settings.shortcutCrt"
+                                            >Alternar modo CRT</span
                                         >
                                     </div>
                                     <style>
@@ -761,6 +684,19 @@
                                 </button>
                                 <button
                                     class="sc-btn sc-btn-sm"
+                                    id="scBtnHidePl"
+                                >
+                                    <svg
+                                        viewBox="0 0 16 16"
+                                        width="12"
+                                        height="12"
+                                    >
+                                        <rect x="2" y="3" width="5" height="10" fill="currentColor" opacity="0.4"/>
+                                        <rect x="9" y="3" width="5" height="10" fill="currentColor"/>
+                                    </svg>
+                                </button>
+                                <button
+                                    class="sc-btn sc-btn-sm"
                                     id="scBtnHideArt"
                                 >
                                     <svg
@@ -939,114 +875,144 @@
                     </div>
                 </div>
 
+                <!-- ===== PINS WINDOW ===== -->
+                <div class="window" id="pinsWindow" style="display: none">
+                    <div class="title-bar" id="pinsDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="14" height="14">
+                            </span>
+                            <span>Pins</span>
+                        </span>
+                        <script>document.write(createWindowButtons("pins"));</script>
+                    </div>
+                    <div class="window-body" id="pinsBody">
+                        <div class="pins-layout">
+                            <div class="pins-toolbar">
+                                <button class="pins-btn" id="pinsAddBtn">
+                                    <img src="system/assets/icons/tango2kde/16x16/actions/list-add.png" alt="" width="12" height="12">
+                                    Adicionar Pin
+                                </button>
+                                <span class="pins-counter" id="pinsCounter">0 pins</span>
+                            </div>
+                            <div class="pins-grid" id="pinsGrid">
+                                <div class="pins-empty">
+                                    <div class="pins-empty-icon">📌</div>
+                                    <div class="pins-empty-text">Nenhum pin ainda</div>
+                                    <div class="pins-empty-sub">Clique em "Adicionar Pin" para começar</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ===== START MENU ===== -->
                 <div class="start-menu" id="startMenu">
                     <div class="start-menu-header">
                         <span data-i18n="start.header">win2000</span>
                     </div>
-                    <div class="start-menu-body" id="startMenuBody">
-                        <div
-                            class="start-menu-group-title"
-                            data-i18n="start.frequent"
-                        >
-                            Usados frequentemente
-                        </div>
-                        <div class="start-menu-item" data-action="games">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/categories/applications-games.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.games">Jogos</span>
-                        </div>
-                        <div class="start-menu-item" data-action="randomgif">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/apps/gwenview.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.gallery"
-                                >Coleção de imgs</span
-                            >
-                        </div>
-                        <div class="start-menu-item" data-action="dopamina">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/apps/energy.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.dopamina">Dopamina</span>
-                        </div>
-                        <div class="start-menu-item" data-action="links">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.links">Links</span>
-                        </div>
-                        <!--
-                        <div class="start-menu-item" data-action="feed">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/apps/text-editor.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.feed">Rede Social</span>
-                        </div>
-                        -->
-                        <div class="start-menu-item" data-action="settings">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.settings"
-                                >Configurações</span
-                            >
-                        </div>
-                        <div class="start-menu-item" data-action="soundcloud">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.soundcloud">SoundCloud</span>
-                        </div>
-                        <div class="start-menu-separator"></div>
-                        <div
-                            class="start-menu-group-title"
-                            data-i18n="start.system"
-                        >
-                            Sistema
-                        </div>
-                        <div class="start-menu-item" data-action="terminal">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/apps/terminal.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.terminal">Terminal</span>
-                        </div>
-                        <div class="start-menu-item" data-action="fullscreen">
-                            <img
-                                src="system/assets/icons/tango2kde/16x16/actions/view-fullscreen.png"
-                                alt=""
-                                width="16"
-                                height="16"
-                            />
-                            <span data-i18n="start.fullscreen">Tela Cheia</span>
-                        </div>
-                        <div class="start-menu-item" data-action="shutdown">
-                            <span data-i18n="start.shutdown">Desligar</span>
+                    <div class="fabric-nav start-menu-fabric">
+                        <div class="fabric-nav-inner">
+                            <div class="fabric-nav-content start-menu-body" id="startMenuBody">
+                                <div
+                                    class="start-menu-group-title"
+                                    data-i18n="start.frequent"
+                                >
+                                    Usados frequentemente
+                                </div>
+                                <div class="start-menu-item" data-action="games">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/categories/applications-games.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.games">Jogos</span>
+                                </div>
+                                <div class="start-menu-item" data-action="randomgif">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/apps/gwenview.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.gallery"
+                                        >Coleção de imgs</span
+                                    >
+                                </div>
+                                <div class="start-menu-item" data-action="pins">
+                                    <img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="16" height="16">
+                                    <span>Pins</span>
+                                </div>
+                                <div class="start-menu-item" data-action="links">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.links">Links</span>
+                                </div>
+                                <!--
+                                <div class="start-menu-item" data-action="feed">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/apps/text-editor.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.feed">Rede Social</span>
+                                </div>
+                                -->
+                                <div class="start-menu-item" data-action="settings">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.settings"
+                                        >Configurações</span
+                                    >
+                                </div>
+                                <div class="start-menu-item" data-action="soundcloud">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.soundcloud">SoundCloud</span>
+                                </div>
+                                <div class="start-menu-separator"></div>
+                                <div
+                                    class="start-menu-group-title"
+                                    data-i18n="start.system"
+                                >
+                                    Sistema
+                                </div>
+                                <div class="start-menu-item" data-action="terminal">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/apps/terminal.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.terminal">Terminal</span>
+                                </div>
+                                <div class="start-menu-item" data-action="fullscreen">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/actions/view-fullscreen.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.fullscreen">Tela Cheia</span>
+                                </div>
+                                <div class="start-menu-item" data-action="shutdown">
+                                    <span data-i18n="start.shutdown">Desligar</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1093,7 +1059,9 @@
         <script src="system/js/i18n.js"></script>
         <script src="system/js/geo.js"></script>
         <script src="system/js/dialogs.js"></script>
+        <script src="system/js/theme.js"></script>
         <script src="system/js/tray.js"></script>
+        <script src="system/js/equalizer.js"></script>
         <script src="system/js/window-manager.js"></script>
         <script src="system/js/mobile.js"></script>
         <script src="apps/gallery/gallery.js"></script>
@@ -1101,9 +1069,9 @@
         <script src="apps/games/games.js"></script>
 
         <script src="apps/soundcloud/soundcloud.js"></script>
-        <script src="apps/dopamina/dopamina.js"></script>
         <!-- <script src="apps/feed/feed.js"></script> -->
 
+        <script src="apps/pins/pins.js"></script>
         <script src="system/js/main.js"></script>
         <script src="apps/welcome/welcome.js"></script>
         <script src="apps/settings/settings.js"></script>
@@ -1132,6 +1100,27 @@
                 },
                 { once: true },
             );
+        </script>
+        <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+            <filter id="crt" x="0%" y="0%" width="100%" height="100%">
+                <feGaussianBlur stdDeviation="1.5" result="blur" />
+                <feComponentTransfer in="blur" result="brick">
+                    <feFuncR type="discrete" tableValues="0 0.15 0.3 0.45 0.6 0.8 1" />
+                    <feFuncG type="discrete" tableValues="0 0.15 0.3 0.45 0.6 0.8 1" />
+                    <feFuncB type="discrete" tableValues="0 0.15 0.3 0.45 0.6 0.8 1" />
+                </feComponentTransfer>
+            </filter>
+        </svg>
+        <script>
+            window.toggleCrtMode = function () {
+                document.documentElement.classList.toggle('crt-mode');
+            };
+            document.addEventListener('keydown', function (e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+                    e.preventDefault();
+                    window.toggleCrtMode();
+                }
+            });
         </script>
     </body>
 </html>

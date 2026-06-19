@@ -188,7 +188,7 @@
         var block = document.createElement("div");
         block.className = "games-block";
         block.style.cssText =
-          "background:#000080;color:#fff;font-family:'Courier New',monospace;font-size:14px;font-weight:bold;padding:20px 12px;text-align:center;cursor:pointer;border:2px solid;border-color:#0000c0 #000040 #000040 #0000c0;display:flex;align-items:center;justify-content:center;aspect-ratio:1;user-select:none;opacity:0;";
+          "background:var(--clr-highlight);color:var(--clr-text-on-highlight);font-family:'Courier New',monospace;font-size:14px;font-weight:bold;padding:20px 12px;text-align:center;cursor:pointer;border:2px solid;border-color:var(--clr-highlight-hover) var(--clr-border-dark) var(--clr-border-dark) var(--clr-highlight-hover);display:flex;align-items:center;justify-content:center;aspect-ratio:1;user-select:none;opacity:0;";
         block.textContent = g.label;
         block.style.animationDelay = (idx * 0.06) + "s";
         setTimeout(function(el) {
@@ -795,11 +795,25 @@
   function startTypingChaos() {
     clearBody();
     var words = [
-      "SINERGIA", "BRAINSTORM", "ASAP", "MINDSET", "DELIVERY",
-      "PROATIVO", "FEEDBACK", "BENCHMARK", "AGILE", "FLEX",
-      "TRAVA-LINGUA", "PARALELEPIPEDO", "INCONSTITUCIONAL",
-      "OTORRINOLARINGOLOGISTA", "BICICLETA", "CIRCUNFERENCIA",
-      "PERPENDICULAR", "HIDROELETRICA", "CATASTROFE", "VULNERAVEL"
+      "BLZ", "VDD", "TBM", "PQ", "VLW", "FDS", "TLGD", "MDS",
+      "CRL", "DPS", "DNV", "NGM", "SMP", "TD", "TO", "TA",
+      "NAO", "SIM", "JA", "ATE", "MAIS", "AQUI", "ALI", "LA",
+      "MANO", "POXA", "BAH", "PUTS", "CARAMBA", "NOSSA",
+      "GENTE", "COISA", "MESMO", "ASSIM", "ENTAO", "ENTENDE",
+      "FALOU", "OBRIGADO", "DESCULPA", "CALMA", "ESPERA",
+      "PRONTO", "LEGAL", "MASSA", "TOP", "FODA", "CHATO",
+      "LINDO", "DOIDO", "SERIO", "VERDADE", "TALVEZ",
+      "NUNCA", "SEMPRE", "AGORA", "AINDA", "DEPOIS", "ONTEM",
+      "HOJE", "AMANHA", "BONITO", "CARINHO", "SAUDADE",
+      "BESTEIRA", "CUIDADO", "DIREITO", "RESPOSTA", "CABECA",
+      "CERTEZA", "MOTIVO", "VONTADE", "FELIZ", "TRISTE",
+      "CANSADO", "COMIDA", "DORMIR", "TRABALHO", "ESTUDAR",
+      "VIAJAR", "JOGAR", "PENSAR", "FALAR", "OUVIR",
+      "LEMBRAR", "ESQUECER", "ACEITAR", "MUDAR", "MORAR",
+      "VOLTAR", "CHEGAR", "PEDIR", "COMPRAR", "PAGAR",
+      "FIQUEM", "VAMOS", "BORA", "TUDO", "NADA", "ALGO",
+      "NENHUM", "QUAL", "QUEM", "ONDE", "PORQUE", "MOTIVO",
+      "RAPAZ", "MOCA", "AMIGO", "FILHO", "PAI", "MAE", "IRMAO"
     ];
     var patience = 5;
     var destroyed = 0;
@@ -895,8 +909,8 @@
       for (var i = 0; i < falling.length; i++) {
         var f = falling[i];
         var isActive = (i === activeWordIdx);
-        var matchedPart = currentInput;
-        var remaining = f.word.slice(currentInput.length);
+        var matchedPart = isActive ? currentInput : "";
+        var remaining = isActive ? f.word.slice(currentInput.length) : f.word;
         html += '<div class="tw-word" style="left:' + f.x + '%;top:' + f.y + '%;' +
           (isActive ? 'color:#ff0;text-shadow:0 0 12px #ff0,0 0 24px #f80;transform:scale(1.15);' : '') +
           '"><span class="tw-matched">' + matchedPart + '</span><span class="tw-remaining">' + remaining + '</span></div>';

@@ -51,12 +51,10 @@
     flex-shrink: 0;
 }
 
-
-
-.sc-playlist-item {
+.sc-pl-item {
     display: flex;
     align-items: center;
-    padding: 3px 6px 3px 4px;
+    padding: 3px 6px;
     font-size: 15px;
     cursor: pointer;
     color: #000;
@@ -69,86 +67,16 @@
     transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
 }
 
-.sc-playlist-item:before {
-    content: "\266A";
-    margin-right: 4px;
-    color: #888;
-    font-size: 12px;
-    flex-shrink: 0;
-    transition: color 0.18s ease;
-}
-
-.sc-playlist-item:hover {
+.sc-pl-item:hover {
     background: #000080;
     color: #fff;
     padding-left: 8px;
 }
 
-.sc-playlist-item:hover:before {
-    color: #fff;
-}
-
-.sc-playlist-item-active {
+.sc-pl-item-active {
     background: #000080 !important;
     color: #fff !important;
     font-weight: bold;
-}
-
-.sc-playlist-item-active:before {
-    color: #fff !important;
-}
-
-.sc-playlist-item-label {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.sc-playlist-remove {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-    cursor: pointer;
-    opacity: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 4px;
-    border: 1px solid transparent;
-    color: #888;
-    transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
-.sc-playlist-item:hover .sc-playlist-remove {
-    opacity: 1;
-}
-
-.sc-playlist-remove:hover {
-    color: #c00;
-    border-color: #c00;
-}
-
-.sc-playlist-add {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 4px 6px;
-    font-size: 13px;
-    cursor: pointer;
-    color: #555;
-    background: #d4d0c8;
-    border: none;
-    border-top: 1px solid #b0aca4;
-    width: 100%;
-    user-select: none;
-    flex-shrink: 0;
-    transition: background 0.2s ease, color 0.2s ease;
-}
-
-.sc-playlist-add:hover {
-    background: #c8c4bc;
-    color: #000;
 }
 
 .sc-artwork {
@@ -307,6 +235,11 @@
 }
 
 .sc-btn-hideart-active {
+    border-color: var(--btn-bd-active) !important;
+    background: #b0aca4 !important;
+}
+
+.sc-btn-hidepl-active {
     border-color: var(--btn-bd-active) !important;
     background: #b0aca4 !important;
 }
@@ -522,8 +455,6 @@ body.is-fullscreen .sc-player.sc-wide {
     grid-template-columns: 1fr minmax(300px, 45%);
 }
 
-/* Taskbar popup menu (removed — menu now lives in tray widget) */
-
 /* ---- Mobile playlist bar ------------------------------------- */
 .sc-mobile-playlist-bar {
     display: none;
@@ -541,7 +472,7 @@ body.is-fullscreen .sc-player.sc-wide {
     display: none;
 }
 
-.sc-mobile-playlist-btn {
+.sc-mobile-pl-item {
     flex-shrink: 0;
     padding: 2px 10px;
     font-size: 13px;
@@ -557,17 +488,10 @@ body.is-fullscreen .sc-player.sc-wide {
     min-height: 28px;
 }
 
-.sc-mobile-playlist-btn:active,
-.sc-mobile-playlist-btn-active {
+.sc-mobile-pl-item:active,
+.sc-mobile-pl-item-active {
     border-color: var(--btn-bd-active) !important;
     background: var(--btn-bg-active) !important;
-}
-
-.sc-mobile-playlist-add {
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1;
-    padding: 2px 8px;
 }
 
 /* ---- Hide artwork ------------------------------------------- */
@@ -591,4 +515,109 @@ body.is-fullscreen .sc-player.sc-wide {
     grid-column: 2;
     grid-row: 1 / 3;
     align-self: center;
+}
+
+/* ---- Hide playlists ----------------------------------------- */
+.sc-hide-playlists .sc-playlist-bar {
+    display: none;
+}
+
+.sc-hide-playlists .sc-artwork {
+    width: 100% !important;
+}
+
+.sc-player.sc-wide.sc-hide-playlists .sc-playlist-bar {
+    display: none;
+}
+
+.sc-player.sc-wide.sc-hide-playlists .sc-artwork {
+    grid-column: 1 / 3;
+    width: 100% !important;
+}
+
+.sc-player.sc-wide.sc-hide-playlists .sc-track-list-wrap {
+    grid-column: 1 / 3;
+}
+
+/* ---- Art mode (maximized + hide-art toggled) ---- */
+.sc-art-mode .sc-top-row,
+.sc-art-mode .sc-info,
+.sc-art-mode .sc-progress-container,
+.sc-art-mode .sc-track-list-wrap {
+    display: none !important;
+}
+
+.sc-art-mode {
+    position: relative;
+    overflow: hidden;
+}
+
+.sc-art-mode .sc-artwork {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: auto;
+    border: none;
+    z-index: 1;
+}
+
+.sc-art-mode .sc-artwork img {
+    object-fit: contain !important;
+}
+
+.sc-art-mode .sc-artwork-overlay {
+    z-index: 2;
+}
+
+.sc-art-mode-header {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    color: #fff;
+    font-size: 17px;
+    font-weight: bold;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.3);
+    padding: 3px 10px;
+    pointer-events: none;
+    max-width: 55%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sc-art-mode-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 10px;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.sc-art-mode.sc-art-controls-show .sc-art-mode-bar {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.sc-art-mode-bar .sc-btn {
+    background: #555;
+    border-color: #777 #333 #333 #777;
+}
+
+.sc-art-mode-bar .sc-btn:active,
+.sc-art-mode-bar .sc-btn.sc-pressed {
+    border-color: #333 #777 #777 #333 !important;
+    background: #333 !important;
 }

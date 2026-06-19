@@ -18,5 +18,6 @@
 @import url("../../apps/feed/feed.css");
 @import url("../../apps/settings/settings.css");
 @import url("../../apps/welcome/welcome.css");
-@import url("../../apps/dopamina/dopamina.css");
+@import url("../../apps/pins/pins.css");
 @import url("tray.css");
+@import url("crt.css");

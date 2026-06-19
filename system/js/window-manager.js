@@ -10,13 +10,21 @@
      All sounds use the same building blocks for consistent character.
      ================================================================== */
   var _sndCtx = null;
+  var _masterGain = null;
   function _getSndCtx() {
     if (!_sndCtx) {
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return null;
       _sndCtx = new AC();
+      _masterGain = _sndCtx.createGain();
+      _masterGain.gain.value = typeof global.getPageVolume === 'function' ? global.getPageVolume() : 1;
+      _masterGain.connect(_sndCtx.destination);
     }
     return _sndCtx;
+  }
+  function _updateMasterVolume() {
+    if (_masterGain && typeof global.getPageVolume === 'function')
+      _masterGain.gain.value = global.getPageVolume();
   }
 
   /* ---- low-level primitives ---- */
@@ -32,7 +40,7 @@
         o.frequency.exponentialRampToValueAtTime(Math.max(endFreq, 0.01), ctx.currentTime + dur);
       g.gain.setValueAtTime(vol || 0.08, ctx.currentTime);
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-      o.connect(g); g.connect(ctx.destination);
+      o.connect(g); g.connect(_masterGain || ctx.destination);
       o.start(); o.stop(ctx.currentTime + dur);
     } catch (e) {}
   }
@@ -47,7 +55,7 @@
       var g = ctx.createGain();
       g.gain.setValueAtTime(vol || 0.03, ctx.currentTime);
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-      s.connect(g); g.connect(ctx.destination); s.start();
+      s.connect(g); g.connect(_masterGain || ctx.destination); s.start();
     } catch (e) {}
   }
   function _sweepNoise(from, to, dur, vol, Q) {
@@ -66,7 +74,7 @@
       var g = ctx.createGain();
       g.gain.setValueAtTime(vol || 0.03, ctx.currentTime);
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-      s.connect(f); f.connect(g); g.connect(ctx.destination); s.start();
+      s.connect(f); f.connect(g); g.connect(_masterGain || ctx.destination); s.start();
     } catch (e) {}
   }
   function _impact(freq, dur, vol, type) {
@@ -79,7 +87,7 @@
       o.frequency.setValueAtTime(freq, ctx.currentTime);
       g.gain.setValueAtTime(vol || 0.07, ctx.currentTime);
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + Math.max(dur, 0.005));
-      o.connect(g); g.connect(ctx.destination);
+      o.connect(g); g.connect(_masterGain || ctx.destination);
       o.start(); o.stop(ctx.currentTime + Math.max(dur, 0.005) + 0.01);
     } catch (e) {}
   }
@@ -301,6 +309,7 @@
   global.playErrorBeepSnd = playErrorBeepSnd;
   global.playGalleryNextSnd = playGalleryNextSnd;
   global.playGalleryPrevSnd = playGalleryPrevSnd;
+  global._updateMasterVolume = _updateMasterVolume;
 
   /* ===== End Sound Effects ===== */
 

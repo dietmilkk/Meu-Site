@@ -3,6 +3,7 @@
     { "src": "system/api/gallery.js", "use": "@vercel/node" },
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "apps/**", "use": "@vercel/static" },
+    { "src": "assets/**", "use": "@vercel/static" },
     { "src": "system/assets/**", "use": "@vercel/static" },
     { "src": "diretorio/**", "use": "@vercel/static" },
     { "src": "system/js/**", "use": "@vercel/static" },

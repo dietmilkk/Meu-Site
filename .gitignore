@@ -1,0 +1,18 @@
+# Ignore downloaded music (use update_music.py)
+assets/music/
+
+# Python
+__pycache__/
+*.pyc
+
+# yt-dlp partial downloads
+*.part
+*.ytdl
+
+# Audio files in wrong place
+*.m4a
+*.mp3
+
+# Metadata cache
+.metadata_cache.json
+cookies.txt

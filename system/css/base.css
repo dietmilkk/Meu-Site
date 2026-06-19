@@ -18,18 +18,43 @@
     --ff-mono: "IBM VGA 8x16", "Courier New", "Consolas", "Lucida Console", monospace;
     --ff-mono-lg: "IBM VGA 9x16", "Courier New", "Consolas", "Lucida Console", monospace;
     --ff-title: "Times New Roman", serif;
+
+    /* Theme seed — generates the full palette via JS */
+    --clr-theme: #000080;
+
+    /* Generated from theme */
     --clr-highlight: #000080;
     --clr-highlight-bg: #e0e0f0;
+    --clr-highlight-hover: #0000a0;
+    --clr-title-bar: #000080;
+    --clr-title-text: #ffffff;
+
+    /* Surface colors */
     --clr-window-bg: #ece9e0;
     --clr-panel-bg: #d4d0c8;
+    --clr-surface: #faf8f4;
+    --clr-taskbar-bg: #d4d0c8;
+    --clr-start-menu-header: linear-gradient(180deg, #000080, #1084d0);
+
+    /* Borders */
     --clr-border-dark: #5a5a5a;
-    --clr-border-light: #fff;
+    --clr-border-light: #ffffff;
+
+    /* Text */
+    --clr-text: #000000;
+    --clr-text-secondary: #444444;
+    --clr-text-on-highlight: #ffffff;
 
     /* Button states: deactivated = normal (raised), activated = pressed (depressed) */
     --btn-bg: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
     --btn-bg-active: linear-gradient(180deg, #c8c4bc, #d4d0c8);
     --btn-bd: #fff #5a5a5a #5a5a5a #fff;
     --btn-bd-active: #5a5a5a #fff #fff #5a5a5a;
+
+    /* Dialog */
+    --dialog-overlay: rgba(0,0,0,0.5);
+    --dialog-bg: #d4d0c8;
+    --dialog-bd: #ffffff #5a5a5a #5a5a5a #ffffff;
 }
 
 * {

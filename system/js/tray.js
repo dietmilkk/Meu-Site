@@ -257,6 +257,9 @@
     if (typeof window.setSoundCloudVolume === "function") {
       window.setSoundCloudVolume(v);
     }
+    if (typeof window._updateMasterVolume === "function") {
+      window._updateMasterVolume();
+    }
     if (typeof window._volumeUIUpdate === "function") {
       window._volumeUIUpdate();
     }
@@ -268,6 +271,9 @@
     saveVolume();
     if (typeof window.setSoundCloudVolume === "function") {
       window.setSoundCloudVolume(0);
+    }
+    if (typeof window._updateMasterVolume === "function") {
+      window._updateMasterVolume();
     }
     if (typeof window._volumeUIUpdate === "function") {
       window._volumeUIUpdate();

@@ -99,9 +99,9 @@
     left: 0;
     right: 0;
     height: 40px;
-    background: #d4d0c8;
-    border-top: 2px solid #fff;
-    border-bottom: 2px solid #5a5a5a;
+    background: var(--clr-taskbar-bg);
+    border-top: 2px solid var(--clr-border-light);
+    border-bottom: 2px solid var(--clr-border-dark);
     display: flex;
     align-items: center;
     padding: 0 3px;
@@ -129,7 +129,7 @@
 .start-text {
     font-size: 17px;
     font-weight: 700;
-    color: #000;
+    color: var(--clr-text);
     padding: 3px;
 }
 
@@ -233,7 +233,7 @@
     min-width: 80px;
     max-width: 200px;
     font-size: 16px;
-    color: #000;
+    color: var(--clr-text);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -292,11 +292,11 @@
     bottom: 40px;
     left: 0;
     width: 220px;
-    background: #ece9e0;
-    border-top: 2px solid #fff;
-    border-left: 2px solid #fff;
-    border-right: 2px solid #5a5a5a;
-    border-bottom: 2px solid #5a5a5a;
+    background: var(--clr-window-bg);
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
     z-index: 9998;
     box-shadow: 2px -2px 6px rgba(0, 0, 0, 0.2);
 }
@@ -313,8 +313,8 @@
     align-items: center;
     gap: 6px;
     padding: 6px 10px;
-    background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
-    color: #fff;
+    background: var(--clr-start-menu-header);
+    color: var(--clr-title-text);
     font-weight: 700;
     font-size: 17px;
     font-family: var(--ff-ui);
@@ -322,6 +322,7 @@
 
 .start-menu-body {
     padding: 2px 0;
+    background: transparent;
 }
 
 .start-menu-group-title {
@@ -340,7 +341,7 @@
     gap: 8px;
     padding: 5px 12px 5px 16px;
     font-size: 17px;
-    color: #000;
+    color: var(--clr-text);
     font-family: var(--ff-ui);
     margin: 0 2px;
     border-radius: 0;
@@ -351,13 +352,13 @@
 }
 
 .start-menu-item:hover {
-    background: #000080;
-    color: #fff;
+    background: var(--clr-highlight);
+    color: var(--clr-text-on-highlight);
     padding-left: 20px;
 }
 
 .start-menu-item:active {
-    background: #0000a0;
+    background: var(--clr-highlight-hover);
     transition-duration: 0.05s;
 }
 
@@ -376,19 +377,19 @@
 .start-menu-separator {
     height: 1px;
     margin: 3px 10px;
-    background: #c8c4bc;
-    border-bottom: 1px solid #fff;
+    background: var(--clr-panel-bg);
+    border-bottom: 1px solid var(--clr-border-light);
 }
 
 .ctx-menu {
     display: none;
     position: fixed;
     min-width: 200px;
-    background: #ece9e0;
-    border-top: 2px solid #fff;
-    border-left: 2px solid #fff;
-    border-right: 2px solid #5a5a5a;
-    border-bottom: 2px solid #5a5a5a;
+    background: var(--clr-window-bg);
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
     z-index: 99999;
     padding: 3px 0;
@@ -405,7 +406,7 @@
 
 .ctx-menu-item {
     padding: 5px 20px;
-    color: #000;
+    color: var(--clr-text);
     white-space: nowrap;
     transition:
         background 0.15s ease,
@@ -413,20 +414,20 @@
 }
 
 .ctx-menu-item:hover {
-    background: #000080;
-    color: #fff;
+    background: var(--clr-highlight);
+    color: var(--clr-text-on-highlight);
 }
 
 .ctx-menu-item:active {
-    background: #0000a0;
+    background: var(--clr-highlight-hover);
     transition-duration: 0.05s;
 }
 
 .ctx-menu-separator {
     height: 1px;
     margin: 4px 10px;
-    background: #c8c4bc;
-    border-bottom: 1px solid #fff;
+    background: var(--clr-panel-bg);
+    border-bottom: 1px solid var(--clr-border-light);
 }
 
 .taskbar-tray {
@@ -441,24 +442,21 @@
     background: #d0ccc4;
     border-top: 1px solid #888480;
     border-left: 1px solid #888480;
-    border-right: 1px solid #fff;
-    border-bottom: 1px solid #fff;
+    border-right: 1px solid var(--clr-border-light);
+    border-bottom: 1px solid var(--clr-border-light);
 }
 
 .tray-icon {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    padding: 2px;
+    width: 26px;
+    height: 26px;
     border: 1px solid transparent;
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
+    padding: 2px;
 }
-
 .tray-icon:hover {
-    background: #c8c4bc;
+    background: var(--clr-panel-bg);
     border-color: #888480;
 }
 
@@ -469,7 +467,7 @@
 
 .tray-clock {
     font-size: 16px;
-    color: #000;
+    color: var(--clr-text);
     font-weight: 600;
     min-width: 34px;
     text-align: center;
@@ -490,9 +488,9 @@
     height: 26px;
     min-width: 0;
     font-size: 14px;
-    color: #000;
+    color: var(--clr-text);
     font-family: var(--ff-ui);
-    border-right: 2px solid #fff;
+    border-right: 2px solid var(--clr-border-light);
     cursor: pointer;
     position: relative;
 }
@@ -511,9 +509,9 @@
     position: fixed;
     right: 10px;
     bottom: 40px;
-    background: #d4d0c8;
+    background: var(--clr-panel-bg);
     border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border-color: var(--clr-border-light) #808080 #808080 var(--clr-border-light);
     padding: 12px 14px;
     z-index: 99999;
     white-space: nowrap;
@@ -531,7 +529,7 @@
     object-fit: cover;
     flex-shrink: 0;
     border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border-color: var(--clr-border-light) #808080 #808080 var(--clr-border-light);
     margin-right: 10px;
 }
 .sc-now-playing-menu .sc-np-body {
@@ -541,7 +539,7 @@
 }
 .sc-now-playing-menu .sc-np-track {
     font-size: 14px;
-    color: #000;
+    color: var(--clr-text);
     padding: 0 0 6px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -559,7 +557,7 @@
     border-color: var(--btn-bd);
     cursor: pointer;
     padding: 4px 8px;
-    color: #000;
+    color: var(--clr-text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -579,7 +577,7 @@
 }
 
 .tray-clock:hover {
-    background: #c8c4bc;
+    background: var(--clr-panel-bg);
     border-color: #888480;
 }
 

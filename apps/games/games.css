@@ -13,7 +13,7 @@
     align-items: center;
     gap: 6px;
     padding: 5px 8px;
-    background: linear-gradient(90deg, #000080 0%, #0000c0 50%, #000080 100%);
+    background: linear-gradient(90deg, var(--clr-highlight) 0%, var(--clr-highlight-hover) 50%, var(--clr-highlight) 100%);
     background-size: 200% 100%;
     -webkit-animation: hudGlow 4s ease-in-out infinite;
     animation: hudGlow 4s ease-in-out infinite;
@@ -84,9 +84,9 @@
 }
 
 .games-card-active {
-    background: linear-gradient(135deg, #000080, #0000a0);
-    border-color: #606080 #0000c0 #0000c0 #606080;
-    box-shadow: 0 0 12px rgba(0,0,128,0.4);
+    background: linear-gradient(135deg, var(--clr-highlight), var(--clr-highlight-hover));
+    border-color: var(--clr-highlight-bg) var(--clr-highlight-hover) var(--clr-highlight-hover) var(--clr-highlight-bg);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--clr-highlight) 40%, transparent);
 }
 
 .games-card-active .games-card-label { color: #fff; }
@@ -157,7 +157,7 @@
     background: #0a0a0a;
     border: 3px solid;
     border-color: #fff #808080 #808080 #fff;
-    box-shadow: 0 0 0 2px #000080;
+    box-shadow: 0 0 0 2px var(--clr-highlight);
 }
 
 .games-detail-controls {
@@ -279,8 +279,8 @@ body.mobile-mode .games-block {
     transition: transform 0.3s cubic-bezier(0.34, 1.8, 0.64, 1), box-shadow 0.25s ease, border-color 0.2s ease !important;
 }
 .games-block:hover {
-    box-shadow: 0 6px 20px rgba(0,0,128,0.5) !important;
-    border-color: #4040ff #000040 #000040 #4040ff !important;
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--clr-highlight) 50%, transparent) !important;
+    border-color: var(--clr-highlight-hover) var(--clr-border-dark) var(--clr-border-dark) var(--clr-highlight-hover) !important;
 }
 .games-block:active {
     transform: scale(0.95) !important;
@@ -313,7 +313,7 @@ body.mobile-mode .games-block {
     align-items: center;
     gap: 8px;
     padding: 3px 8px 3px 34px;
-    background: linear-gradient(90deg, #000080, #0000c0, #000080);
+    background: linear-gradient(90deg, var(--clr-highlight), var(--clr-highlight-hover), var(--clr-highlight));
     background-size: 200% 100%;
     -webkit-animation: hudGlow 4s ease-in-out infinite;
     animation: hudGlow 4s ease-in-out infinite;
@@ -327,7 +327,7 @@ body.mobile-mode .games-block {
 }
 
 .games-hud-label { font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-.games-hud-sep { color: #8080c0; }
+.games-hud-sep { color: color-mix(in srgb, var(--clr-highlight) 70%, #fff); }
 .games-hud-val { color: #0f0; font-weight: bold; transition: color 0.2s ease; }
 .games-hud-high { color: #ff0; font-weight: bold; transition: color 0.2s ease; }
 

@@ -1,10 +1,10 @@
 .window {
     position: absolute;
-    background: #ece9e0;
-    border-top: 2px solid #fff;
-    border-left: 2px solid #fff;
-    border-right: 2px solid #5a5a5a;
-    border-bottom: 2px solid #5a5a5a;
+    background: var(--clr-window-bg);
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
     box-shadow: 1px 1px 0 #b0aca4 inset, -1px -1px 0 #f5f2ea inset;
     display: flex;
     flex-direction: column;
@@ -23,8 +23,8 @@
 }
 
 .title-bar {
-    background: #000080;
-    color: #fff;
+    background: var(--clr-title-bar);
+    color: var(--clr-title-text);
     padding: 4px 6px;
     display: flex;
     align-items: center;
@@ -82,7 +82,7 @@
     flex: 1;
     overflow-y: auto;
     padding: 4px 6px 6px;
-    background: #ece9e0;
+    background: var(--clr-window-bg);
 }
 
 .resize-edge {
@@ -111,17 +111,17 @@
 /* Resize visual feedback */
 .resize-edge:hover,
 .resize-corner:hover {
-    background: rgba(0, 0, 128, 0.08);
+    background: color-mix(in srgb, var(--clr-highlight) 8%, transparent);
     border-radius: 4px;
 }
 
 .window-resizing {
-    box-shadow: 0 0 16px rgba(0, 0, 128, 0.12), 1px 1px 0 #b0aca4 inset, -1px -1px 0 #f5f2ea inset !important;
+    box-shadow: 0 0 16px color-mix(in srgb, var(--clr-highlight) 12%, transparent), 1px 1px 0 #b0aca4 inset, -1px -1px 0 #f5f2ea inset !important;
 }
 
 .window-resizing .resize-edge,
 .window-resizing .resize-corner {
-    background: rgba(0, 0, 128, 0.15);
+    background: color-mix(in srgb, var(--clr-highlight) 15%, transparent);
     border-radius: 4px;
 }
 
@@ -139,11 +139,11 @@
 }
 
 .xp-dialog {
-    background: #ece9e0;
-    border-top: 2px solid #fff;
-    border-left: 2px solid #fff;
-    border-right: 2px solid #5a5a5a;
-    border-bottom: 2px solid #5a5a5a;
+    background: var(--clr-window-bg);
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
     box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
     min-width: 340px;
     max-width: 460px;
@@ -154,8 +154,8 @@
 }
 
 .xp-dialog-title-bar {
-    background: #000080;
-    color: #fff;
+    background: var(--clr-title-bar);
+    color: var(--clr-title-text);
     padding: 3px 6px;
     display: flex;
     align-items: center;
@@ -179,7 +179,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000;
+    color: var(--clr-text);
 }
 
 .xp-dialog-close:active {
@@ -202,7 +202,7 @@
     background: var(--btn-bg);
     border: 2px solid;
     border-color: var(--btn-bd);
-    color: #000;
+    color: var(--clr-text);
     outline: none;
 }
 
@@ -225,14 +225,14 @@
 .xp-dialog-icon {
     width: 36px;
     height: 36px;
-    background: #000080;
+    background: var(--clr-highlight);
     border: 2px solid #4a6a9a;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
     font-weight: bold;
-    color: #fff;
+    color: var(--clr-text-on-highlight);
     font-family: var(--ff-mono);
 }
 
@@ -244,7 +244,7 @@
 }
 
 .xp-dialog-msg {
-    color: #000;
+    color: var(--clr-text);
     line-height: 1.5;
     font-size: 16px;
     white-space: pre-line;
@@ -254,11 +254,11 @@
     width: 100%;
     padding: 4px 6px;
     font-size: 16px;
-    background: #fff;
-    border-top: 2px solid #5a5a5a;
-    border-left: 2px solid #5a5a5a;
-    border-right: 2px solid #fff;
-    border-bottom: 2px solid #fff;
+    background: var(--clr-surface);
+    border-top: 2px solid var(--clr-border-dark);
+    border-left: 2px solid var(--clr-border-dark);
+    border-right: 2px solid var(--clr-border-light);
+    border-bottom: 2px solid var(--clr-border-light);
     font-family: var(--ff-ui);
     outline: none;
     box-sizing: border-box;

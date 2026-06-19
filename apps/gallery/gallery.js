@@ -80,6 +80,16 @@
     closeBtn.setAttribute("aria-label", "Fechar");
     overlay.appendChild(closeBtn);
 
+    var pinBtn = document.createElement("button");
+    pinBtn.className = "gallery-pin-btn";
+    pinBtn.textContent = "Pinterest";
+    pinBtn.setAttribute("aria-label", "Abrir Pinterest");
+    pinBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      window.open("https://br.pinterest.com/sillky786/fufufuf~/", "_blank");
+    });
+    overlay.appendChild(pinBtn);
+
     document.body.appendChild(overlay);
     overlay.focus();
 

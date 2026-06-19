@@ -58,3 +58,32 @@
   border-color: var(--btn-bd-active);
   background: var(--btn-bg-active);
 }
+
+.gallery-pin-btn {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  padding: 4px 14px;
+  font-size: 15px;
+  font-family: var(--ff-ui);
+  background: #e60023;
+  border: 2px solid;
+  border-color: #ff4d6a #8a0015 #8a0015 #ff4d6a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 9999999;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gallery-pin-btn:hover {
+  background: #c0001e;
+}
+
+.gallery-pin-btn:active {
+  border-color: #8a0015 #ff4d6a #ff4d6a #8a0015;
+  background: #a00018;
+}

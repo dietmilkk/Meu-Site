@@ -285,7 +285,7 @@
       _prevVolume = _volume;
       window.setVolume(0);
     } else {
-      window.setVolume(_prevVolume > 0 ? _prevVolume : 1);
+      window.setVolume(0.5);
     }
   };
 
@@ -407,7 +407,7 @@
 
     resetBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      window.resetVolume();
+      window.toggleMute();
     });
 
     updateUI();

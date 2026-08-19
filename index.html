@@ -44,81 +44,90 @@
             <!-- ===== WELCOME (inside boot, after boot bar completes) ===== -->
             <div class="boot-welcome" id="bootWelcome" style="display: none">
                 <div class="welcome-layout">
-                    <div class="welcome-header">
-                        <div class="welcome-avatar">
-                            <img
-                                src="system/assets/icons/tango2kde/48x48/apps/dolphin.png"
-                                alt=""
-                                width="48"
-                                height="48"
-                            />
-                        </div>
-                        <div class="welcome-intro">
-                            <h2
-                                class="welcome-greeting"
-                                id="welcomeGreeting"
-                                data-i18n="welcome.greeting"
-                            >
-                                Oi! Sou o win2000
-                            </h2>
-                            <p
-                                class="welcome-desc"
-                                id="welcomeDesc"
-                                data-i18n="welcome.desc"
-                            >
-                                Um desktop retrô montado à mão com HTML, CSS e
-                                JavaScript puro. Sem frameworks, sem
-                                dependências — só código raiz.
-                            </p>
-                            <p
-                                class="welcome-volume-tip"
-                                id="welcomeVolumeTip"
-                                data-i18n="welcome.volumeTip"
-                            >
-                                Para uma melhor experiência, aumente o volume do
-                                seu computador.
-                            </p>
-                        </div>
+                    <div class="welcome-titlebar">
+                        <span class="welcome-titlebar-logo"></span>
+                        <span class="welcome-titlebar-text">win2000</span>
                     </div>
 
-                    <div class="welcome-divider"></div>
-
-                    <div class="welcome-prefs">
-                        <div class="welcome-pref-col">
-                            <span class="welcome-label"
-                                id="welcomeLangLabel"
-                                data-i18n="welcome.langLabel">Idioma</span>
-                            <div class="welcome-lang-toggle">
-                                <button class="welcome-lang-btn active" data-lang="pt" id="welcomeLangPt">PT-BR</button>
-                                <button class="welcome-lang-btn" data-lang="en" id="welcomeLangEn">EN</button>
-                                <button class="welcome-lang-btn" data-lang="zh" id="welcomeLangZh">中文</button>
+                    <div class="welcome-body">
+                        <div class="welcome-header">
+                            <div class="welcome-avatar">
+                                <img
+                                    src="system/assets/icons/tango2kde/48x48/apps/dolphin.png"
+                                    alt=""
+                                    width="64"
+                                    height="64"
+                                />
                             </div>
-                            <p class="welcome-translation-note" id="welcomeTranslationNote" data-i18n="welcome.translationNote"></p>
-                        </div>
-                        <div class="welcome-pref-sep"></div>
-                        <div class="welcome-pref-col">
-                            <span class="welcome-label" data-i18n="welcome.modeLabel">Modo</span>
-                            <div class="welcome-lang-toggle">
-                                <button class="welcome-lang-btn active" id="welcomeModeDesktop">
-                                    <span data-i18n="welcome.desktopMode">Desktop</span>
-                                </button>
-                                <button class="welcome-lang-btn" id="welcomeModeMobile">
-                                    <span data-i18n="welcome.mobileMode">Mobile</span>
-                                </button>
+                            <div class="welcome-intro">
+                                <h2
+                                    class="welcome-greeting"
+                                    id="welcomeGreeting"
+                                    data-i18n="welcome.greeting"
+                                >
+                                    Bem vinda!
+                                </h2>
+                                <p
+                                    class="welcome-desc"
+                                    id="welcomeDesc"
+                                    data-i18n="welcome.desc"
+                                >
+                                    Esse é o meu site pessoal com temática de
+                                    win2000, espero que goste pois é feito com
+                                    carinho, sinta-se à vontade, explore e
+                                    aproveite ^^
+                                </p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="welcome-divider"></div>
+                        <p
+                            class="welcome-volume-tip"
+                            id="welcomeVolumeTip"
+                            data-i18n="welcome.volumeTip"
+                        >
+                            Para uma melhor experiência, aumente o volume do seu
+                            computador.
+                        </p>
 
-                    <div class="welcome-footer">
-                        <label class="welcome-check-label">
-                            <input type="checkbox" id="welcomeDontShow" />
-                            <span id="welcomeDontShowText" data-i18n="welcome.dontShow">Não mostrar na inicialização</span>
-                        </label>
-                        <button class="welcome-start-btn" id="welcomeStartBtn">
-                            <span id="welcomeStartText" data-i18n="welcome.startBtn">Começar</span>
-                        </button>
+                        <div class="welcome-divider"></div>
+
+                        <div class="welcome-prefs">
+                            <div class="welcome-pref-col">
+                                <span class="welcome-label"
+                                    id="welcomeLangLabel"
+                                    data-i18n="welcome.langLabel">Idioma</span>
+                                <div class="welcome-lang-toggle">
+                                    <button class="welcome-lang-btn active" data-lang="pt" id="welcomeLangPt">PT-BR</button>
+                                    <button class="welcome-lang-btn" data-lang="en" id="welcomeLangEn">EN</button>
+                                    <button class="welcome-lang-btn" data-lang="zh" id="welcomeLangZh">中文</button>
+                                </div>
+                                <p class="welcome-translation-note" id="welcomeTranslationNote" data-i18n="welcome.translationNote"></p>
+                            </div>
+                            <div class="welcome-pref-sep"></div>
+                            <div class="welcome-pref-col">
+                                <span class="welcome-label" data-i18n="welcome.modeLabel">Modo</span>
+                                <div class="welcome-lang-toggle">
+                                    <button class="welcome-lang-btn active" id="welcomeModeDesktop">
+                                        <span data-i18n="welcome.desktopMode">Desktop</span>
+                                    </button>
+                                    <button class="welcome-lang-btn" id="welcomeModeMobile">
+                                        <span data-i18n="welcome.mobileMode">Mobile</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="welcome-divider"></div>
+
+                        <div class="welcome-footer">
+                            <label class="welcome-check-label">
+                                <input type="checkbox" id="welcomeDontShow" />
+                                <span id="welcomeDontShowText" data-i18n="welcome.dontShow">Não mostrar na inicialização</span>
+                            </label>
+                            <button class="welcome-start-btn" id="welcomeStartBtn">
+                                <span id="welcomeStartText" data-i18n="welcome.startBtn">Começar</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,16 +160,10 @@
                             />
                         </span>
                         <span class="di-label" data-i18n="desktop.soundcloud"
-                            >SoundCloud</span
+                            >Music Player</span
                         >
                     </div>
 
-                    <div class="desk-icon" data-action="pins">
-                        <span class="di-icon">
-                            <img src="system/assets/icons/tango2kde/48x48/apps/gwenview.png" alt="" width="36" height="36">
-                        </span>
-                        <span class="di-label" data-i18n="desktop.pins">Pins</span>
-                    </div>
                     <div class="desk-icon" data-action="settings">
                         <span class="di-icon">
                             <img
@@ -212,10 +215,6 @@
                             <div class="links-item" onclick="window.open('https://wakatime.com/@pepsicoca','_blank')" title="wakatime.com/@pepsicoca">
                                 <img src="system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png" alt="">
                                 <span>WakaTime</span>
-                            </div>
-                            <div class="links-item" onclick="window.open('https://pinterest.com/sillky786/','_blank')" title="pinterest.com/sillky786">
-                                <img src="system/assets/icons/tango2kde/48x48/apps/gwenview.png" alt="">
-                                <span>Pinterest</span>
                             </div>
                         </div>
                     </div>
@@ -438,6 +437,13 @@
                                     <div class="settings-panel-header" style="margin-top:6px;">Equalizador</div>
                                     <div class="eq-wrap" id="eqWrap">
                                         <div class="eq-sliders" id="eqSliders"></div>
+                                        <div class="eq-wave" id="eqWave">
+                                            <div class="eq-wave-track" id="eqWaveTrack"></div>
+                                            <div class="eq-wave-caption">
+                                                <span class="eq-wave-label" data-i18n="settings.eqWaveLabel">ESPECTRO</span>
+                                                <span class="eq-wave-live" id="eqWaveLive">●</span>
+                                            </div>
+                                        </div>
                                         <div class="eq-footer">
                                             <div class="eq-presets">
                                                 <select class="eq-select" id="eqPresetSelect"></select>
@@ -593,7 +599,7 @@
                 </div>
 
                 <!-- ===== SOUNDCLOUD PLAYER ===== -->
-                <div class="window" id="scWindow" style="display: none; width: 444.5px; height: 666px;">
+                <div class="window" id="scWindow" style="display: none; width: 500px; height: 700px;">
                     <div class="title-bar" id="scDragHandle">
                         <span class="title-bar-text">
                             <span class="icon">
@@ -605,7 +611,7 @@
                                 />
                             </span>
                             <span data-i18n="soundcloud.title"
-                                >SoundCloud Player</span
+                                >Music Player</span
                             >
                         </span>
                         <script>
@@ -614,22 +620,34 @@
                     </div>
                     <div class="window-body" id="scBody">
                         <div class="sc-player" id="scPlayer">
-                            <div class="sc-top-row">
-                                <div class="sc-playlist-bar" id="scPlaylistBar">
+                            <div class="sc-top-row" id="scTopRow">
+                                <div class="sc-child-win" id="scArtworkWin">
                                     <div
-                                        class="sc-playlist-title"
+                                        class="sc-child-title"
+                                        id="scArtworkDrag"
+                                        data-i18n="soundcloud.artworkTitle"
+                                    >
+                                        Artwork
+                                    </div>
+                                    <div class="sc-artwork" id="scArtwork">
+                                        <img src="" alt="" id="scArtImg" />
+                                        <div
+                                            class="sc-artwork-overlay"
+                                            id="scArtOverlay"
+                                        ></div>
+                                    </div>
+                                </div>
+                                <div class="sc-child-win" id="scPlaylistWin">
+                                    <div
+                                        class="sc-child-title"
+                                        id="scPlaylistDrag"
                                         data-i18n="soundcloud.playlistTitle"
                                     >
                                         Playlists
                                     </div>
-                                    <div id="scPlaylistItems"></div>
-                                </div>
-                                <div class="sc-artwork" id="scArtwork">
-                                    <img src="" alt="" id="scArtImg" />
-                                    <div
-                                        class="sc-artwork-overlay"
-                                        id="scArtOverlay"
-                                    ></div>
+                                    <div class="sc-playlist-bar" id="scPlaylistBar">
+                                        <div id="scPlaylistItems"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="sc-info">
@@ -841,6 +859,14 @@
                 <button class="mobile-fab" id="mobileFab" style="display:none;" aria-label="Menu">≡</button>
                 <div class="taskbar">
                     <div class="start-btn" id="startBtn">
+                        <span class="start-logo"
+                            ><img
+                                src="system/assets/icons/tango2kde/16x16/actions/flag.png"
+                                alt=""
+                                width="16"
+                                height="16"
+                            /></span
+                        >
                         <span class="start-text" data-i18n="start.label"
                             >Start</span
                         >
@@ -875,42 +901,10 @@
                     </div>
                 </div>
 
-                <!-- ===== PINS WINDOW ===== -->
-                <div class="window" id="pinsWindow" style="display: none">
-                    <div class="title-bar" id="pinsDragHandle">
-                        <span class="title-bar-text">
-                            <span class="icon">
-                                <img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="14" height="14">
-                            </span>
-                            <span>Pins</span>
-                        </span>
-                        <script>document.write(createWindowButtons("pins"));</script>
-                    </div>
-                    <div class="window-body" id="pinsBody">
-                        <div class="pins-layout">
-                            <div class="pins-toolbar">
-                                <button class="pins-btn" id="pinsAddBtn">
-                                    <img src="system/assets/icons/tango2kde/16x16/actions/list-add.png" alt="" width="12" height="12">
-                                    Adicionar Pin
-                                </button>
-                                <span class="pins-counter" id="pinsCounter">0 pins</span>
-                            </div>
-                            <div class="pins-grid" id="pinsGrid">
-                                <div class="pins-empty">
-                                    <div class="pins-empty-icon">📌</div>
-                                    <div class="pins-empty-text">Nenhum pin ainda</div>
-                                    <div class="pins-empty-sub">Clique em "Adicionar Pin" para começar</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- ===== START MENU ===== -->
                 <div class="start-menu" id="startMenu">
-                    <div class="start-menu-header">
-                        <span data-i18n="start.header">win2000</span>
-                    </div>
+                    <div class="start-menu-banner" data-i18n="start.header">win2000</div>
+                    <div class="start-menu-body-wrap">
                     <div class="fabric-nav start-menu-fabric">
                         <div class="fabric-nav-inner">
                             <div class="fabric-nav-content start-menu-body" id="startMenuBody">
@@ -939,10 +933,6 @@
                                     <span data-i18n="start.gallery"
                                         >Coleção de imgs</span
                                     >
-                                </div>
-                                <div class="start-menu-item" data-action="pins">
-                                    <img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="16" height="16">
-                                    <span>Pins</span>
                                 </div>
                                 <div class="start-menu-item" data-action="links">
                                     <img
@@ -982,7 +972,7 @@
                                         width="16"
                                         height="16"
                                     />
-                                    <span data-i18n="start.soundcloud">SoundCloud</span>
+                                    <span data-i18n="start.soundcloud">Music Player</span>
                                 </div>
                                 <div class="start-menu-separator"></div>
                                 <div
@@ -1014,6 +1004,7 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
 
@@ -1063,6 +1054,7 @@
         <script src="system/js/tray.js"></script>
         <script src="system/js/equalizer.js"></script>
         <script src="system/js/window-manager.js"></script>
+        <script src="system/js/router.js"></script>
         <script src="system/js/mobile.js"></script>
         <script src="apps/gallery/gallery.js"></script>
         <script src="apps/terminal/terminal.js"></script>
@@ -1071,7 +1063,6 @@
         <script src="apps/soundcloud/soundcloud.js"></script>
         <!-- <script src="apps/feed/feed.js"></script> -->
 
-        <script src="apps/pins/pins.js"></script>
         <script src="system/js/main.js"></script>
         <script src="apps/welcome/welcome.js"></script>
         <script src="apps/settings/settings.js"></script>

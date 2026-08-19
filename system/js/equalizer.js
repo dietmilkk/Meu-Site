@@ -4,6 +4,7 @@
   var ctx = null;
   var source = null;
   var filters = [];
+  var analyser = null;
   var bypassed = false;
 
   var BANDS = [
@@ -47,7 +48,13 @@
     for (var i = 0; i < filters.length; i++) {
       try { filters[i].disconnect(); } catch(e) {}
     }
+    if (analyser) {
+      try { analyser.disconnect(); } catch(e) {}
+    }
     filters = [];
+    analyser = c.createAnalyser();
+    analyser.fftSize = 1024;
+    analyser.smoothingTimeConstant = 0.78;
     for (var i = 0; i < BANDS.length; i++) {
       var f = c.createBiquadFilter();
       f.type = "peaking";
@@ -63,17 +70,16 @@
     try {
       source.disconnect();
     } catch(e) {}
-    if (bypassed) {
-      source.connect(ctx.destination);
-    } else {
-      var chain = [source];
+    var chain = [source];
+    if (analyser) chain.push(analyser);
+    if (!bypassed) {
       for (var i = 0; i < filters.length; i++) {
         chain.push(filters[i]);
       }
-      chain.push(ctx.destination);
-      for (var i = 0; i < chain.length - 1; i++) {
-        chain[i].connect(chain[i+1]);
-      }
+    }
+    chain.push(ctx.destination);
+    for (var i = 0; i < chain.length - 1; i++) {
+      chain[i].connect(chain[i+1]);
     }
   }
 
@@ -110,6 +116,26 @@
     return gains.slice();
   };
 
+  /* Live per-band levels (0..1), grouped like a real spectrum */
+  window._eqGetLevels = function () {
+    if (!analyser || !ctx) return null;
+    var data = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(data);
+    var n = data.length;
+    var out = [];
+    var bands = BANDS.length;
+    for (var i = 0; i < bands; i++) {
+      var a = Math.floor(Math.pow(i / bands, 2) * n);
+      var b = Math.floor(Math.pow((i + 1) / bands, 2) * n);
+      if (b <= a) b = Math.min(a + 1, n);
+      if (a >= n) { out.push(0); continue; }
+      var sum = 0;
+      for (var j = a; j < b; j++) sum += data[j];
+      out.push(sum / (b - a) / 255);
+    }
+    return out;
+  };
+
   window._eqSetPreset = function (name) {
     var p = PRESETS[name];
     if (!p) return;
@@ -144,6 +170,10 @@
     if (source) {
       try { source.disconnect(); } catch(e) {}
       source = null;
+    }
+    if (analyser) {
+      try { analyser.disconnect(); } catch(e) {}
+      analyser = null;
     }
     filters = [];
   };

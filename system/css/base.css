@@ -27,18 +27,23 @@
     --clr-highlight-bg: #e0e0f0;
     --clr-highlight-hover: #0000a0;
     --clr-title-bar: #000080;
+    --clr-title-bar-inactive: #808080;
     --clr-title-text: #ffffff;
+    --clr-title-text-inactive: #d8d8d8;
 
     /* Surface colors */
-    --clr-window-bg: #ece9e0;
-    --clr-panel-bg: #d4d0c8;
-    --clr-surface: #faf8f4;
-    --clr-taskbar-bg: #d4d0c8;
+    --clr-window-bg: #c0c0c0;
+    --clr-panel-bg: #c0c0c0;
+    --clr-surface: #ffffff;
+    --clr-taskbar-bg: #c0c0c0;
     --clr-start-menu-header: linear-gradient(180deg, #000080, #1084d0);
 
     /* Borders */
-    --clr-border-dark: #5a5a5a;
+    --clr-border-dark: #808080;
     --clr-border-light: #ffffff;
+    --clr-border-darkest: #000000;
+    --clr-hilight: #dfdfdf;
+    --clr-shadow: #404040;
 
     /* Text */
     --clr-text: #000000;
@@ -46,15 +51,15 @@
     --clr-text-on-highlight: #ffffff;
 
     /* Button states: deactivated = normal (raised), activated = pressed (depressed) */
-    --btn-bg: linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc);
-    --btn-bg-active: linear-gradient(180deg, #c8c4bc, #d4d0c8);
-    --btn-bd: #fff #5a5a5a #5a5a5a #fff;
-    --btn-bd-active: #5a5a5a #fff #fff #5a5a5a;
+    --btn-bg: #c0c0c0;
+    --btn-bg-active: #c0c0c0;
+    --btn-bd: #fff #808080 #808080 #fff;
+    --btn-bd-active: #808080 #fff #fff #808080;
 
     /* Dialog */
     --dialog-overlay: rgba(0,0,0,0.5);
-    --dialog-bg: #d4d0c8;
-    --dialog-bd: #ffffff #5a5a5a #5a5a5a #ffffff;
+    --dialog-bg: #c0c0c0;
+    --dialog-bd: #ffffff #808080 #808080 #ffffff;
 }
 
 * {
@@ -120,6 +125,30 @@ html, body { overflow: hidden; }
     scrollbar-width: none;
     -ms-overflow-style: none;
     overflow-y: auto;
+}
+
+/* Classic Win98/2000 dotted focus ring for keyboard users */
+button:focus-visible,
+.win-btn:focus-visible,
+.start-btn:focus-visible,
+.ql-icon:focus-visible,
+.tray-icon:focus-visible,
+.settings-category:focus-visible,
+.settings-file-btn:focus-visible,
+.settings-btn:focus-visible,
+.games-card:focus-visible,
+.games-detail-start:focus-visible,
+.sc-btn:focus-visible,
+.sc-playlist-item:focus-visible,
+.cal-nav-btn:focus-visible,
+.xp-dialog-btn:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: -5px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+    outline: none;
 }
 
 .window-body::-webkit-scrollbar,

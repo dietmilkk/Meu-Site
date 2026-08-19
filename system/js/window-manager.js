@@ -11,6 +11,7 @@
      ================================================================== */
   var _sndCtx = null;
   var _masterGain = null;
+  var _sndAnalyser = null;
   function _getSndCtx() {
     if (!_sndCtx) {
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -18,7 +19,15 @@
       _sndCtx = new AC();
       _masterGain = _sndCtx.createGain();
       _masterGain.gain.value = typeof global.getPageVolume === 'function' ? global.getPageVolume() : 1;
-      _masterGain.connect(_sndCtx.destination);
+      try {
+        _sndAnalyser = _sndCtx.createAnalyser();
+        _sndAnalyser.fftSize = 1024;
+        _sndAnalyser.smoothingTimeConstant = 0.55;
+        _masterGain.connect(_sndAnalyser);
+        _sndAnalyser.connect(_sndCtx.destination);
+      } catch (e) {
+        _masterGain.connect(_sndCtx.destination);
+      }
     }
     return _sndCtx;
   }
@@ -26,6 +35,26 @@
     if (_masterGain && typeof global.getPageVolume === 'function')
       _masterGain.gain.value = global.getPageVolume();
   }
+
+  /* Live site-sound spectrum levels (0..1), one value per EQ band */
+  global._eqGetSiteLevels = function () {
+    if (!_sndAnalyser || !_sndCtx || _sndCtx.state !== "running") return null;
+    var data = new Uint8Array(_sndAnalyser.frequencyBinCount);
+    _sndAnalyser.getByteFrequencyData(data);
+    var n = data.length;
+    var BANDS = 10;
+    var out = [];
+    for (var i = 0; i < BANDS; i++) {
+      var a = Math.floor(Math.pow(i / BANDS, 2) * n);
+      var b = Math.floor(Math.pow((i + 1) / BANDS, 2) * n);
+      if (b <= a) b = Math.min(a + 1, n);
+      if (a >= n) { out.push(0); continue; }
+      var sum = 0;
+      for (var j = a; j < b; j++) sum += data[j];
+      out.push(sum / (b - a) / 255);
+    }
+    return out;
+  };
 
   /* ---- low-level primitives ---- */
   function _tone(freq, endFreq, dur, type, vol) {
@@ -356,7 +385,9 @@
       });
       win.classList.add('active');
       if (tbEntry) tbEntry.classList.add('active');
-
+      var aId = win.getAttribute('data-app-id');
+      if (aId) _pushApp(aId);
+      if (global.W2K && global.W2K.Router) global.W2K.Router.sync();
     }
 
     win.addEventListener('mousedown', bringToFront);
@@ -399,7 +430,7 @@
         if (btnMaximize) {
           var svg = btnMaximize.querySelector('svg');
           if (svg) {
-            svg.innerHTML = '<rect x="1" y="4" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="1" width="11" height="11" fill="#d4d0c8" stroke="currentColor" stroke-width="1.2"/>';
+            svg.innerHTML = '<rect x="1" y="4" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="1" width="11" height="11" fill="#c0c0c0" stroke="currentColor" stroke-width="1.2"/>';
           }
         }
         var onMaxEnd = function() {
@@ -422,6 +453,7 @@
       if (document.body.classList.contains('mobile-mode')) {
         minimized = true;
         win.style.display = 'none';
+        win.classList.remove('active');
         if (tbEntry) tbEntry.classList.remove('active');
         if (onMinimize) onMinimize();
         return;
@@ -442,6 +474,7 @@
       saveRect();
       playMinimizeSnd();
       if (tb) tb.classList.remove('active');
+      win.classList.remove('active');
       win.style.transition = 'none';
       win.style.left = sx + 'px';
       win.style.top = sy + 'px';
@@ -517,7 +550,7 @@
           win.style.height = ch + 'px';
           win.style.opacity = '1';
           win.style.transform = 'scale(1)';
-          win.style.boxShadow = '1px 1px 0 #b0aca4 inset, -1px -1px 0 #f5f2ea inset, 0 0 0 rgba(0,0,128,0)';
+          win.style.boxShadow = '1px 1px 0 #808080 inset, -1px -1px 0 #f0f0f0 inset, 0 0 0 rgba(0,0,128,0)';
           var onRestoreEnd = function() {
             win.removeEventListener('animationend', onRestoreEnd);
             win.classList.remove('anim-win-restore');
@@ -698,7 +731,7 @@
     });
 
     (function() {
-      if (!win.querySelector('.resize-edge')) {
+      if (!win.querySelector(':scope > .resize-edge')) {
         var resizeHTML = '';
         var edges = ['t','b','l','r'];
         for (var ei = 0; ei < edges.length; ei++) {
@@ -714,7 +747,9 @@
           win.appendChild(frag.firstChild);
         }
       }
-      var edges = win.querySelectorAll('.resize-edge, .resize-corner');
+      var edges = [].filter.call(win.querySelectorAll('.resize-edge, .resize-corner'), function (el) {
+        return el.parentElement === win;
+      });
       if (!edges.length) return;
 
       function startResize(e, edge) {
@@ -871,11 +906,7 @@
           } else if (win.style.display === "none") {
             show();
           } else if (win.classList.contains("active")) {
-            if (_isPinned()) {
-              controls.bringToFront();
-            } else {
-              controls.minimize();
-            }
+            controls.minimize();
           } else {
             controls.bringToFront();
           }
@@ -935,6 +966,7 @@
     function show() {
       _init();
       createTaskbarEntry();
+      if (tbEntry && controls) controls.setTaskbarEntry(tbEntry);
       win.style.display = "";
       win.style.transition = "";
       win.style.opacity = "";
@@ -942,6 +974,7 @@
       win.style.boxShadow = "";
       win.classList.remove("anim-win-close");
       win.classList.add("anim-win-open");
+      _pushApp(appId);
       playOpenSnd();
       if (tbEntry) tbEntry.classList.add("active");
       controls.bringToFront();
@@ -965,6 +998,7 @@
       win.removeEventListener("animationend", onOpenEnd);
       win.addEventListener("animationend", onOpenEnd);
       if (global.MobileMenu && global.MobileMenu.updateFab) global.MobileMenu.updateFab();
+      if (global.W2K && global.W2K.Router) global.W2K.Router.sync();
     }
 
     function hide() {
@@ -974,10 +1008,12 @@
         win.style.display = 'none';
         if (tbEntry) tbEntry.classList.remove('active');
         removeTaskbarEntry();
+        _removeApp(appId);
         opts._onShowFired = false;
         if (controls) controls.clearSavedRect();
         if (opts.onHide) opts.onHide(this);
         if (global.MobileMenu && global.MobileMenu.updateFab) global.MobileMenu.updateFab();
+        if (global.W2K && global.W2K.Router) global.W2K.Router.sync();
         return;
       }
       if (tbEntry) tbEntry.classList.remove("active");
@@ -1003,10 +1039,12 @@
             win.style.boxShadow = "";
             win.style.display = "none";
             removeTaskbarEntry();
+            _removeApp(appId);
             opts._onShowFired = false;
             if (controls) controls.clearSavedRect();
             if (opts.onHide) opts.onHide(this);
             if (global.MobileMenu && global.MobileMenu.updateFab) global.MobileMenu.updateFab();
+            if (global.W2K && global.W2K.Router) global.W2K.Router.sync();
           }.bind(this);
           win.addEventListener("transitionend", onCloseEnd);
           setTimeout(
@@ -1120,6 +1158,25 @@
 
   global.windowRegistry = [];
 
+  /* Ordered stack of open apps: last item is the topmost window */
+  var _openAppStack = [];
+  global.getOpenApps = function () {
+    return _openAppStack.slice();
+  };
+
+  function _pushApp(id) {
+    if (!id) return;
+    var i = _openAppStack.indexOf(id);
+    if (i !== -1) _openAppStack.splice(i, 1);
+    _openAppStack.push(id);
+  }
+
+  function _removeApp(id) {
+    if (!id) return;
+    var i = _openAppStack.indexOf(id);
+    if (i !== -1) _openAppStack.splice(i, 1);
+  }
+
   global.registerWindow = function(desc) {
     global.windowRegistry.push({
       minimize: desc.minimize,
@@ -1129,4 +1186,179 @@
   };
 
   global.WindowBehavior = WindowBehavior;
+
+  /**
+   * MDI-style child panel: draggable + resizable within a parent container.
+   */
+  global.createChildPanel = function (panel, opts) {
+    opts = opts || {};
+    var parent = opts.parent || panel.parentElement;
+    var handle = opts.handle || panel.querySelector('.sc-child-title');
+    var childClass = opts.childClass || 'sc-child-win';
+    var minW = opts.minW || 160;
+    var minH = opts.minH || 90;
+    var gap = opts.gap || 0;
+    var obstacle = opts.obstacle || null;
+
+    var dragState = null;
+    var resizeState = null;
+
+    function obstacleBounds() {
+      if (!obstacle) return null;
+      var pr = parent.getBoundingClientRect();
+      var or = obstacle.getBoundingClientRect();
+      var pCenter = panel.getBoundingClientRect().left + panel.offsetWidth / 2;
+      var oCenter = or.left + or.width / 2;
+      return {
+        left: or.left - pr.left,
+        right: or.left - pr.left + or.width,
+        isLeft: pCenter < oCenter,
+      };
+    }
+
+    function isFloating() {
+      if (document.body.classList.contains('mobile-mode')) return false;
+      return getComputedStyle(panel).position === 'absolute';
+    }
+
+    function raise() {
+      var maxZ = 0;
+      parent.querySelectorAll('.' + childClass).forEach(function (s) {
+        s.classList.remove('active');
+        maxZ = Math.max(maxZ, parseInt(s.style.zIndex, 10) || 0);
+      });
+      panel.style.zIndex = maxZ + 1;
+      panel.classList.add('active');
+    }
+
+    if (handle) {
+      handle.addEventListener('mousedown', function (e) {
+        if (e.button !== 0 || !isFloating()) return;
+        e.preventDefault();
+        raise();
+        var r = panel.getBoundingClientRect();
+        dragState = {
+          ox: e.clientX - r.left,
+          oy: e.clientY - r.top,
+          obs: obstacleBounds(),
+        };
+        panel.style.cursor = 'move';
+      });
+    }
+
+    if (!panel.querySelector(':scope > .resize-edge')) {
+      var html = '';
+      var edges = ['t', 'b', 'l', 'r'];
+      for (var ei = 0; ei < edges.length; ei++) {
+        html += '<div class="resize-edge" data-edge="' + edges[ei] + '"></div>';
+      }
+      var corners = ['tl', 'tr', 'bl', 'br'];
+      for (var ci = 0; ci < corners.length; ci++) {
+        html += '<div class="resize-corner" data-edge="' + corners[ci] + '"></div>';
+      }
+      var frag = document.createElement('div');
+      frag.innerHTML = html;
+      while (frag.firstChild) {
+        panel.appendChild(frag.firstChild);
+      }
+    }
+
+    panel.querySelectorAll('.resize-edge, .resize-corner').forEach(function (el) {
+      el.addEventListener('mousedown', function (e) {
+        if (e.button !== 0 || !isFloating()) return;
+        e.preventDefault();
+        e.stopPropagation();
+        raise();
+        var r = panel.getBoundingClientRect();
+        resizeState = {
+          edge: el.getAttribute('data-edge'),
+          startX: e.clientX,
+          startY: e.clientY,
+          startLeft: r.left,
+          startTop: r.top,
+          startW: r.width,
+          startH: r.height,
+          obs: obstacleBounds(),
+        };
+      });
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (dragState) {
+        var pr = parent.getBoundingClientRect();
+        var x = e.clientX - pr.left - dragState.ox;
+        var y = e.clientY - pr.top - dragState.oy;
+        x = Math.max(0, Math.min(x, pr.width - panel.offsetWidth));
+        y = Math.max(0, Math.min(y, pr.height - panel.offsetHeight));
+        if (dragState.obs) {
+          if (dragState.obs.isLeft) {
+            x = Math.min(x, dragState.obs.left - gap - panel.offsetWidth);
+          } else {
+            x = Math.max(x, dragState.obs.right + gap);
+          }
+        }
+        global.__domWrite(function () {
+          panel.style.left = x + 'px';
+          panel.style.top = y + 'px';
+        });
+        return;
+      }
+      if (!resizeState) return;
+      var s = resizeState;
+      var dx = e.clientX - s.startX;
+      var dy = e.clientY - s.startY;
+      var pr = parent.getBoundingClientRect();
+      var newL = s.startLeft - pr.left, newT = s.startTop - pr.top;
+      var newW = s.startW, newH = s.startH;
+      var edge = s.edge;
+
+      if (edge.indexOf('l') !== -1) {
+        newL = newL + dx;
+        newW = s.startW - dx;
+        if (newW < minW) { newW = minW; newL = s.startLeft + s.startW - minW - pr.left; }
+        newL = Math.max(0, newL);
+        newW = Math.min(newW, pr.width - newL);
+      } else if (edge.indexOf('r') !== -1) {
+        newW = s.startW + dx;
+        newW = Math.max(minW, Math.min(newW, pr.width - newL));
+      }
+
+      if (edge.indexOf('t') !== -1) {
+        newT = newT + dy;
+        newH = s.startH - dy;
+        if (newH < minH) { newH = minH; newT = s.startTop + s.startH - minH - pr.top; }
+        newT = Math.max(0, newT);
+        newH = Math.min(newH, pr.height - newT);
+      } else if (edge.indexOf('b') !== -1) {
+        newH = s.startH + dy;
+        newH = Math.max(minH, Math.min(newH, pr.height - newT));
+      }
+
+      if (s.obs) {
+        if (s.obs.isLeft && edge.indexOf('r') !== -1) {
+          newW = Math.min(newW, s.obs.left - gap - newL);
+        } else if (!s.obs.isLeft && edge.indexOf('l') !== -1) {
+          newL = Math.max(newL, s.obs.right + gap);
+        }
+      }
+
+      global.__domWrite(function () {
+        panel.style.left = newL + 'px';
+        panel.style.top = newT + 'px';
+        panel.style.width = newW + 'px';
+        panel.style.height = newH + 'px';
+      });
+    });
+
+    document.addEventListener('mouseup', function () {
+      dragState = null;
+      resizeState = null;
+      panel.style.cursor = '';
+    });
+
+    return {
+      isFloating: isFloating,
+      raise: raise,
+    };
+  };
 })(window);

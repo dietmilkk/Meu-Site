@@ -76,7 +76,8 @@
     var checkBoot = setInterval(function() {
       if (window._bootReady) {
         clearInterval(checkBoot);
-        if (welcomed !== 'true') {
+        var hasTarget = window.W2K && window.W2K.Router && window.W2K.Router.readTarget();
+        if (welcomed !== 'true' && !hasTarget) {
           showBootWelcome();
         } else {
           dismissBoot();

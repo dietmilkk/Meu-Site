@@ -1,9 +1,7 @@
 #feedBody {
   padding: 0;
-  background: #ece9e0;
+  background: var(--clr-window-bg);
   overflow-y: auto;
-  background-image:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 70%);
 }
 
 /* ===== Profile Header ===== */
@@ -11,9 +9,9 @@
   display: flex;
   gap: 18px;
   padding: 24px 24px 20px;
-  background: linear-gradient(180deg, #d8d4ca, #d0ccc2);
-  border-bottom: 2px solid #b0aca4;
-  border-top: 2px solid #f0ece2;
+  background: linear-gradient(180deg, #d4d0c8, #c8c4bc);
+  border-bottom: 2px solid var(--clr-border-dark);
+  border-top: 2px solid var(--clr-border-light);
   align-items: flex-start;
   position: relative;
 }
@@ -24,21 +22,21 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: #fff;
+  background: var(--clr-border-light);
   opacity: 0.3;
 }
 .feed-avatar {
   width: 72px;
   height: 72px;
-  background: linear-gradient(135deg, #000080, #0000a0);
+  background: linear-gradient(135deg, var(--clr-highlight), var(--clr-highlight-hover));
   border: 3px solid;
-  border-color: #fff #8a8a8a #8a8a8a #fff;
+  border-color: var(--clr-border-light) #8a8a8a #8a8a8a var(--clr-border-light);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 32px;
-  color: #fff;
+  color: var(--clr-text-on-highlight);
   font-weight: 700;
   overflow: hidden;
   box-shadow: 2px 2px 6px rgba(0,0,0,0.12);
@@ -85,7 +83,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #b0aca4;
+  background: #808080;
   flex-shrink: 0;
 }
 .feed-stats strong {
@@ -103,11 +101,11 @@
   margin: 0 auto;
 }
 .feed-post {
-  background: #f2efe5;
-  border-top: 2px solid #faf7ed;
-  border-left: 2px solid #f5f2e8;
-  border-right: 2px solid #b0aca4;
-  border-bottom: 2px solid #a8a49c;
+  background: var(--clr-window-bg);
+  border-top: 2px solid var(--clr-border-light);
+  border-left: 2px solid var(--clr-border-light);
+  border-right: 2px solid var(--clr-border-dark);
+  border-bottom: 2px solid var(--clr-border-dark);
   position: relative;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
@@ -120,8 +118,8 @@
 .feed-post-header {
   padding: 5px 12px;
   font-size: 11px;
-  background: linear-gradient(180deg, #1a1a90, #000080);
-  color: #fff;
+  background: var(--clr-start-menu-header);
+  color: var(--clr-title-text);
   font-weight: 600;
   display: flex;
   justify-content: space-between;
@@ -132,7 +130,7 @@
 .feed-post-media {
   width: 100%;
   overflow: hidden;
-  background: #c8c4bc;
+  background: #b8b8b8;
   line-height: 0;
 }
 .feed-post-media img {
@@ -168,9 +166,9 @@
   align-items: center;
   justify-content: center;
   min-height: 250px;
-  color: #999;
+  color: #777;
   font-size: 15px;
-  background: #ece9e0;
+  background: var(--clr-window-bg);
   padding: 40px 20px;
   text-align: center;
 }

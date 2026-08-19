@@ -82,7 +82,7 @@
   function __(key) {
     if (typeof window._t === "function") return window._t(key);
     var fallback = {
-      "soundcloud.title": "SoundCloud",
+      "soundcloud.title": "Music Player",
       "soundcloud.loading": "Loading...",
       "soundcloud.failed": "Failed to load",
       "soundcloud.loadingTrack": "Loading track...",
@@ -584,6 +584,7 @@
 
   if (elBtnHidePl) {
     elBtnHidePl.addEventListener("click", function () {
+      if (elBtnHidePl.disabled || scPlayer.classList.contains("sc-wide")) return;
       var hidden = scPlayer.classList.toggle("sc-hide-playlists");
       elBtnHidePl.classList.toggle("sc-btn-hidepl-active", hidden);
       if (typeof playToggleOnSnd === "function") {
@@ -594,6 +595,7 @@
 
   if (elBtnHideArt) {
     elBtnHideArt.addEventListener("click", function () {
+      if (elBtnHideArt.disabled || scPlayer.classList.contains("sc-wide")) return;
       if (scPlayer.classList.contains("sc-art-mode")) {
         exitArtMode();
       } else if (win.classList.contains("window-maximized")) {
@@ -713,12 +715,169 @@
     }, 3000);
   }
 
+  /* ===== MDI child panels (movable/resizable, never overlapping) ===== */
+  (function () {
+    var topRow = document.getElementById("scTopRow");
+    var plWin = document.getElementById("scPlaylistWin");
+    var artWin = document.getElementById("scArtworkWin");
+    if (!topRow || !plWin || !artWin) return;
+    if (typeof window.createChildPanel !== "function") return;
+    window.createChildPanel(plWin, {
+      parent: topRow,
+      handle: document.getElementById("scPlaylistDrag"),
+      obstacle: artWin,
+      gap: 6,
+      minW: 140,
+      minH: 80,
+    });
+    window.createChildPanel(artWin, {
+      parent: topRow,
+      handle: document.getElementById("scArtworkDrag"),
+      obstacle: plWin,
+      gap: 6,
+      minW: 200,
+      minH: 120,
+    });
+    plWin.classList.add("active");
+  })();
+
+  /* ===== Adaptive layout: side-by-side MDI <-> stacked (playlists below) ===== */
+  (function () {
+    var player = document.getElementById("scPlayer");
+    var topRow = document.getElementById("scTopRow");
+    var plWin = document.getElementById("scPlaylistWin");
+    var artWin = document.getElementById("scArtworkWin");
+    if (!player || !topRow || !plWin || !artWin) return;
+
+    var stacked = false;
+
+    function blocked() {
+      return (
+        document.body.classList.contains("mobile-mode") ||
+        player.classList.contains("sc-wide") ||
+        player.classList.contains("sc-art-mode")
+      );
+    }
+
+    function enterStacked() {
+      stacked = true;
+      player.classList.add("sc-stacked");
+      var H = topRow.getBoundingClientRect().height;
+      var h = Math.max(60, Math.min(H * 0.55, H - 92));
+      artWin.style.height = h + "px";
+    }
+
+    function exitStacked() {
+      stacked = false;
+      player.classList.remove("sc-stacked");
+      plWin.style.left = "";
+      plWin.style.top = "";
+      plWin.style.width = "";
+      plWin.style.height = "";
+      artWin.style.left = "";
+      artWin.style.top = "";
+      artWin.style.width = "";
+      artWin.style.height = "";
+    }
+
+    function updateMode() {
+      if (blocked()) {
+        if (stacked) exitStacked();
+        return;
+      }
+      var pr = topRow.getBoundingClientRect();
+      var W = pr.width;
+      if (!W) return;
+      if (getComputedStyle(win).transform !== "none") return;
+      if (!stacked) {
+        var pl = plWin.getBoundingClientRect();
+        var art = artWin.getBoundingClientRect();
+        var need = pl.width + art.width + 18;
+        if (need > W) {
+          if (W < 450) {
+            enterStacked();
+            return;
+          }
+          var room = W - 18 - pl.width;
+          if (room < 200) {
+            artWin.style.width = Math.max(200, room) + "px";
+            plWin.style.width = Math.max(140, W - 18 - Math.max(200, room)) + "px";
+          }
+        }
+        var maxR = pr.left + W - 6;
+        if (art.right > maxR) artWin.style.width = Math.max(200, maxR - art.left) + "px";
+        if (pl.right > maxR) plWin.style.width = Math.max(140, maxR - pl.left) + "px";
+      } else if (W >= 450) {
+        exitStacked();
+      }
+    }
+
+    function clampStack() {
+      if (!stacked) return;
+      var H = topRow.getBoundingClientRect().height;
+      var h = Math.max(60, Math.min(parseFloat(artWin.style.height) || H * 0.55, H - 92));
+      artWin.style.height = h + "px";
+    }
+
+    var splitter = document.createElement("div");
+    splitter.className = "sc-splitter";
+    topRow.insertBefore(splitter, plWin);
+    var splitting = false;
+    splitter.addEventListener("mousedown", function (e) {
+      if (e.button !== 0 || !stacked) return;
+      e.preventDefault();
+      splitting = true;
+    });
+    document.addEventListener("mousemove", function (e) {
+      if (!splitting) return;
+      var r = topRow.getBoundingClientRect();
+      var h = Math.max(60, Math.min(e.clientY - r.top - 6, r.height - 92));
+      artWin.style.height = h + "px";
+    });
+    document.addEventListener("mouseup", function () {
+      splitting = false;
+    });
+    document.addEventListener("mouseup", function () {
+      setTimeout(updateMode, 60);
+    });
+
+    if (typeof ResizeObserver !== "undefined") {
+      new ResizeObserver(function () {
+        updateMode();
+        clampStack();
+      }).observe(topRow);
+      window.addEventListener("resize", function () {
+        setTimeout(function () {
+          updateMode();
+          clampStack();
+        }, 60);
+      });
+    }
+    updateMode();
+  })();
+
   /* ===== Wide layout detection ===== */
   (function () {
     var el = document.getElementById("scPlayer");
     if (!el) return;
+    var winEl = document.getElementById("scWindow");
     function checkWidth() {
-      el.classList.toggle("sc-wide", el.getBoundingClientRect().width >= 700);
+      var measure = winEl && winEl.getBoundingClientRect().width
+        ? winEl.getBoundingClientRect().width
+        : el.getBoundingClientRect().width;
+      var wide = measure >= 588;
+      el.classList.toggle("sc-wide", wide);
+      if (wide) {
+        el.classList.remove("sc-hide-artwork", "sc-hide-playlists");
+        if (elBtnHideArt) elBtnHideArt.classList.remove("sc-btn-hideart-active");
+        if (elBtnHidePl) elBtnHidePl.classList.remove("sc-btn-hidepl-active");
+      }
+      if (elBtnHideArt && elBtnHidePl) {
+        elBtnHideArt.disabled = wide;
+        elBtnHidePl.disabled = wide;
+        elBtnHideArt.classList.toggle("sc-hide-btn-disabled", wide);
+        elBtnHidePl.classList.toggle("sc-hide-btn-disabled", wide);
+      }
     }
     if (typeof ResizeObserver !== "undefined") {
       new ResizeObserver(checkWidth).observe(el);
@@ -786,7 +945,7 @@
       }
       if (_scFirstShow) {
         _scFirstShow = false;
-        if (!win.style.width || win.style.width === "") win.style.width = "444.5px";
+        if (!win.style.width || win.style.width === "") win.style.width = "500px";
         if (!win.style.height || win.style.height === "") win.style.height = "800px";
       }
       if (typeof window.setSoundCloudVolume === "function") {

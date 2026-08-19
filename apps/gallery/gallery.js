@@ -80,16 +80,6 @@
     closeBtn.setAttribute("aria-label", "Fechar");
     overlay.appendChild(closeBtn);
 
-    var pinBtn = document.createElement("button");
-    pinBtn.className = "gallery-pin-btn";
-    pinBtn.textContent = "Pinterest";
-    pinBtn.setAttribute("aria-label", "Abrir Pinterest");
-    pinBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      window.open("https://br.pinterest.com/sillky786/fufufuf~/", "_blank");
-    });
-    overlay.appendChild(pinBtn);
-
     document.body.appendChild(overlay);
     overlay.focus();
 
@@ -167,6 +157,22 @@
         next();
       }
     });
+
+    var _wheelCooldown = false;
+    overlay.addEventListener(
+      "wheel",
+      function (e) {
+        e.preventDefault();
+        if (_wheelCooldown) return;
+        _wheelCooldown = true;
+        setTimeout(function () {
+          _wheelCooldown = false;
+        }, 350);
+        if (e.deltaY > 0) next();
+        else if (e.deltaY < 0) prev();
+      },
+      { passive: false },
+    );
   }
 
   window.openGallery = function () {

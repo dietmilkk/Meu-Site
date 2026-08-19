@@ -208,7 +208,7 @@
 
 .games-detail-start:hover {
     box-shadow: 0 0 16px rgba(0,255,0,0.2);
-    border-color: #0f0 #5a5a5a #5a5a5a #0f0;
+    border-color: #0f0 #808080 #808080 #0f0;
     color: #060;
 }
 
@@ -239,7 +239,7 @@ body.mobile-mode .games-block {
 
 .games-sel-foot {
     padding: 4px 8px;
-    background: #d4d0c8;
+    background: #c0c0c0;
     border-top: 2px solid;
     border-color: #fff #808080 #808080 #fff;
     font-size: 13px;

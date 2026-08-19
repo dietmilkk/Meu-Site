@@ -26,22 +26,23 @@
     );
   }
 
-  /* Fixed base palette — classic Win2K warm beige/gray */
+  /* Fixed base palette — classic Win99 silver/3D */
   var _base = {
-    windowBg:  "#ece9e0",
-    panelBg:   "#d4d0c8",
-    surface:   "#faf8f4",
-    taskbarBg: "#d4d0c8",
-    borderDark:  "#5a5a5a",
+    windowBg:  "#c0c0c0",
+    panelBg:   "#c0c0c0",
+    surface:   "#ffffff",
+    taskbarBg: "#c0c0c0",
+    borderDark:  "#808080",
     borderLight: "#ffffff",
     text:         "#000000",
     textSecondary: "#444444",
     textOnHighlight: "#ffffff",
     titleText: "#ffffff",
-    btnBg:        "linear-gradient(180deg, #e0dcd4, #d4d0c8 40%, #c8c4bc)",
-    btnBgActive:  "linear-gradient(180deg, #c8c4bc, #d4d0c8)",
-    btnBd:        "#fff #5a5a5a #5a5a5a #fff",
-    btnBdActive:  "#5a5a5a #fff #fff #5a5a5a",
+    titleBarInactive: "#808080",
+    btnBg:        "#c0c0c0",
+    btnBgActive:  "#c0c0c0",
+    btnBd:        "#fff #808080 #808080 #fff",
+    btnBdActive:  "#808080 #fff #fff #808080",
   };
 
   function generatePalette(hex) {
@@ -55,13 +56,9 @@
     var surface   = isDefault ? _base.surface   : mix(_base.surface,   hex, tint);
     var taskbarBg = isDefault ? _base.taskbarBg : mix(_base.taskbarBg, hex, tint);
 
-    /* Button gradients: use base, subtle tint for non-default */
-    var btnGrad1 = "#e0dcd4", btnGrad2 = "#d4d0c8", btnGrad3 = "#c8c4bc";
-    if (!isDefault) {
-      btnGrad1 = mix("#e0dcd4", hex, 0.10);
-      btnGrad2 = mix("#d4d0c8", hex, 0.10);
-      btnGrad3 = mix("#c8c4bc", hex, 0.10);
-    }
+    /* Button face: flat silver, subtle tint for non-default */
+    var btnFace = _base.btnBg;
+    if (!isDefault) btnFace = mix(_base.btnBg, hex, 0.10);
 
     /* Accent colors */
     var titleBar = isDefault ? "#000080" : hex;
@@ -81,6 +78,8 @@
       theme: hex,
       titleBar: titleBar,
       titleText: "#ffffff",
+      titleBarInactive: _base.titleBarInactive,
+      titleTextInactive: "#d8d8d8",
       highlight: highlight,
       highlightHover: highlightHover,
       highlightBg: highlightBg,
@@ -88,16 +87,16 @@
       panelBg: panelBg,
       surface: surface,
       taskbarBg: taskbarBg,
-      borderDark: isDefault ? "#5a5a5a" : mix("#5a5a5a", hex, 0.12),
+      borderDark: isDefault ? "#808080" : mix("#808080", hex, 0.12),
       borderLight: "#ffffff",
       text: "#000000",
       textSecondary: "#444444",
       textOnHighlight: "#ffffff",
       startMenuHeader: startHdr,
-      btnBg: "linear-gradient(180deg, " + btnGrad1 + ", " + btnGrad2 + " 40%, " + btnGrad3 + ")",
-      btnBgActive: "linear-gradient(180deg, " + btnGrad3 + ", " + btnGrad2 + ")",
-      btnBd: "#fff " + (isDefault ? "#5a5a5a" : mix("#5a5a5a", hex, 0.12)) + " " + (isDefault ? "#5a5a5a" : mix("#5a5a5a", hex, 0.12)) + " #fff",
-      btnBdActive: (isDefault ? "#5a5a5a" : mix("#5a5a5a", hex, 0.12)) + " #fff #fff " + (isDefault ? "#5a5a5a" : mix("#5a5a5a", hex, 0.12)),
+      btnBg: btnFace,
+      btnBgActive: btnFace,
+      btnBd: "#fff " + (isDefault ? "#808080" : mix("#808080", hex, 0.12)) + " " + (isDefault ? "#808080" : mix("#808080", hex, 0.12)) + " #fff",
+      btnBdActive: (isDefault ? "#808080" : mix("#808080", hex, 0.12)) + " #fff #fff " + (isDefault ? "#808080" : mix("#808080", hex, 0.12)),
     };
   }
 
@@ -109,6 +108,8 @@
     s.setProperty("--clr-highlight-hover", p.highlightHover);
     s.setProperty("--clr-title-bar", p.titleBar);
     s.setProperty("--clr-title-text", p.titleText);
+    s.setProperty("--clr-title-bar-inactive", p.titleBarInactive);
+    s.setProperty("--clr-title-text-inactive", p.titleTextInactive);
     s.setProperty("--clr-window-bg", p.windowBg);
     s.setProperty("--clr-panel-bg", p.panelBg);
     s.setProperty("--clr-surface", p.surface);

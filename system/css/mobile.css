@@ -148,7 +148,7 @@ body.mobile-mode .mobile-fab:active {
     left: max(0px, env(safe-area-inset-left, 0px));
     right: max(0px, env(safe-area-inset-right, 0px));
     bottom: max(0px, env(safe-area-inset-bottom, 0px));
-    background: #ece9e0;
+    background: #c0c0c0;
     z-index: 999997;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -190,7 +190,7 @@ body.mobile-mode .mobile-fab:active {
 .mobile-app-drawer-divider {
     height: 1px;
     margin: 4px 10px;
-    background: #c8c4bc;
+    background: #b8b8b8;
     border-bottom: 1px solid #fff;
 }
 
@@ -203,18 +203,21 @@ body.mobile-mode .boot-welcome {
 
 body.mobile-mode .boot-welcome .welcome-layout {
     width: auto;
-    padding: 18px 16px;
-    gap: 8px;
+}
+
+body.mobile-mode .welcome-body {
+    padding: 16px 16px 18px;
+    gap: 12px;
 }
 
 body.mobile-mode .welcome-avatar img {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
 }
 
 body.mobile-mode .welcome-greeting {
-    font-size: 16px;
-    margin: 0 0 2px;
+    font-size: 18px;
+    margin: 0 0 4px;
 }
 
 body.mobile-mode .welcome-desc {
@@ -222,9 +225,18 @@ body.mobile-mode .welcome-desc {
 }
 
 body.mobile-mode .welcome-volume-tip {
-    font-size: 11px;
-    margin: 4px 0 0;
-    padding: 4px 6px;
+    font-size: 12px;
+    margin: 0;
+    padding: 6px 8px;
+}
+
+body.mobile-mode .welcome-prefs {
+    flex-direction: column;
+    gap: 12px;
+}
+
+body.mobile-mode .welcome-pref-sep {
+    display: none;
 }
 
 body.mobile-mode .welcome-lang-btn {
@@ -256,6 +268,16 @@ body.mobile-mode .settings-btn {
     font-size: 15px;
 }
 
+body.mobile-mode .settings-sidebar {
+    width: 100%;
+    border-bottom: 2px solid #8a8680;
+    border-right: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: auto;
+    padding: 4px;
+}
+
 /* ---- Gallery ------ ------------------------------------------ */
 body.mobile-mode .gallery-info {
     bottom: 8px;
@@ -283,6 +305,41 @@ body.mobile-mode #scWindow {
     min-height: 0;
 }
 
+body.mobile-mode .sc-top-row {
+    height: auto;
+}
+
+body.mobile-mode .sc-child-win {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    border: none;
+    box-shadow: none;
+    display: flex;
+}
+
+body.mobile-mode .sc-child-title {
+    display: none;
+}
+
+body.mobile-mode .sc-splitter {
+    display: none !important;
+}
+
+body.mobile-mode #scPlaylistWin {
+    display: none;
+}
+
+body.mobile-mode .sc-artwork {
+    flex: none;
+    height: auto !important;
+    aspect-ratio: 1;
+    min-height: 0;
+}
+
 body.mobile-mode .sc-playlist-bar {
     display: none;
 }
@@ -299,6 +356,10 @@ body.mobile-mode .sc-btn {
 body.mobile-mode .sc-btn.sc-btn-play {
     min-height: 44px;
     min-width: 44px;
+}
+
+body.mobile-mode #scBtnHidePl {
+    display: none;
 }
 
 body.mobile-mode .sc-np-btn {

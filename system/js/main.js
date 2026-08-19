@@ -95,11 +95,11 @@
       e.preventDefault();
       window.toggleFullscreen();
     }
-    if (e.altKey && e.key === "1") {
+    if (e.altKey && e.key === "2") {
       e.preventDefault();
       _closeTopWindow();
     }
-    if (e.key === "Meta") {
+    if (e.altKey && e.key === "Meta") {
       e.preventDefault();
       startBtn.click();
     }
@@ -153,56 +153,66 @@
   var _showDesktop = false;
   var _sdState = [];
 
+  function showDesktop() {
+    _showDesktop = true;
+    var ql = document.getElementById("qlShowDesktop");
+    _sdState = [];
+    var appList = [];
+    (W2K && W2K.AppRegistry
+      ? W2K.AppRegistry.forEach
+      : function (fn) {
+          (window.windowRegistry || []).forEach(function (w, i) {
+            fn({ hasEntry: w.hasEntry }, "reg" + i);
+          });
+        })(function (app, id) {
+      var z = 0;
+      if (id.indexOf("reg") === 0) {
+        var idx = parseInt(id.replace("reg", ""));
+        var wins = document.querySelectorAll('.window');
+        if (wins[idx]) z = parseInt(wins[idx].style.zIndex) || 0;
+      } else {
+        var winEl = document.querySelector('.window[data-app-id="' + id + '"]');
+        if (winEl) z = parseInt(winEl.style.zIndex) || 0;
+      }
+      _sdState.push({
+        id: id,
+        zIndex: z,
+        wasOpen: app.hasEntry ? app.hasEntry() : false,
+      });
+      if (app.minimize) appList.push(app);
+    });
+    appList.forEach(function (app, i) {
+      setTimeout(function () { app.minimize(); }, i * 50);
+    });
+    if (ql) ql.classList.add("active");
+  }
+
+  function restoreDesktop() {
+    var toShow = _sdState.filter(function (s) { return s.wasOpen; });
+    toShow.sort(function (a, b) { return a.zIndex - b.zIndex; });
+    toShow.forEach(function (s, i) {
+      setTimeout(function () {
+        if (W2K && W2K.AppRegistry) {
+          var app = W2K.AppRegistry.get(s.id);
+          if (app) app.show();
+        } else {
+          var reg = window.windowRegistry || [];
+          var idx = parseInt(s.id.replace("reg", ""));
+          if (reg[idx]) reg[idx].show();
+        }
+      }, i * 60);
+    });
+    _sdState = [];
+    var ql = document.getElementById("qlShowDesktop");
+    if (ql) ql.classList.remove("active");
+  }
+
   function toggleShowDesktop() {
     _showDesktop = !_showDesktop;
-    var ql = document.getElementById("qlShowDesktop");
     if (_showDesktop) {
-      _sdState = [];
-      var appList = [];
-      (W2K && W2K.AppRegistry
-        ? W2K.AppRegistry.forEach
-        : function (fn) {
-            (window.windowRegistry || []).forEach(function (w, i) {
-              fn({ hasEntry: w.hasEntry }, "reg" + i);
-            });
-          })(function (app, id) {
-        var z = 0;
-        if (id.indexOf("reg") === 0) {
-          var idx = parseInt(id.replace("reg", ""));
-          var wins = document.querySelectorAll('.window');
-          if (wins[idx]) z = parseInt(wins[idx].style.zIndex) || 0;
-        } else {
-          var winEl = document.querySelector('.window[data-app-id="' + id + '"]');
-          if (winEl) z = parseInt(winEl.style.zIndex) || 0;
-        }
-        _sdState.push({
-          id: id,
-          zIndex: z,
-          wasOpen: app.hasEntry ? app.hasEntry() : false,
-        });
-        if (app.minimize) appList.push(app);
-      });
-      appList.forEach(function (app, i) {
-        setTimeout(function () { app.minimize(); }, i * 50);
-      });
-      if (ql) ql.classList.add("active");
+      showDesktop();
     } else {
-      var toShow = _sdState.filter(function (s) { return s.wasOpen; });
-      toShow.sort(function (a, b) { return a.zIndex - b.zIndex; });
-      toShow.forEach(function (s, i) {
-        setTimeout(function () {
-          if (W2K && W2K.AppRegistry) {
-            var app = W2K.AppRegistry.get(s.id);
-            if (app) app.show();
-          } else {
-            var reg = window.windowRegistry || [];
-            var idx = parseInt(s.id.replace("reg", ""));
-            if (reg[idx]) reg[idx].show();
-          }
-        }, i * 60);
-      });
-      _sdState = [];
-      if (ql) ql.classList.remove("active");
+      restoreDesktop();
     }
   }
 
@@ -282,13 +292,13 @@
   });
 
   /* ===== Desktop icon drag with snap-to-grid ===== */
-  var GRID_X = 80;
-  var GRID_Y = 90;
-  var GRID_OFFSET_X = 14;
-  var GRID_OFFSET_Y = 14;
+  var GRID_X = 88;
+  var GRID_Y = 96;
+  var GRID_OFFSET_X = 12;
+  var GRID_OFFSET_Y = 12;
   var TASKBAR_H = 40;
-  var ICON_W = 78;
-  var ICON_H = 78;
+  var ICON_W = 82;
+  var ICON_H = 84;
 
   var _hiddenShortcuts = null;
   function _loadHiddenShortcuts() {
@@ -752,12 +762,12 @@
         break;
       case "showdesktop":
         if (typeof playMinimizeSnd === 'function') playMinimizeSnd();
-        toggleShowDesktop();
+        showDesktop();
         break;
       case "properties":
         if (typeof playClickSnd === 'function') playClickSnd();
         if (typeof window.switchToSettingsCategory === "function") {
-          window.switchToSettingsCategory("about");
+          window.switchToSettingsCategory("system");
         }
         break;
     }
@@ -801,7 +811,7 @@
        ADD / REMOVE DESKTOP SHORTCUT
        ================================================================ */
 
-  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','links','settings','pins'];
+  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','links','settings'];
 
   var _deskIconMap = {
     terminal: { icon: 'system/assets/icons/tango2kde/48x48/apps/terminal.png', labelKey: 'desktop.terminal' },
@@ -813,7 +823,6 @@
     links: { icon: 'system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png', labelKey: 'desktop.links' },
     settings: { icon: 'system/assets/icons/tango2kde/48x48/categories/redhat-system_tools.png', labelKey: 'desktop.settings' },
     gallery: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.gallery' },
-    pins: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.pins' },
   };
 
   _ensureDynamicIcons();

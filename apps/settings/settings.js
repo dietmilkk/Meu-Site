@@ -12,6 +12,7 @@
   var wallpaperPreview = document.getElementById("wallpaperPreview");
   var applyBtn = document.getElementById("settingsApplyBtn");
   var selectedFile = null;
+  var eqWrap = document.getElementById("eqSliders");
 
   var _pageLoad = Date.now();
 
@@ -238,7 +239,7 @@
   /* ===== Equalizer ===== */
   function initEqualizer() {
     if (typeof window._eqGetBands !== "function") return;
-    var wrap = document.getElementById("eqSliders");
+    var wrap = eqWrap;
     if (!wrap || wrap.hasAttribute("data-eq-inited")) return;
     wrap.setAttribute("data-eq-inited", "1");
 
@@ -324,6 +325,138 @@
     }
 
     window._eqUIUpdate = syncEqUI;
+
+    buildEqWave();
+    startEqAnimation();
+  }
+
+  /* ===== Decorative live spectrum (moves with site + player audio) ===== */
+  var _waveBars = [];
+  var _waveN = 24;
+
+  function buildEqWave() {
+    var track = document.getElementById("eqWaveTrack");
+    if (!track || _waveBars.length) return;
+    for (var i = 0; i < _waveN; i++) {
+      var bar = document.createElement("div");
+      bar.className = "eq-wave-bar";
+      bar.style.height = "4%";
+      track.appendChild(bar);
+      _waveBars.push(bar);
+    }
+    function sizeTrack() {
+      if (!track || !win || win.offsetParent === null) return;
+      var h = Math.max(56, Math.min(220, Math.round(win.offsetHeight * 0.34)));
+      track.style.height = h + "px";
+    }
+    sizeTrack();
+    if (typeof ResizeObserver !== "undefined") {
+      new ResizeObserver(sizeTrack).observe(win);
+    } else {
+      window.addEventListener("resize", sizeTrack);
+    }
+  }
+
+  /* Combine player spectrum + site-sound spectrum into N bar heights (0..1) */
+  function _waveHeights() {
+    var music = typeof window._eqGetLevels === "function" ? window._eqGetLevels() : null;
+    var site = typeof window._eqGetSiteLevels === "function" ? window._eqGetSiteLevels() : null;
+    var bands = null;
+    if (music || site) {
+      var len = 10;
+      var merged = new Array(len).fill(0);
+      if (music) for (var i = 0; i < len && i < music.length; i++) merged[i] = Math.max(merged[i], music[i]);
+      if (site) for (var j = 0; j < len && j < site.length; j++) merged[j] = Math.max(merged[j], site[j]);
+      bands = merged;
+    }
+    var out = new Array(_waveN).fill(0);
+    if (!bands) return out;
+    for (var k = 0; k < _waveN; k++) {
+      var pos = (k / (_waveN - 1)) * (bands.length - 1);
+      var lo = Math.floor(pos), hi = Math.min(lo + 1, bands.length - 1);
+      var f = pos - lo;
+      out[k] = bands[lo] * (1 - f) + bands[hi] * f;
+    }
+    return out;
+  }
+
+  /* ===== Live equalizer animation (moves with the music) ===== */
+  var _eqAnimRunning = false;
+  var _eqDragging = false;
+  var _waveSmooth = [];
+  var _waveT = 0;
+
+  function startEqAnimation() {
+    if (_eqAnimRunning) return;
+    _eqAnimRunning = true;
+
+    var w = eqWrap;
+    if (!w) return;
+    w.addEventListener("mousedown", function (e) {
+      if (e.target && e.target.tagName === "INPUT") _eqDragging = true;
+    });
+    w.addEventListener("touchstart", function (e) {
+      if (e.target && e.target.tagName === "INPUT") _eqDragging = true;
+    });
+    document.addEventListener("mouseup", function () { _eqDragging = false; });
+    document.addEventListener("touchend", function () { _eqDragging = false; });
+
+    (function loop() {
+      requestAnimationFrame(loop);
+      if (_eqDragging) return;
+      if (!win || win.offsetParent === null) return;
+      var levels = typeof window._eqGetLevels === "function" ? window._eqGetLevels() : null;
+      var peak = 0;
+      if (levels) {
+        for (var i = 0; i < levels.length; i++) if (levels[i] > peak) peak = levels[i];
+      }
+      for (var i = 0; i < 10; i++) {
+        var slider = document.getElementById("eqSlider" + i);
+        if (!slider) continue;
+        var base = typeof window._eqGetBand === "function" ? window._eqGetBand(i) : 0;
+        var val;
+        if (levels && peak >= 0.015) {
+          val = base + (levels[i] * 2 - 1) * 6;
+        } else {
+          val = base;
+        }
+        val = Math.max(-12, Math.min(12, val));
+        slider.value = val;
+        var vl = document.getElementById("eqVal" + i);
+        if (vl) vl.textContent = (val > 0 ? "+" : "") + val.toFixed(1) + "dB";
+      }
+      updateEqWave(peak);
+    })();
+  }
+
+  function updateEqWave(peak) {
+    var heights = _waveHeights();
+    var live = document.getElementById("eqWaveLive");
+    var combinedPeak = peak;
+    for (var k = 0; k < heights.length; k++) if (heights[k] > combinedPeak) combinedPeak = heights[k];
+    var liveOn = combinedPeak >= 0.015;
+    if (!_waveSmooth.length) {
+      for (var i = 0; i < _waveN; i++) _waveSmooth[i] = 0;
+    }
+    for (var i = 0; i < _waveBars.length; i++) {
+      var target;
+      if (liveOn) {
+        target = 0.06 + Math.pow(heights[i], 0.8) * 0.94;
+      } else {
+        /* Gentle idle ripple — calm decorative motion when silent */
+        target = 0.06 + 0.16 * (0.5 + 0.5 * Math.sin(_waveT * 2.4 + i * 0.55)) *
+                 (0.5 + 0.5 * Math.sin(_waveT * 3.1 + i * 0.9));
+      }
+      _waveSmooth[i] += (target - _waveSmooth[i]) * 0.62;
+      var h = Math.max(4, Math.min(100, _waveSmooth[i] * 100));
+      var bar = _waveBars[i];
+      if (bar) bar.style.height = h.toFixed(1) + "%";
+    }
+    _waveT += 0.03;
+    if (live) {
+      if (liveOn) live.classList.add("active");
+      else live.classList.remove("active");
+    }
   }
 
   function syncEqUI() {

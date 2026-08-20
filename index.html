@@ -467,7 +467,30 @@
                                         </div>
                                         <div class="eq-footer">
                                             <div class="eq-presets">
-                                                <select class="eq-select" id="eqPresetSelect"></select>
+                                                <div class="eq-drop" id="eqPresetDrop">
+                                                    <button
+                                                        type="button"
+                                                        class="eq-drop-btn"
+                                                        id="eqPresetDropBtn"
+                                                        aria-haspopup="listbox"
+                                                        aria-expanded="false"
+                                                    >
+                                                        <span
+                                                            class="eq-drop-label"
+                                                            id="eqPresetDropLabel"
+                                                            >Flat</span
+                                                        >
+                                                        <span
+                                                            class="eq-drop-arrow"
+                                                        ></span>
+                                                    </button>
+                                                    <div
+                                                        class="eq-drop-list"
+                                                        id="eqPresetDropList"
+                                                        role="listbox"
+                                                        hidden
+                                                    ></div>
+                                                </div>
                                                 <button class="settings-btn" id="eqApplyPreset">Aplicar</button>
                                             </div>
                                             <div class="eq-actions">

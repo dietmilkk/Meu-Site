@@ -283,25 +283,113 @@
       })(i);
     }
 
-    // Presets
-    var sel = document.getElementById("eqPresetSelect");
-    if (sel && typeof window._eqGetPresets === "function") {
-      var presets = window._eqGetPresets();
-      for (var i = 0; i < presets.length; i++) {
-        var opt = document.createElement("option");
-        opt.value = presets[i].id;
-        opt.textContent = presets[i].label;
-        sel.appendChild(opt);
+    // Presets (custom Win2000-style dropdown)
+    var dropBtn = document.getElementById("eqPresetDropBtn");
+    var dropList = document.getElementById("eqPresetDropList");
+    var dropLabel = document.getElementById("eqPresetDropLabel");
+    var presets = [];
+    var selIdx = 0;
+    var currentPreset = "flat";
+
+    function setDropSelection() {
+      if (!presets[selIdx]) return;
+      currentPreset = presets[selIdx].id;
+      dropLabel.textContent = presets[selIdx].label;
+      var items = dropList.children;
+      for (var i = 0; i < items.length; i++) {
+        items[i].classList.toggle("sel", i === selIdx);
       }
     }
+
+    function applyPreset(name) {
+      if (typeof window._eqSetPreset === "function") window._eqSetPreset(name);
+      syncEqUI();
+      if (typeof playToggleOnSnd === "function") playToggleOnSnd();
+    }
+
+    if (dropBtn && dropList && typeof window._eqGetPresets === "function") {
+      presets = window._eqGetPresets();
+      for (var i = 0; i < presets.length; i++) {
+        (function (pr, idx) {
+          var item = document.createElement("div");
+          item.className = "eq-drop-item";
+          item.textContent = pr.label;
+          item.dataset.value = pr.id;
+          item.addEventListener("mousedown", function (e) { e.preventDefault(); });
+          item.addEventListener("click", function () {
+            selIdx = idx;
+            setDropSelection();
+            closeEqDrop();
+          });
+          dropList.appendChild(item);
+        })(presets[i], i);
+      }
+      document.body.appendChild(dropList);
+      selIdx = 0;
+      setDropSelection();
+    }
+
+    function openEqDrop() {
+      if (!dropList || dropList.hidden === false) return;
+      dropBtn.focus();
+      var r = dropBtn.getBoundingClientRect();
+      dropList.style.left = r.left + "px";
+      dropList.style.top = r.bottom + 2 + "px";
+      dropList.style.bottom = "auto";
+      dropList.style.minWidth = Math.max(r.width, 150) + "px";
+      dropList.hidden = false;
+      dropBtn.setAttribute("aria-expanded", "true");
+      var lh = dropList.offsetHeight;
+      if (r.bottom + 2 + lh > window.innerHeight) {
+        dropList.style.top = "auto";
+        dropList.style.bottom = window.innerHeight - r.top + 2 + "px";
+      }
+    }
+
+    function closeEqDrop() {
+      if (!dropList || dropList.hidden === true) return;
+      dropList.hidden = true;
+      dropBtn.setAttribute("aria-expanded", "false");
+    }
+
+    if (dropBtn) {
+      dropBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (dropList.hidden === true) openEqDrop();
+        else closeEqDrop();
+      });
+      dropBtn.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          e.preventDefault();
+          if (dropList.hidden === true) { openEqDrop(); return; }
+          var items = dropList.children;
+          var d = e.key === "ArrowDown" ? 1 : -1;
+          var idx = (selIdx + d + items.length) % items.length;
+          selIdx = idx;
+          for (var i = 0; i < items.length; i++) items[i].classList.remove("hl");
+          items[selIdx].classList.add("hl");
+          items[selIdx].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter" && dropList.hidden === false) {
+          e.preventDefault();
+          setDropSelection();
+          closeEqDrop();
+        } else if (e.key === "Escape") {
+          closeEqDrop();
+        }
+      });
+    }
+
+    document.addEventListener("mousedown", function (e) {
+      if (dropList && dropList.hidden === false && !e.target.closest(".eq-drop") && !e.target.closest("#eqPresetDropList")) {
+        closeEqDrop();
+      }
+    });
 
     var applyBtn = document.getElementById("eqApplyPreset");
     if (applyBtn) {
       applyBtn.addEventListener("click", function () {
-        var name = sel ? sel.value : "flat";
-        if (typeof window._eqSetPreset === "function") window._eqSetPreset(name);
-        syncEqUI();
-        if (typeof playToggleOnSnd === "function") playToggleOnSnd();
+        closeEqDrop();
+        applyPreset(currentPreset);
       });
     }
 

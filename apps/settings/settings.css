@@ -503,16 +503,73 @@ body.mobile-mode .eq-wave-track {
     gap: 6px;
 }
 
-.eq-select {
+.eq-drop {
+    position: relative;
+}
+
+.eq-drop-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 120px;
     padding: 3px 6px;
     font-size: 14px;
     font-family: var(--ff-ui);
-    background: var(--clr-surface);
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: #808080 var(--clr-border-light) var(--clr-border-light) #808080;
+    border-color: var(--btn-bd);
     color: var(--clr-text);
     outline: none;
     cursor: pointer;
+    user-select: none;
+    text-align: left;
+}
+
+.eq-drop-btn:active {
+    border-color: var(--btn-bd-active);
+    background: var(--btn-bg-active);
+}
+
+.eq-drop-arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #000;
+    flex-shrink: 0;
+}
+
+.eq-drop-list {
+    position: fixed;
+    background: #fff;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    box-shadow: 0 0 0 1px #000, inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #404040;
+    z-index: 100000;
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 2px;
+}
+
+.eq-drop-item {
+    padding: 4px 8px;
+    font-size: 14px;
+    font-family: var(--ff-ui);
+    color: #000;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.eq-drop-item:hover,
+.eq-drop-item.hl {
+    background: var(--clr-highlight);
+    color: var(--clr-text-on-highlight);
+}
+
+.eq-drop-item.sel {
+    font-weight: bold;
 }
 
 .eq-actions {

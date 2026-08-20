@@ -56,6 +56,24 @@
     return out;
   };
 
+  /* Real dBFS readings (RMS + peak) of the site's own sounds, or null when offline */
+  global._eqGetSiteDb = function () {
+    if (!_sndAnalyser || !_sndCtx || _sndCtx.state !== "running") return null;
+    var data = new Uint8Array(_sndAnalyser.frequencyBinCount);
+    _sndAnalyser.getByteFrequencyData(data);
+    var sum = 0, peak = 0, n = data.length;
+    for (var i = 0; i < n; i++) {
+      var v = data[i];
+      sum += v * v;
+      if (v > peak) peak = v;
+    }
+    var rms = Math.sqrt(sum / n) / 255;
+    return {
+      rms: 20 * Math.log10(Math.max(rms, 1e-6)),
+      peak: 20 * Math.log10(Math.max(peak, 1) / 255),
+    };
+  };
+
   /* ---- low-level primitives ---- */
   function _tone(freq, endFreq, dur, type, vol) {
     var ctx = _getSndCtx();

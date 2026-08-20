@@ -136,6 +136,24 @@
     return out;
   };
 
+  /* Real dBFS readings (RMS + peak) of the player audio, or null when offline */
+  window._eqGetDb = function () {
+    if (!analyser || !ctx) return null;
+    var data = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(data);
+    var sum = 0, peak = 0, n = data.length;
+    for (var i = 0; i < n; i++) {
+      var v = data[i];
+      sum += v * v;
+      if (v > peak) peak = v;
+    }
+    var rms = Math.sqrt(sum / n) / 255;
+    return {
+      rms: 20 * Math.log10(Math.max(rms, 1e-6)),
+      peak: 20 * Math.log10(Math.max(peak, 1) / 255),
+    };
+  };
+
   window._eqSetPreset = function (name) {
     var p = PRESETS[name];
     if (!p) return;

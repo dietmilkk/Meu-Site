@@ -134,11 +134,12 @@ body.mobile-mode .mobile-fab {
     border: 2px solid;
     border-color: var(--btn-bd);
     outline: 1px solid #808080;
-    box-shadow: none;
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
 }
 
 body.mobile-mode .mobile-fab:active {
     border-color: var(--btn-bd-active);
+    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
 }
 
 /* ---- App Drawer ---------------------------------------------- */

@@ -188,7 +188,7 @@
         var block = document.createElement("div");
         block.className = "games-block";
         block.style.cssText =
-          "background:var(--clr-highlight);color:var(--clr-text-on-highlight);font-family:'Courier New',monospace;font-size:14px;font-weight:bold;padding:20px 12px;text-align:center;cursor:pointer;border:2px solid;border-color:var(--clr-highlight-hover) var(--clr-border-dark) var(--clr-border-dark) var(--clr-highlight-hover);display:flex;align-items:center;justify-content:center;aspect-ratio:1;user-select:none;opacity:0;";
+          "background:var(--clr-highlight);color:var(--clr-text-on-highlight);font-family:'Courier New',monospace;font-size:14px;font-weight:bold;padding:20px 12px;text-align:center;cursor:pointer;border:2px solid;border-color:var(--clr-highlight-hover) var(--clr-border-dark) var(--clr-border-dark) var(--clr-highlight-hover);box-shadow:inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);display:flex;align-items:center;justify-content:center;aspect-ratio:1;user-select:none;opacity:0;";
         block.textContent = g.label;
         block.style.animationDelay = (idx * 0.06) + "s";
         setTimeout(function(el) {

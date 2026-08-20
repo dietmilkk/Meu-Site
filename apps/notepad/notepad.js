@@ -8,6 +8,9 @@
   var btnMaximize = document.getElementById("notepadBtnMaximize");
   var textarea = document.getElementById("notepadTextarea");
   var status = document.getElementById("notepadStatus");
+  var rendered = document.getElementById("notepadRendered");
+  var fmtToggle = document.querySelector(".notepad-menu-toggle");
+  var fmtOn = false;
 
   var NOTEPAD_TEXT =
     "# I. A PREMISSA\n" +
@@ -185,6 +188,66 @@
       var chars = textarea.value.length;
       status.textContent = "Ln " + lines + ", " + chars + " caracteres";
     }
+  }
+
+  function escHtml(s) {
+    return s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function renderMarkdown(src) {
+    var lines = src.split("\n");
+    var html = "";
+    var inList = false;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      var t = line.trim();
+      if (t === "---" || t === "___" || t === "***") {
+        html += "<hr>";
+      } else if (/^### /.test(t)) {
+        html += "<h3>" + escHtml(t.replace(/^### /, "")) + "</h3>";
+      } else if (/^## /.test(t)) {
+        html += "<h2>" + escHtml(t.replace(/^## /, "")) + "</h2>";
+      } else if (/^# /.test(t)) {
+        html += "<h1>" + escHtml(t.replace(/^# /, "")) + "</h1>";
+      } else if (/^[\-\*] /.test(t) || /^\d+\. /.test(t)) {
+        if (!inList) { html += "<p>"; inList = true; }
+        html += escHtml(t.replace(/^[\-\*] |^\d+\. /, "")) + "<br>";
+      } else if (t === "") {
+        if (inList) { html += "</p>"; inList = false; }
+      } else {
+        if (inList) { html += "</p>"; inList = false; }
+        var p = escHtml(line);
+        p = p.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+        p = p.replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+        html += "<p>" + p + "</p>";
+      }
+    }
+    if (inList) html += "</p>";
+    return html;
+  }
+
+  function setFormat(on) {
+    fmtOn = on;
+    if (!textarea || !rendered) return;
+    if (on) {
+      rendered.innerHTML = renderMarkdown(textarea.value);
+      textarea.style.display = "none";
+      rendered.style.display = "block";
+      if (fmtToggle) fmtToggle.classList.add("active");
+    } else {
+      rendered.style.display = "none";
+      textarea.style.display = "";
+      if (fmtToggle) fmtToggle.classList.remove("active");
+    }
+  }
+
+  if (fmtToggle) {
+    fmtToggle.addEventListener("click", function () {
+      setFormat(!fmtOn);
+    });
   }
 
   if (textarea) {

@@ -25,6 +25,7 @@
       'desktop.gallery': 'Coleção de imgs',
       'desktop.links': 'Links',
       'desktop.settings': 'Config',
+      'desktop.notepad': 'Bloco de Notas',
 
       /* Start menu */
       'start.label': 'Start',
@@ -37,6 +38,7 @@
       'start.soundcloud': 'Music Player',
       'start.system': 'Sistema',
       'start.terminal': 'Terminal',
+      'start.notepad': 'Bloco de Notas',
       'start.fullscreen': 'Tela Cheia',
       'start.shutdown': 'Desligar',
 
@@ -165,6 +167,13 @@
       'terminal.help': 'Comandos disponíveis:\n  help       Mostra esta ajuda\n  clear      Limpar a tela\n  data       Informações do sistema\n  uptime     Tempo de atividade\n  whereami   Informações de localização',
       'terminal.uptime': 'Tempo de atividade: ',
       'terminal.unknown': 'desconhecida',
+
+      /* Notepad */
+      'notepad.title': 'Bloco de Notas',
+      'notepad.file': 'Arquivo',
+      'notepad.edit': 'Editar',
+      'notepad.view': 'Exibir',
+      'notepad.help': 'Ajuda',
       'terminal.unknownAgent': 'desconhecido',
       'terminal.dataHeader': 'Informações do Sistema',
       'terminal.ipLocation': '  Localização: ',
@@ -286,6 +295,7 @@
       'desktop.gallery': 'Image Collection',
       'desktop.links': 'Links',
       'desktop.settings': 'Settings',
+      'desktop.notepad': 'Notepad',
 
       /* Start menu */
       'start.label': 'Start',
@@ -298,6 +308,7 @@
       'start.soundcloud': 'Music Player',
       'start.system': 'System',
       'start.terminal': 'Terminal',
+      'start.notepad': 'Notepad',
       'start.fullscreen': 'Full Screen',
       'start.shutdown': 'Shut Down',
 
@@ -426,6 +437,13 @@
       'terminal.help': 'Available commands:\n  help       Show this help\n  clear      Clear screen\n  data       System information\n  uptime     Uptime\n  whereami   Location information',
       'terminal.uptime': 'Uptime: ',
       'terminal.unknown': 'unknown',
+
+      /* Notepad */
+      'notepad.title': 'Notepad',
+      'notepad.file': 'File',
+      'notepad.edit': 'Edit',
+      'notepad.view': 'View',
+      'notepad.help': 'Help',
       'terminal.unknownAgent': 'unknown',
       'terminal.dataHeader': 'System Information',
       'terminal.ipLocation': '  Location: ',
@@ -547,6 +565,7 @@
       'desktop.gallery': '图片收藏',
       'desktop.links': '链接',
       'desktop.settings': '设置',
+      'desktop.notepad': '记事本',
 
       /* Start menu */
       'start.label': '开始',
@@ -559,6 +578,7 @@
       'start.soundcloud': 'Music Player',
       'start.system': '系统',
       'start.terminal': '终端',
+      'start.notepad': '记事本',
       'start.fullscreen': '全屏',
       'start.shutdown': '关机',
 
@@ -686,6 +706,13 @@
       'terminal.help': '可用命令：\n  help       显示此帮助\n  clear      清屏\n  data       系统信息\n  uptime     运行时间\n  whereami   位置信息',
       'terminal.uptime': '运行时间：',
       'terminal.unknown': '未知',
+
+      /* Notepad */
+      'notepad.title': '记事本',
+      'notepad.file': '文件',
+      'notepad.edit': '编辑',
+      'notepad.view': '查看',
+      'notepad.help': '帮助',
       'terminal.unknownAgent': '未知',
       'terminal.dataHeader': '系统信息',
       'terminal.ipLocation': '  位置：',

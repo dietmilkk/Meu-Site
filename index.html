@@ -177,6 +177,20 @@
                             >Config</span
                         >
                     </div>
+
+                    <div class="desk-icon" data-action="notepad">
+                        <span class="di-icon">
+                            <img
+                                src="system/assets/icons/tango2kde/48x48/apps/kwrite.png"
+                                alt=""
+                                width="36"
+                                height="36"
+                            />
+                        </span>
+                        <span class="di-label" data-i18n="desktop.notepad"
+                            >Bloco de Notas</span
+                        >
+                    </div>
                 </div>
 
                 <!-- ===== LINKS PAGE ===== -->
@@ -598,6 +612,42 @@
                     </div>
                 </div>
 
+                <!-- ===== NOTEPAD WINDOW ===== -->
+                <div class="window" id="notepadWindow" style="display: none">
+                    <div class="title-bar" id="notepadDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="system/assets/icons/tango2kde/16x16/apps/kwrite.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="notepad.title"
+                                >Bloco de Notas</span
+                            >
+                        </span>
+                        <script>
+                            document.write(createWindowButtons("notepad"));
+                        </script>
+                    </div>
+                    <div class="window-body" id="notepadBody">
+                        <div class="notepad-menu">
+                            <span data-i18n="notepad.file">Arquivo</span>
+                            <span data-i18n="notepad.edit">Editar</span>
+                            <span data-i18n="notepad.view">Exibir</span>
+                            <span data-i18n="notepad.help">Ajuda</span>
+                        </div>
+                        <textarea
+                            class="notepad-textarea"
+                            id="notepadTextarea"
+                            spellcheck="false"
+                        ></textarea>
+                        <div class="notepad-status" id="notepadStatus"></div>
+                    </div>
+                </div>
+
                 <!-- ===== SOUNDCLOUD PLAYER ===== -->
                 <div class="window" id="scWindow" style="display: none; width: 500px; height: 700px;">
                     <div class="title-bar" id="scDragHandle">
@@ -990,6 +1040,15 @@
                                     />
                                     <span data-i18n="start.terminal">Terminal</span>
                                 </div>
+                                <div class="start-menu-item" data-action="notepad">
+                                    <img
+                                        src="system/assets/icons/tango2kde/16x16/apps/kwrite.png"
+                                        alt=""
+                                        width="16"
+                                        height="16"
+                                    />
+                                    <span data-i18n="start.notepad">Bloco de Notas</span>
+                                </div>
                                 <div class="start-menu-item" data-action="fullscreen">
                                     <img
                                         src="system/assets/icons/tango2kde/16x16/actions/view-fullscreen.png"
@@ -1058,6 +1117,7 @@
         <script src="system/js/mobile.js"></script>
         <script src="apps/gallery/gallery.js"></script>
         <script src="apps/terminal/terminal.js"></script>
+        <script src="apps/notepad/notepad.js"></script>
         <script src="apps/games/games.js"></script>
 
         <script src="apps/soundcloud/soundcloud.js"></script>

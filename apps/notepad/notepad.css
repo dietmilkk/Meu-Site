@@ -1,0 +1,71 @@
+#notepadWindow {
+    width: 720px;
+    height: 560px;
+    left: 180px;
+    top: 80px;
+    background: var(--clr-window-bg, #c0c0c0);
+}
+
+#notepadWindow .window-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--clr-window-bg, #c0c0c0);
+}
+
+.notepad-menu {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px 4px;
+    background: var(--clr-window-bg, #c0c0c0);
+    border-bottom: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    flex-shrink: 0;
+}
+
+.notepad-menu span {
+    padding: 3px 10px;
+    font-size: 15px;
+    font-family: var(--ff-ui);
+    color: var(--clr-text, #000);
+    cursor: default;
+}
+
+.notepad-menu span:hover {
+    background: var(--clr-highlight, #000080);
+    color: var(--clr-text-on-highlight, #fff);
+}
+
+.notepad-textarea {
+    flex: 1;
+    width: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+    padding: 8px 10px;
+    font-family: var(--ff-mono);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--clr-text, #000);
+    background: var(--clr-surface, #fff);
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+}
+
+.notepad-status {
+    padding: 3px 8px;
+    font-size: 13px;
+    font-family: var(--ff-ui);
+    color: var(--clr-text-secondary, #444);
+    background: var(--clr-window-bg, #c0c0c0);
+    border-top: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    flex-shrink: 0;
+}

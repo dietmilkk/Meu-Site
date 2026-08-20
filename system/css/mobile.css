@@ -259,6 +259,11 @@ body.mobile-mode .welcome-check-label input {
     height: 18px;
 }
 
+body.mobile-mode .welcome-check-label input.win-checkbox:checked::after {
+    left: 4px;
+    top: 2px;
+}
+
 /* ---- Settings ------------------------------------------------ */
 body.mobile-mode .settings-layout {
     flex-direction: column;

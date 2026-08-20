@@ -278,9 +278,11 @@
     appearance: none;
     width: 20px;
     height: 10px;
-    background: #c0c0c0;
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border-color: var(--btn-bd);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
+    border-radius: 0;
     cursor: pointer;
     margin-left: -6px;
 }
@@ -300,20 +302,24 @@
 .eq-band-slider::-moz-range-thumb {
     width: 20px;
     height: 10px;
-    background: #c0c0c0;
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border-color: var(--btn-bd);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
+    border-radius: 0;
     cursor: pointer;
 }
 
 .eq-band-slider:active::-webkit-slider-thumb {
     border-color: var(--btn-bd-active);
     background: var(--btn-bg-active);
+    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
 }
 
 .eq-band-slider:active::-moz-range-thumb {
     border-color: var(--btn-bd-active);
     background: var(--btn-bg-active);
+    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
 }
 
 .eq-band-label {

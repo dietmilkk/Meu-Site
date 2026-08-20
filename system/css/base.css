@@ -191,6 +191,52 @@ button:active,
     box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
 }
 
+/* ===== Classic Win98/2000 checkbox (custom, replaces the native control) ===== */
+input.win-checkbox {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+    background: #fff;
+    border: 2px solid;
+    border-color: var(--btn-bd);
+    box-shadow: 0 0 0 1px #000, inset 1px 1px 0 var(--clr-shadow);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+input.win-checkbox:active {
+    border-color: var(--btn-bd-active);
+    background: #f4f4f4;
+}
+
+input.win-checkbox:checked {
+    background: #fff;
+}
+
+input.win-checkbox:checked::after {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 0;
+    width: 5px;
+    height: 9px;
+    border: solid #000;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+input.win-checkbox:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: 1px;
+}
+
 .window-body::-webkit-scrollbar,
 .term-output::-webkit-scrollbar,
 .settings-content::-webkit-scrollbar {

@@ -99,7 +99,7 @@
       e.preventDefault();
       _closeTopWindow();
     }
-    if (e.altKey && e.key === "Meta") {
+    if (e.metaKey && e.key === "Alt") {
       e.preventDefault();
       startBtn.click();
     }

@@ -171,23 +171,32 @@
     font-size: 15px;
     font-family: var(--ff-ui);
     background: var(--btn-bg);
-    border: none;
+    border: 2px solid;
+    border-color: var(--btn-bd);
     color: var(--clr-text);
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
     line-height: 1.2;
-    transition: background 0.2s ease, color 0.2s ease;
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
 }
 
 .welcome-lang-btn:hover {
     background: var(--clr-hilight);
 }
 
+.welcome-lang-btn:active {
+    border-color: var(--btn-bd-active);
+    background: var(--btn-bg-active);
+    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
+}
+
 .welcome-lang-btn.active {
     background: var(--clr-highlight);
     color: var(--clr-text-on-highlight);
+    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
+    border-color: var(--btn-bd-active);
 }
 
 .welcome-translation-note {

@@ -207,7 +207,10 @@
 }
 
 .games-detail-start:hover {
-    box-shadow: 0 0 16px rgba(0,255,0,0.2);
+    box-shadow:
+        0 0 16px rgba(0,255,0,0.2),
+        inset 1px 1px 0 var(--clr-hilight),
+        inset -1px -1px 0 var(--clr-shadow);
     border-color: #0f0 #808080 #808080 #0f0;
     color: #060;
 }
@@ -215,6 +218,7 @@
 .games-detail-start:active {
     border-color: var(--btn-bd-active);
     background: var(--btn-bg-active);
+    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
     transform: scale(0.92);
 }
 

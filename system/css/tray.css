@@ -160,12 +160,15 @@
   display: flex;
   align-items: center;
   padding: 2px;
-  transition: background 0.2s ease;
+  border: 2px solid;
+  border-color: var(--btn-bd);
+  background: var(--btn-bg);
+  box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
 }
 
 .volume-mute-btn:hover,
 .volume-max-btn:hover {
-  background: var(--clr-panel-bg);
+  background: var(--clr-hilight);
 }
 
 .volume-slider-wrap {
@@ -259,14 +262,12 @@
   padding: 2px 6px;
   color: #666;
   font-size: 14px;
-  border: 1px solid transparent;
+  background: var(--btn-bg);
+  border: 2px solid;
+  border-color: var(--btn-bd);
 }
 
 .volume-reset-btn:hover {
   color: var(--clr-text);
-  background: var(--clr-panel-bg);
-  border-top: 1px solid var(--clr-border-light);
-  border-left: 1px solid var(--clr-border-light);
-  border-right: 1px solid #505050;
-  border-bottom: 1px solid #505050;
+  background: var(--clr-hilight);
 }

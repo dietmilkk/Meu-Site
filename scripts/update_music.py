@@ -19,10 +19,13 @@ PLAYLISTS = [
     {"id": "brsoft",    "label": "br soft",      "url": "https://soundcloud.com/cu11/sets/7fy"},
     {"id": "cute",      "label": "cute <3",      "url": "https://soundcloud.com/cu11/sets/3a1"},
     {"id": "bb",        "label": "bb = bem bom", "url": "https://soundcloud.com/cu11/sets/3mk"},
-    {"id": "soundspace","label": " .soundspace ", "url": "https://soundcloud.com/cu11/sets/zd2"},
+    {"id": "soundspace","label": ".soundspace ", "url": "https://soundcloud.com/cu11/sets/zd2"},
     {"id": "br",        "label": "br",           "url": "https://soundcloud.com/cu11/sets/lbo"},
     {"id": "star",      "label": "*^#,%'",       "url": "https://soundcloud.com/cu11/sets/4bg"},
     {"id": "balon",     "label": "br balão",     "url": "https://soundcloud.com/cu11/sets/pcc"},
+    {"id": "guitar",    "label": "guitar",       "url": "https://soundcloud.com/cu11/sets/58v"},
+    {"id": "emotion",   "label": "emotion",      "url": "https://soundcloud.com/cu11/sets/7kp"},
+    {"id": "energy",    "label": ".energy",      "url": "https://soundcloud.com/cu11/sets/vv4"},
 ]
 
 

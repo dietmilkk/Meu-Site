@@ -351,9 +351,9 @@
 .eq-wave-track {
     display: flex;
     align-items: flex-end;
-    justify-content: center;
-    gap: 2px;
-    height: 56px;
+    justify-content: space-between;
+    gap: 1px;
+    height: 72px;
     padding: 4px 4px 0;
     background: #c0c0c0;
     border: 2px solid;
@@ -364,8 +364,8 @@
 
 .eq-wave-bar {
     flex: 1 1 0;
-    min-width: 2px;
-    max-width: 8px;
+    min-width: 1px;
+    max-width: 100%;
     height: 4%;
     background: linear-gradient(180deg, #1010d0 0%, var(--clr-highlight) 55%, #000040 100%);
     border: 1px solid rgba(0, 0, 0, 0.45);
@@ -412,7 +412,7 @@
 
 body.mobile-mode .eq-wave-track {
     height: auto;
-    min-height: 72px;
+    min-height: 96px;
 }
 
 .eq-presets {

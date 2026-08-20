@@ -151,6 +151,46 @@ a:focus:not(:focus-visible) {
     outline: none;
 }
 
+/* ===== Standard 3D bevel for ALL buttons (raised Win98/2000 look) ===== */
+button,
+.win-btn,
+.start-btn,
+.sc-btn,
+.sc-np-btn,
+.settings-btn,
+.settings-file-btn,
+.xp-dialog-btn,
+.cal-nav-btn,
+.gallery-close-btn,
+.games-back-btn,
+.welcome-lang-btn,
+.welcome-start-btn,
+.volume-mute-btn,
+.volume-max-btn,
+.volume-reset-btn {
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
+}
+
+button:active,
+.win-btn:active,
+.start-btn:active,
+.sc-btn:active,
+.sc-btn.sc-pressed,
+.sc-np-btn:active,
+.settings-btn:active,
+.settings-file-btn:active,
+.xp-dialog-btn:active,
+.cal-nav-btn:active,
+.gallery-close-btn:active,
+.games-back-btn:active,
+.welcome-lang-btn:active,
+.welcome-start-btn:active,
+.volume-mute-btn:active,
+.volume-max-btn:active,
+.volume-reset-btn:active {
+    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
+}
+
 .window-body::-webkit-scrollbar,
 .term-output::-webkit-scrollbar,
 .settings-content::-webkit-scrollbar {

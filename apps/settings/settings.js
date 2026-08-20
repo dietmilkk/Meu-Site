@@ -332,7 +332,7 @@
 
   /* ===== Decorative live spectrum (moves with site + player audio) ===== */
   var _waveBars = [];
-  var _waveN = 24;
+  var _waveN = 48;
 
   function buildEqWave() {
     var track = document.getElementById("eqWaveTrack");
@@ -346,7 +346,7 @@
     }
     function sizeTrack() {
       if (!track || !win || win.offsetParent === null) return;
-      var h = Math.max(56, Math.min(220, Math.round(win.offsetHeight * 0.34)));
+      var h = Math.max(72, Math.min(260, Math.round(win.offsetHeight * 0.4)));
       track.style.height = h + "px";
     }
     sizeTrack();

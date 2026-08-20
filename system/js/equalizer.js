@@ -20,6 +20,18 @@
     { freq: 16000,label: "16K" },
   ];
 
+  /* Band boundaries in Hz: geometric midpoints between adjacent centers,
+     low edge at 20Hz, top capped at 20kHz so the 16K band reads the
+     audible treble (real streams/MP3s carry little above 16-20kHz). */
+  var BAND_EDGES = (function () {
+    var e = [20];
+    for (var i = 1; i < BANDS.length; i++) {
+      e.push(Math.sqrt(BANDS[i - 1].freq * BANDS[i].freq));
+    }
+    e.push(20000);
+    return e;
+  })();
+
   var gains = [];
   for (var i = 0; i < BANDS.length; i++) gains[i] = 0;
 
@@ -122,13 +134,15 @@
     var data = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(data);
     var n = data.length;
+    var binHz = ctx.sampleRate / analyser.fftSize;
     var out = [];
     var bands = BANDS.length;
     for (var i = 0; i < bands; i++) {
-      var a = Math.floor(Math.pow(i / bands, 2) * n);
-      var b = Math.floor(Math.pow((i + 1) / bands, 2) * n);
-      if (b <= a) b = Math.min(a + 1, n);
+      var a = Math.floor(BAND_EDGES[i] / binHz);
+      var b = Math.floor(BAND_EDGES[i + 1] / binHz);
+      if (b <= a) b = a + 1;
       if (a >= n) { out.push(0); continue; }
+      if (b > n) b = n;
       var sum = 0;
       for (var j = a; j < b; j++) sum += data[j];
       out.push(sum / (b - a) / 255);

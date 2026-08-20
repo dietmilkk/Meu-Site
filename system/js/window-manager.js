@@ -42,13 +42,19 @@
     var data = new Uint8Array(_sndAnalyser.frequencyBinCount);
     _sndAnalyser.getByteFrequencyData(data);
     var n = data.length;
-    var BANDS = 10;
+    var BAND_FREQ = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000];
+    var edges = [20];
+    for (var i = 1; i < BAND_FREQ.length; i++) edges.push(Math.sqrt(BAND_FREQ[i - 1] * BAND_FREQ[i]));
+    edges.push(20000);
+    var binHz = _sndCtx.sampleRate / _sndAnalyser.fftSize;
+    var BANDS = BAND_FREQ.length;
     var out = [];
     for (var i = 0; i < BANDS; i++) {
-      var a = Math.floor(Math.pow(i / BANDS, 2) * n);
-      var b = Math.floor(Math.pow((i + 1) / BANDS, 2) * n);
-      if (b <= a) b = Math.min(a + 1, n);
+      var a = Math.floor(edges[i] / binHz);
+      var b = Math.floor(edges[i + 1] / binHz);
+      if (b <= a) b = a + 1;
       if (a >= n) { out.push(0); continue; }
+      if (b > n) b = n;
       var sum = 0;
       for (var j = a; j < b; j++) sum += data[j];
       out.push(sum / (b - a) / 255);

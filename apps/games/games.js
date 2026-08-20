@@ -794,27 +794,32 @@
      ================================================================ */
   function startTypingChaos() {
     clearBody();
-    var words = [
-      "BLZ", "VDD", "TBM", "PQ", "VLW", "FDS", "TLGD", "MDS",
-      "CRL", "DPS", "DNV", "NGM", "SMP", "TD", "TO", "TA",
-      "NAO", "SIM", "JA", "ATE", "MAIS", "AQUI", "ALI", "LA",
-      "MANO", "POXA", "BAH", "PUTS", "CARAMBA", "NOSSA",
-      "GENTE", "COISA", "MESMO", "ASSIM", "ENTAO", "ENTENDE",
-      "FALOU", "OBRIGADO", "DESCULPA", "CALMA", "ESPERA",
-      "PRONTO", "LEGAL", "MASSA", "TOP", "FODA", "CHATO",
-      "LINDO", "DOIDO", "SERIO", "VERDADE", "TALVEZ",
-      "NUNCA", "SEMPRE", "AGORA", "AINDA", "DEPOIS", "ONTEM",
-      "HOJE", "AMANHA", "BONITO", "CARINHO", "SAUDADE",
-      "BESTEIRA", "CUIDADO", "DIREITO", "RESPOSTA", "CABECA",
-      "CERTEZA", "MOTIVO", "VONTADE", "FELIZ", "TRISTE",
-      "CANSADO", "COMIDA", "DORMIR", "TRABALHO", "ESTUDAR",
-      "VIAJAR", "JOGAR", "PENSAR", "FALAR", "OUVIR",
-      "LEMBRAR", "ESQUECER", "ACEITAR", "MUDAR", "MORAR",
-      "VOLTAR", "CHEGAR", "PEDIR", "COMPRAR", "PAGAR",
-      "FIQUEM", "VAMOS", "BORA", "TUDO", "NADA", "ALGO",
-      "NENHUM", "QUAL", "QUEM", "ONDE", "PORQUE", "MOTIVO",
-      "RAPAZ", "MOCA", "AMIGO", "FILHO", "PAI", "MAE", "IRMAO"
+    var stories = [
+      {
+        title: "My Immortal",
+        text: "Hi my name is Ebony Dark ness Dementia Raven Way and I have long ebony black hair that reaches my mid back and icy blue eyes like limpid tears and a lot of people tell me I look like Amy Lee from Evanescence I am a goth and I live in a castle in a forest my parents died when I was young and I live with my grandmother who is very old I go to Hogwarts and I am in year three but my friends are all in year seven Dumbledore is so stupid he wears a long beard and has no fashion sense"
+      },
+      {
+        title: "Jeff the Killer",
+        text: "I am Jeff do you know how I got these scars I killed my best friend I killed my parents too they say I am insane but I am just awake go to sleep go to sleep close your eyes and never wake up I will find you I live in your walls do not look behind you"
+      },
+      {
+        title: "L is Real 2401",
+        text: "It is a me Mario I found the castle of Bowser and I rescued the princess but something is wrong this is not the real princess L is real find the hidden door in the maze Bowser is watching me from the walls my mustache is starting to grow hair I hear whispers in the pipes L is real 2401"
+      },
+      {
+        title: "Sonic.exe",
+        text: "Welcome to your final nightmare I am Sonic exe I am not the real Sonic I have been waiting for you play my game run from me you cannot escape your eyes are bleeding it is too late for you now"
+      }
     ];
+    var story = stories[Math.floor(Math.random() * stories.length)];
+    var seen = {};
+    var words = [];
+    story.text.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^A-Z0-9]/g, " ").split(/\s+/)
+      .forEach(function (w) {
+        if (w.length >= 2 && !seen[w]) { seen[w] = true; words.push(w); }
+      });
     var patience = 5;
     var destroyed = 0;
     var falling = [];
@@ -977,7 +982,8 @@
     topBar.innerHTML =
       '<span class="games-hud-label">' + __("games.typing.hud") + '</span><span class="games-hud-sep">|</span>' +
       __("games.typing.patience") + '<span class="games-hud-val" id="typingPatience">' + patience + '</span><span class="games-hud-sep">|</span>' +
-      __("games.typing.destroyed") + '<span class="games-hud-val" id="typingDestroyed">0</span>';
+      __("games.typing.destroyed") + '<span class="games-hud-val" id="typingDestroyed">0</span><span class="games-hud-sep">|</span>' +
+      '<span class="games-hud-label">' + __("games.typing.story") + '</span><span class="games-hud-val" id="typingStory">' + story.title + '</span>';
     c.appendChild(topBar);
 
     var boardWrap = document.createElement("div");

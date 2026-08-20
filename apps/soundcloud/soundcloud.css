@@ -24,7 +24,7 @@
 
 .sc-top-row {
     position: relative;
-    height: 250px;
+    height: clamp(160px, 44%, 250px);
     flex-shrink: 0;
 }
 
@@ -99,8 +99,8 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    padding: 6px;
-    gap: 6px;
+    padding: 4px;
+    gap: 4px;
 }
 
 .sc-stacked .sc-child-win {
@@ -118,7 +118,7 @@
     min-height: 60px;
     align-self: center;
     aspect-ratio: 1 / 1;
-    max-width: 100%;
+    max-width: 62%;
     border: 2px solid;
     border-color: #fff #808080 #808080 #fff;
     box-shadow:
@@ -130,7 +130,7 @@
 .sc-stacked #scPlaylistWin {
     flex: 1 1 auto;
     height: auto !important;
-    min-height: 60px;
+    min-height: 88px;
     border: 2px solid;
     border-color: #fff #808080 #808080 #fff;
     box-shadow:
@@ -216,8 +216,8 @@
 .sc-pl-item {
     display: flex;
     align-items: center;
-    padding: 3px 6px;
-    font-size: 15px;
+    padding: 1px 6px;
+    font-size: 14px;
     cursor: pointer;
     color: #000;
     white-space: nowrap;
@@ -524,8 +524,8 @@
 
 .sc-player.sc-wide {
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(220px, 1fr);
-    grid-template-rows: 1fr auto auto auto;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 1fr);
+    grid-template-rows: 1fr auto auto auto minmax(110px, 1fr);
 }
 
 .sc-player.sc-wide .sc-top-row {
@@ -551,12 +551,12 @@
 
 .sc-player.sc-wide #scPlaylistWin {
     grid-column: 1;
-    grid-row: 4;
+    grid-row: 5;
 }
 
 .sc-player.sc-wide .sc-track-list-wrap {
     grid-column: 1;
-    grid-row: 1 / 4;
+    grid-row: 1 / 5;
     border-top: none;
     border-right: 2px solid;
     border-color: #808080 #fff #fff #808080;
@@ -602,6 +602,7 @@
 
 .sc-player.sc-wide .sc-progress-container {
     grid-column: 2 !important;
+    grid-row: 4;
 }
 
 .sc-player.sc-wide .sc-track-item {

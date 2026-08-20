@@ -763,7 +763,7 @@
       stacked = true;
       player.classList.add("sc-stacked");
       var H = topRow.getBoundingClientRect().height;
-      var h = Math.max(60, Math.min(H * 0.55, H - 92));
+      var h = Math.max(48, Math.min(H * 0.5, H - 132));
       artWin.style.height = h + "px";
     }
 
@@ -815,7 +815,7 @@
     function clampStack() {
       if (!stacked) return;
       var H = topRow.getBoundingClientRect().height;
-      var h = Math.max(60, Math.min(parseFloat(artWin.style.height) || H * 0.55, H - 92));
+      var h = Math.max(48, Math.min(parseFloat(artWin.style.height) || H * 0.5, H - 132));
       artWin.style.height = h + "px";
     }
 
@@ -831,7 +831,7 @@
     document.addEventListener("mousemove", function (e) {
       if (!splitting) return;
       var r = topRow.getBoundingClientRect();
-      var h = Math.max(60, Math.min(e.clientY - r.top - 6, r.height - 92));
+      var h = Math.max(48, Math.min(e.clientY - r.top - 6, r.height - 132));
       artWin.style.height = h + "px";
     });
     document.addEventListener("mouseup", function () {

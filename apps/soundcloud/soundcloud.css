@@ -726,7 +726,7 @@
 
 .sc-player.sc-large #scPlaylistWin {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 5;
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -754,7 +754,7 @@
 
 .sc-player.sc-large .sc-info {
     grid-column: 2;
-    grid-row: 3;
+    grid-row: 2;
     min-width: 0;
     max-width: 100%;
     overflow: hidden;
@@ -766,21 +766,21 @@
     display: none !important;
 }
 
+.sc-player.sc-large .sc-controls-row {
+    grid-column: 2;
+    grid-row: 3;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+    contain: inline-size;
+}
+
 .sc-player.sc-large .sc-progress-container {
     grid-column: 2 !important;
     grid-row: 4;
     min-width: 0;
     max-width: 100%;
-    contain: inline-size;
-}
-
-.sc-player.sc-large .sc-controls-row {
-    grid-column: 2;
-    grid-row: 5;
-    min-width: 0;
-    max-width: 100%;
-    width: 100%;
-    overflow: hidden;
     contain: inline-size;
 }
 

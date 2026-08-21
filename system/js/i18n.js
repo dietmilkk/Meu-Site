@@ -216,6 +216,7 @@
 
       /* Feed */
       'feed.title': 'Diário',
+      'feed.loading': 'Carregando...',
       'feed.entries': 'entradas',
       'feed.noPosts': 'Nenhuma entrada.',
       'feed.error': 'Erro ao carregar.',
@@ -493,6 +494,7 @@
 
       /* Feed */
       'feed.title': 'Diary',
+      'feed.loading': 'Loading...',
       'feed.entries': 'entries',
       'feed.noPosts': 'No entries.',
       'feed.error': 'Error loading.',
@@ -769,6 +771,7 @@
 
       /* Feed */
       'feed.title': '日记',
+      'feed.loading': '加载中...',
       'feed.entries': '条目',
       'feed.noPosts': '暂无条目。',
       'feed.error': '加载失败。',

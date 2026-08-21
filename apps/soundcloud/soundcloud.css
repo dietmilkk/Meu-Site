@@ -635,11 +635,11 @@
     font-size: 18px;
 }
 
-/* ===== Large >900px: esquerda = musicas (track list), direita = artwork 1x1 fixo ===== */
+/* ===== Large >900px: esquerda = musicas (track list), direita = artwork 1x1 max vertical ===== */
 .sc-player.sc-large {
     display: grid !important;
-    grid-template-columns: 1fr 360px;
-    grid-template-rows: auto 1fr auto auto auto;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 1fr auto auto auto auto;
     height: 100%;
 }
 
@@ -663,9 +663,13 @@
 .sc-player.sc-large #scArtworkWin {
     grid-column: 2;
     grid-row: 1;
-    width: 360px !important;
-    height: 360px !important;
+    width: auto !important;
+    height: 100% !important;
     aspect-ratio: 1 / 1;
+    max-height: 100%;
+    max-width: 65vh;
+    justify-self: end;
+    align-self: start;
     border: 2px solid;
     border-color: #fff #808080 #808080 #fff;
     box-shadow:

@@ -135,16 +135,9 @@
       stopPoll();
       var track = trackList[currentTrackIndex];
       var isLocalFile = track && track.file && audio.src && audio.src.indexOf("assets/music/tracks") !== -1;
-      var isVercel = window.location.hostname.indexOf("vercel.app") !== -1 || (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1" && window.location.protocol !== "file:");
-      if (isLocalFile && isVercel && typeof xpDialog === "function") {
-        xpDialog({
-          title: "Erro",
-          icon: "!",
-          message: "Arquivo não encontrado no servidor. No Vercel as faixas locais (.m4a) não são hospedadas (774 MB ignorados no git). Rode localmente com python3 -m http.server ou hospede as faixas externamente / use Git LFS. Clique em OK para abrir no SoundCloud.",
-          callback: function(ok) {
-            if (ok && track && track.url) window.open(track.url, "_blank");
-          }
-        });
+      if (isLocalFile && track && track.url) {
+        // Tenta fallback via SoundCloud widget quando arquivo local não existe (Vercel sem .m4a)
+        tryFallbackSoundCloud(track);
       }
     });
 
@@ -152,6 +145,32 @@
     if (typeof window._eqConnect === "function") {
       window._eqConnect(audio);
     }
+  }
+
+  function tryFallbackSoundCloud(track) {
+    if (!track || !track.url) return;
+    var wrap = document.getElementById("scIframeWrap");
+    if (!wrap) return;
+    if (wrap.dataset.fallbackFor === String(currentTrackIndex)) return;
+    wrap.dataset.fallbackFor = String(currentTrackIndex);
+    wrap.innerHTML = "";
+    wrap.style.left = "0";
+    wrap.style.top = "auto";
+    wrap.style.bottom = "0";
+    wrap.style.width = "100%";
+    wrap.style.height = "166px";
+    wrap.style.zIndex = "5";
+    wrap.style.overflow = "hidden";
+    var iframe = document.createElement("iframe");
+    iframe.width = "100%";
+    iframe.height = "166";
+    iframe.scrolling = "no";
+    iframe.frameBorder = "no";
+    iframe.allow = "autoplay";
+    iframe.src = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(track.url) + "&color=%23000080&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false";
+    wrap.appendChild(iframe);
+    isPlaying = true;
+    updatePlayBtn();
   }
 
   /* ===== Playback ===== */
@@ -168,15 +187,8 @@
     audio.currentTime = 0;
     try { await audio.play(); } catch (e) {
       var isLocalFile = track.file && track.file.indexOf("assets/music/tracks") !== -1;
-      var isVercel = window.location.hostname.indexOf("vercel.app") !== -1 || (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1" && window.location.protocol !== "file:");
-      if (isLocalFile && isVercel && typeof xpDialog === "function" && track.url) {
-        xpDialog({
-          title: "Aviso",
-          message: "Reprodução local falhou (arquivo não hospedado no Vercel). Abrir no SoundCloud?",
-          icon: "i",
-          type: "confirm",
-          callback: function(ok) { if (ok) window.open(track.url, "_blank"); }
-        });
+      if (isLocalFile && track.url) {
+        tryFallbackSoundCloud(track);
       }
     }
   }

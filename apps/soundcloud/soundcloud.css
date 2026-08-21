@@ -534,6 +534,16 @@
     font-weight: bold;
 }
 
+.sc-track-item.sc-track-item-active {
+    font-size: 30px !important;
+    padding: 6px 16px !important;
+    line-height: 1.3;
+}
+
+.sc-track-item.sc-track-item-active .sc-track-plays {
+    font-size: 14px !important;
+}
+
 .sc-track-item-active:hover {
     background: var(--clr-highlight, #000080);
     color: var(--clr-text-on-highlight, #fff);
@@ -749,6 +759,11 @@
     max-width: 100%;
     overflow: hidden;
     contain: inline-size;
+}
+
+.sc-player.sc-large .sc-info .sc-track-name,
+.sc-player.sc-large #scTrackPlays {
+    display: none !important;
 }
 
 .sc-player.sc-large .sc-progress-container {

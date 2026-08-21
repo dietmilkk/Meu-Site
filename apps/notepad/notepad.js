@@ -430,6 +430,20 @@
         return window.notepadBehavior ? window.notepadBehavior.hasTaskbarEntry() : false;
       },
     });
+    W2K.AppRegistry.register("files", {
+      label: __("files.title"),
+      show: function () {
+        if (window.filesBehavior) window.filesBehavior.show();
+        else if (filesWin) filesWin.style.display = "";
+        buildFilesRows();
+      },
+      minimize: function () {
+        if (window.filesBehavior) window.filesBehavior.minimize();
+      },
+      hasEntry: function () {
+        return window.filesBehavior ? window.filesBehavior.hasTaskbarEntry() : false;
+      },
+    });
   }
 
   window.notepadOpenFile = openFile;

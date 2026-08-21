@@ -42,6 +42,7 @@
       'start.system': 'Sistema',
       'start.terminal': 'Terminal',
       'start.notepad': 'Bloco de Notas',
+      'start.files': 'Gerenciador de Arquivos',
       'start.fullscreen': 'Tela Cheia',
       'start.shutdown': 'Desligar',
 
@@ -320,6 +321,7 @@
       'start.system': 'System',
       'start.terminal': 'Terminal',
       'start.notepad': 'Notepad',
+      'start.files': 'File Manager',
       'start.fullscreen': 'Full Screen',
       'start.shutdown': 'Shut Down',
 
@@ -598,6 +600,7 @@
       'start.system': '系统',
       'start.terminal': '终端',
       'start.notepad': '记事本',
+      'start.files': '文件管理器',
       'start.fullscreen': '全屏',
       'start.shutdown': '关机',
 

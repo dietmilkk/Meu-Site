@@ -1,5 +1,7 @@
-# Ignore downloaded music (use update_music.py)
-assets/music/
+# Ignore downloaded music tracks (keep index)
+assets/music/tracks/
+assets/music/*.m4a
+assets/music/*.mp3
 
 # Python
 __pycache__/

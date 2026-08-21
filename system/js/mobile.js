@@ -228,6 +228,7 @@
   };
 
   registerApp('notepad', 'Bloco de Notas', '<img src="system/assets/icons/tango2kde/22x22/apps/kwrite.png" alt="" width="22" height="22">');
+  registerApp('files', 'Gerenciador de Arquivos', '<img src="system/assets/icons/tango2kde/22x22/apps/dolphin.png" alt="" width="22" height="22">');
   registerApp('soundcloud', 'Music Player', '<img src="system/assets/icons/tango2kde/22x22/apps/kaudiocreator.png" alt="" width="22" height="22">');
   // registerApp('feed', 'Diário', '<img src="system/assets/icons/tango2kde/22x22/apps/text-editor.png" alt="" width="22" height="22">');
   registerApp('games', 'Jogos', '<img src="system/assets/icons/tango2kde/22x22/categories/applications-games.png" alt="" width="22" height="22">');

@@ -751,7 +751,7 @@
        ADD / REMOVE DESKTOP SHORTCUT
        ================================================================ */
 
-  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','settings','notepad'];
+  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','settings','notepad','files'];
 
   var _deskIconMap = {
     terminal: { icon: 'system/assets/icons/tango2kde/48x48/apps/terminal.png', labelKey: 'desktop.terminal' },
@@ -761,6 +761,8 @@
     chat: { icon: 'system/assets/icons/tango2kde/48x48/apps/internet-group-chat.png', labelKey: 'desktop.chat' },
     randomgif: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.randomgif' },
     settings: { icon: 'system/assets/icons/tango2kde/48x48/categories/redhat-system_tools.png', labelKey: 'desktop.settings' },
+    notepad: { icon: 'system/assets/icons/tango2kde/48x48/apps/kwrite.png', labelKey: 'desktop.notepad' },
+    files: { icon: 'system/assets/icons/tango2kde/16x16/apps/dolphin.png', labelKey: 'files.title' },
     gallery: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.gallery' },
   };
 

@@ -943,6 +943,17 @@
         : el.getBoundingClientRect().width;
       var large = measure >= 900;
       el.classList.toggle("sc-large", large);
+      if (large) {
+        requestAnimationFrame(function() {
+          var artWin = document.getElementById("scArtworkWin");
+          if (artWin) {
+            var h = artWin.getBoundingClientRect().height;
+            if (h > 0) el.style.setProperty("--art-size", h + "px");
+          }
+        });
+      } else {
+        el.style.removeProperty("--art-size");
+      }
     }
     if (typeof ResizeObserver !== "undefined") {
       new ResizeObserver(checkLarge).observe(el);

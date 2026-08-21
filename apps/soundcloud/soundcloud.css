@@ -662,7 +662,7 @@
 /* ===== Large >900px: esquerda = musicas (track list), direita = artwork 1x1 max vertical ===== */
 .sc-player.sc-large {
     display: grid !important;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr var(--art-size, 360px);
     grid-template-rows: 1fr auto auto auto auto;
     height: 100%;
 }
@@ -717,6 +717,11 @@
 .sc-player.sc-large #scPlaylistWin {
     grid-column: 2;
     grid-row: 2;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    contain: inline-size;
     border: 2px solid;
     border-color: #fff #808080 #808080 #fff;
     box-shadow:
@@ -740,16 +745,43 @@
 .sc-player.sc-large .sc-info {
     grid-column: 2;
     grid-row: 3;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    contain: inline-size;
 }
 
 .sc-player.sc-large .sc-progress-container {
     grid-column: 2 !important;
     grid-row: 4;
+    min-width: 0;
+    max-width: 100%;
+    contain: inline-size;
 }
 
 .sc-player.sc-large .sc-controls-row {
     grid-column: 2;
     grid-row: 5;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+    contain: inline-size;
+}
+
+.sc-player.sc-large .sc-pl-item {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sc-player.sc-large #scPlaylistItems {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .window-maximized .sc-btn-play {

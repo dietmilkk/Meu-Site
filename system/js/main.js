@@ -634,6 +634,36 @@
     if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
   });
 
+  function positionSubmenu(group) {
+    var submenu = group.querySelector(".start-menu-submenu");
+    if (!submenu) return;
+    submenu.style.top = "-3px";
+    submenu.style.bottom = "auto";
+    submenu.style.maxHeight = "";
+    submenu.style.left = "100%";
+    submenu.style.right = "auto";
+    // Force layout
+    submenu.getBoundingClientRect();
+    var rect = submenu.getBoundingClientRect();
+    var vh = window.innerHeight;
+    var taskbarH = 40;
+    var maxBottom = vh - taskbarH - 8;
+    if (rect.bottom > maxBottom) {
+      var overflow = rect.bottom - maxBottom;
+      var newTop = -3 - overflow;
+      var groupTop = group.getBoundingClientRect().top;
+      if (groupTop + newTop < 8) {
+        newTop = 8 - groupTop;
+        submenu.style.maxHeight = (maxBottom - groupTop - newTop - 8) + "px";
+      }
+      submenu.style.top = newTop + "px";
+    }
+    if (rect.right > window.innerWidth - 8) {
+      submenu.style.left = "auto";
+      submenu.style.right = "100%";
+    }
+  }
+
   // Group hover/click handling (cascading submenus)
   startMenu.addEventListener("mouseover", function (e) {
     var header = e.target.closest(".start-menu-group-header");
@@ -643,6 +673,7 @@
         if (g !== group) g.classList.remove("open");
       });
       group.classList.add("open");
+      positionSubmenu(group);
     }
   });
 
@@ -653,7 +684,10 @@
       var group = header.closest(".start-menu-group");
       var isOpen = group.classList.contains("open");
       document.querySelectorAll(".start-menu-group.open").forEach(function(g) { g.classList.remove("open"); });
-      if (!isOpen) group.classList.add("open");
+      if (!isOpen) {
+        group.classList.add("open");
+        positionSubmenu(group);
+      }
       if (typeof playClickSnd === 'function') playClickSnd();
       return;
     }

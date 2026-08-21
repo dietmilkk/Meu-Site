@@ -473,6 +473,7 @@
   var _eqDragging = false;
   var _waveSmooth = [];
   var _waveT = 0;
+  var _waveLastLive = 0;
 
   function startEqAnimation() {
     if (_eqAnimRunning) return;
@@ -522,7 +523,9 @@
     var live = document.getElementById("eqWaveLive");
     var combinedPeak = peak;
     for (var k = 0; k < heights.length; k++) if (heights[k] > combinedPeak) combinedPeak = heights[k];
-    var liveOn = combinedPeak >= 0.015;
+    var rawLive = combinedPeak >= 0.015;
+    if (rawLive) _waveLastLive = Date.now();
+    var liveOn = rawLive || (Date.now() - _waveLastLive < 3000);
     if (!_waveSmooth.length) {
       for (var i = 0; i < _waveN; i++) _waveSmooth[i] = 0;
     }
@@ -531,8 +534,8 @@
       if (liveOn) {
         target = 0.06 + Math.pow(heights[i], 0.8) * 0.94;
       } else {
-        /* Gentle idle ripple — calm decorative motion when silent */
-        target = 0.06 + 0.16 * (0.5 + 0.5 * Math.sin(_waveT * 2.4 + i * 0.55)) *
+        /* Gentle idle ripple — halved height, after 3s delay */
+        target = 0.03 + 0.08 * (0.5 + 0.5 * Math.sin(_waveT * 2.4 + i * 0.55)) *
                  (0.5 + 0.5 * Math.sin(_waveT * 3.1 + i * 0.9));
       }
       _waveSmooth[i] += (target - _waveSmooth[i]) * 0.62;

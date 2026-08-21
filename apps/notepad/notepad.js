@@ -9,7 +9,15 @@
   var textarea = document.getElementById("notepadTextarea");
   var status = document.getElementById("notepadStatus");
   var rendered = document.getElementById("notepadRendered");
-  var fmtToggle = document.querySelector(".notepad-menu-toggle");
+  var menuFile = document.getElementById("notepadMenuFile");
+  var menuEdit = document.getElementById("notepadMenuEdit");
+  var menuFormat = document.getElementById("notepadMenuFormat");
+  var filesWin = document.getElementById("filesWindow");
+  var filesList = document.getElementById("filesList");
+  var filesDragHandle = document.getElementById("filesDragHandle");
+  var filesBtnClose = document.getElementById("filesBtnClose");
+  var filesBtnMinimize = document.getElementById("filesBtnMinimize");
+  var filesBtnMaximize = document.getElementById("filesBtnMaximize");
   var fmtOn = false;
 
   var NOTEPAD_TEXT =
@@ -182,11 +190,33 @@
     "**A vida não se vende.**\n" +
     "**A vida se vive.**";
 
+  var LINKS_TEXT =
+    "LINKS — plataformas onde estou ativo :)\n" +
+    "\n" +
+    "SoundCloud\n" +
+    "https://soundcloud.com/cu11\n" +
+    "\n" +
+    "Discord\n" +
+    "@sillllky\n" +
+    "\n" +
+    "Bilibili\n" +
+    "https://space.bilibili.com/3706931485084517/dynamic\n" +
+    "\n" +
+    "WakaTime\n" +
+    "https://wakatime.com/@pepsicoca\n";
+
+  var FILES = {
+    notas: { name: "notas.txt", icon: "system/assets/icons/tango2kde/16x16/apps/kwrite.png", text: NOTEPAD_TEXT },
+    links: { name: "links.txt", icon: "system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png", text: LINKS_TEXT }
+  };
+  var currentFile = "notas";
+
   function updateStatus() {
     if (status && textarea) {
       var lines = textarea.value.split("\n").length;
       var chars = textarea.value.length;
-      status.textContent = "Ln " + lines + ", " + chars + " caracteres";
+      var fname = (FILES[currentFile] && FILES[currentFile].name) ? FILES[currentFile].name : "";
+      status.textContent = fname + " — Ln " + lines + ", " + chars + " caracteres";
     }
   }
 
@@ -236,23 +266,54 @@
       rendered.innerHTML = renderMarkdown(textarea.value);
       textarea.style.display = "none";
       rendered.style.display = "block";
-      if (fmtToggle) fmtToggle.classList.add("active");
     } else {
       rendered.style.display = "none";
       textarea.style.display = "";
-      if (fmtToggle) fmtToggle.classList.remove("active");
     }
+    if (menuEdit) menuEdit.classList.toggle("active", !on);
+    if (menuFormat) menuFormat.classList.toggle("active", on);
   }
 
-  if (fmtToggle) {
-    fmtToggle.addEventListener("click", function () {
-      setFormat(!fmtOn);
+  function openFile(id) {
+    if (!FILES[id]) return;
+    if (textarea && FILES[currentFile]) {
+      FILES[currentFile].text = textarea.value;
+    }
+    currentFile = id;
+    if (textarea) {
+      textarea.value = FILES[id].text;
+    }
+    if (fmtOn) {
+      rendered.innerHTML = renderMarkdown(textarea.value);
+    }
+    updateStatus();
+    if (typeof playClickSnd === "function") playClickSnd();
+    if (window.notepadBehavior) window.notepadBehavior.bringToFront();
+    buildFilesRows();
+  }
+
+  if (menuEdit) {
+    menuEdit.addEventListener("click", function () {
+      if (textarea && FILES[currentFile]) FILES[currentFile].text = textarea.value;
+      setFormat(false);
+      if (typeof playClickSnd === "function") playClickSnd();
+    });
+  }
+  if (menuFormat) {
+    menuFormat.addEventListener("click", function () {
+      if (textarea && FILES[currentFile]) FILES[currentFile].text = textarea.value;
+      setFormat(true);
+      if (typeof playClickSnd === "function") playClickSnd();
     });
   }
 
   if (textarea) {
-    textarea.value = NOTEPAD_TEXT;
-    textarea.addEventListener("input", updateStatus);
+    textarea.value = FILES[currentFile].text;
+    updateStatus();
+    textarea.addEventListener("input", function () {
+      if (FILES[currentFile]) FILES[currentFile].text = textarea.value;
+      updateStatus();
+    });
     textarea.addEventListener("keydown", function (e) {
       if (e.key === "Tab") {
         e.preventDefault();
@@ -260,8 +321,50 @@
         var v = textarea.value;
         textarea.value = v.slice(0, s) + "  " + v.slice(textarea.selectionEnd);
         textarea.selectionStart = textarea.selectionEnd = s + 2;
+        if (FILES[currentFile]) FILES[currentFile].text = textarea.value;
         updateStatus();
       }
+    });
+  }
+
+  /* ===== Files manager ===== */
+  function buildFilesRows() {
+    if (!filesList) return;
+    filesList.innerHTML = "";
+    var ids = ["notas", "links"];
+    for (var i = 0; i < ids.length; i++) {
+      (function (id) {
+        var meta = FILES[id];
+        var row = document.createElement("div");
+        row.className = "files-row";
+        if (id === currentFile) row.classList.add("active");
+        row.dataset.file = id;
+        var kb = (meta.text.length / 1024).toFixed(1);
+        row.innerHTML =
+          '<img src="' + meta.icon + '" alt="" width="20" height="20">' +
+          '<span class="files-row-name">' + meta.name + '</span>' +
+          '<span class="files-row-size">' + kb + ' KB</span>';
+        row.addEventListener("click", function () {
+          openFile(id);
+        });
+        filesList.appendChild(row);
+      })(ids[i]);
+    }
+  }
+
+  function openFilesWindow() {
+    buildFilesRows();
+    if (window.filesBehavior) {
+      window.filesBehavior.show();
+    } else if (filesWin) {
+      filesWin.style.display = "";
+    }
+    if (typeof playClickSnd === "function") playClickSnd();
+  }
+
+  if (menuFile) {
+    menuFile.addEventListener("click", function () {
+      openFilesWindow();
     });
   }
 
@@ -290,6 +393,30 @@
     window.notepadBehavior = behavior;
   }
 
+  if (typeof WindowBehavior !== "undefined" && filesWin) {
+    var filesBehavior = new WindowBehavior(filesWin, {
+      dragHandle: filesDragHandle,
+      btnClose: filesBtnClose,
+      btnMinimize: filesBtnMinimize,
+      btnMaximize: filesBtnMaximize,
+      minW: 300,
+      minH: 220,
+      taskbarIcon:
+        '<img src="system/assets/icons/tango2kde/16x16/apps/dolphin.png" alt="" width="14" height="14" style="flex-shrink:0;">',
+      taskbarLabel: __("files.title"),
+      taskbarAction: "files",
+      appId: "files",
+      onShow: function () {
+        if (filesWin) {
+          filesWin.style.width = "340px";
+          filesWin.style.height = "300px";
+        }
+        buildFilesRows();
+      },
+    });
+    window.filesBehavior = filesBehavior;
+  }
+
   if (typeof W2K !== "undefined" && W2K && W2K.AppRegistry) {
     W2K.AppRegistry.register("notepad", {
       label: __("notepad.title"),
@@ -304,4 +431,7 @@
       },
     });
   }
+
+  window.notepadOpenFile = openFile;
 })();
+

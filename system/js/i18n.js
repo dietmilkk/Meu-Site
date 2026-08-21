@@ -15,7 +15,10 @@
       'boot.stage5': 'Finalizando inicialização...',
       'boot.stage6': 'Pronto...',
       'boot.done': 'Pronto! ^^',
-      'page.title': 'Site de ky',
+      'page.title': 'NSUMNEVSAIDF-88',
+
+      /* Files manager */
+      'files.title': 'Gerenciador de Arquivos',
 
       /* Desktop icons */
       'desktop.terminal': 'Terminal',
@@ -29,7 +32,7 @@
 
       /* Start menu */
       'start.label': 'Start',
-      'start.header': 'win2000',
+      'start.header': 'NSUMNEVSAIDF-88',
       'start.frequent': 'Usados frequentemente',
       'start.games': 'Jogos',
       'start.gallery': 'Coleção de imgs',
@@ -54,7 +57,7 @@
 
       /* Welcome window */
       'welcome.greeting': 'Bem vinda!',
-      'welcome.desc': 'Esse é o meu site pessoal com temática de win2000, espero que goste pois é feito com carinho, sinta-se à vontade, explore e aproveite ^^',
+      'welcome.desc': 'Esse é o meu site pessoal com temática de NSUMNEVSAIDF-88, espero que goste pois é feito com carinho, sinta-se à vontade, explore e aproveite ^^',
       'welcome.langLabel': 'Idioma',
       'welcome.modeLabel': 'Modo',
       'welcome.desktopMode': 'Desktop',
@@ -158,7 +161,7 @@
       'settings.applySuccess': 'Wallpaper aplicado com sucesso!',
       'settings.selectFirst': 'Selecione uma imagem primeiro.',
       'settings.dialogTitle': 'Configurações',
-      'settings.aboutContent': '<b>Win2K Desktop</b><br>Um desktop funcional feito por um maluco com HTML/CSS/JS<br><br>O intuito deste espaço é ser um espaço pessoal onde eu possa me expor, tipo um instagram, mas melhor porque não é controlado por uma bigtech, e é totalmente feito e customizado por mim, com base completamente em meus gostos e preferências<br>Sendo meu espaço de paz em meio a um mundo frenético onde todos estão competindo por algo<br><br><br><b>Sobre o Autor</b><br><br>Podem me chamar de sillky ou ky pros mais intimos, sou uma pessoa não binária, pode me chamar com qualquer pronome, tambem sou uma entusiasta de tecnologia e amante de coisas antigas e de culturas alternativas como hacker e grunge<br><br>só isso. se divirta explorando :)',
+      'settings.aboutContent': '<b>NSUMNEVSAIDF-88</b> — "não sei um bom nome então vai ser as iniciais dessa frase"<br>Um desktop funcional feito por um maluco com HTML/CSS/JS<br><br>O intuito deste espaço é ser um espaço pessoal onde eu possa me expor, tipo um instagram, mas melhor porque não é controlado por uma bigtech, e é totalmente feito e customizado por mim, com base completamente em meus gostos e preferências<br>Sendo meu espaço de paz em meio a um mundo frenético onde todos estão competindo por algo<br><br><br><b>Sobre o Autor</b><br><br>Podem me chamar de sillky ou ky pros mais intimos, sou uma pessoa não binária, pode me chamar com qualquer pronome, tambem sou uma entusiasta de tecnologia e amante de coisas antigas e de culturas alternativas como hacker e grunge<br><br>só isso. se divirta explorando :)',
 
       /* Terminal */
       'terminal.title': 'C:\\WINDOWS\\system32\\cmd.exe',
@@ -275,7 +278,7 @@
       /* System */
       'system.title': 'Sistema',
       'system.aboutTitle': 'Sistema',
-      'system.aboutMsg': 'Windows 2000 Desktop\n\nUm projeto hobby feito com HTML, CSS e JavaScript puros.',
+      'system.aboutMsg': 'NSUMNEVSAIDF-88 — "não sei um bom nome então vai ser as iniciais dessa frase"\n\nUm projeto hobby feito com HTML, CSS e JavaScript puros.',
 
     },
 
@@ -289,7 +292,10 @@
       'boot.stage5': 'Finishing startup...',
       'boot.stage6': 'Ready...',
       'boot.done': 'Ready! ^^',
-      'page.title': "Ky's Site",
+      'page.title': 'NSUMNEVSAIDF-88',
+
+      /* Files manager */
+      'files.title': 'File Manager',
 
       /* Desktop icons */
       'desktop.terminal': 'Terminal',
@@ -303,7 +309,7 @@
 
       /* Start menu */
       'start.label': 'Start',
-      'start.header': 'win2000',
+      'start.header': 'NSUMNEVSAIDF-88',
       'start.frequent': 'Frequently Used',
       'start.games': 'Games',
       'start.gallery': 'Image Collection',
@@ -328,7 +334,7 @@
 
       /* Welcome window */
       'welcome.greeting': 'Welcome!',
-      'welcome.desc': 'This is my personal website with a win2000 theme, I hope you enjoy it because it\'s made with love, feel free to explore and have fun ^^',
+      'welcome.desc': 'This is my personal website with a NSUMNEVSAIDF-88 theme, I hope you enjoy it because it\'s made with love, feel free to explore and have fun ^^',
       'welcome.langLabel': 'Language',
       'welcome.modeLabel': 'Mode',
       'welcome.desktopMode': 'Desktop',
@@ -432,7 +438,7 @@
       'settings.applySuccess': 'Wallpaper applied successfully!',
       'settings.selectFirst': 'Select an image first.',
       'settings.dialogTitle': 'Settings',
-      'settings.aboutContent': '<b>Win2K Desktop</b><br>A functional desktop made by a madman with HTML/CSS/JS<br><br>The purpose of this space is to be a personal space where I can express myself, like an Instagram, but better because it\'s not controlled by a big tech company, and it\'s entirely made and customized by me, based completely on my tastes and preferences<br>Being my peace space in the midst of a frenetic world where everyone is competing for something<br><br><br><b>About the Author</b><br><br>You can call me sillky or ky for short, I\'m a non-binary person, you can use any pronouns, I\'m also a tech enthusiast and lover of old things and alternative cultures like hacker and grunge<br><br>that\'s it. have fun exploring :)',
+      'settings.aboutContent': '<b>NSUMNEVSAIDF-88</b> — "não sei um bom nome então vai ser as iniciais dessa frase"<br>A functional desktop made by a madman with HTML/CSS/JS<br><br>The purpose of this space is to be a personal space where I can express myself, like an Instagram, but better because it\'s not controlled by a big tech company, and it\'s entirely made and customized by me, based completely on my tastes and preferences<br>Being my peace space in the midst of a frenetic world where everyone is competing for something<br><br><br><b>About the Author</b><br><br>You can call me sillky or ky for short, I\'m a non-binary person, you can use any pronouns, I\'m also a tech enthusiast and lover of old things and alternative cultures like hacker and grunge<br><br>that\'s it. have fun exploring :)',
 
       /* Terminal */
       'terminal.title': 'C:\\WINDOWS\\system32\\cmd.exe',
@@ -549,7 +555,7 @@
       /* System */
       'system.title': 'System',
       'system.aboutTitle': 'System',
-      'system.aboutMsg': 'Windows 2000 Desktop\n\nA hobby project built with plain HTML, CSS, and JavaScript.',
+      'system.aboutMsg': 'NSUMNEVSAIDF-88 — "não sei um bom nome então vai ser as iniciais dessa frase"\n\nA hobby project built with plain HTML, CSS, and JavaScript.',
 
     },
 
@@ -563,7 +569,10 @@
       'boot.stage5': '完成启动...',
       'boot.stage6': '就绪...',
       'boot.done': '就绪！^^',
-      'page.title': "Ky 的个人网站",
+      'page.title': 'NSUMNEVSAIDF-88',
+
+      /* Files manager */
+      'files.title': '文件管理器',
 
       /* Desktop icons */
       'desktop.terminal': '终端',
@@ -577,7 +586,7 @@
 
       /* Start menu */
       'start.label': '开始',
-      'start.header': 'win2000',
+      'start.header': 'NSUMNEVSAIDF-88',
       'start.frequent': '常用',
       'start.games': '游戏',
       'start.gallery': '图片收藏',
@@ -705,7 +714,7 @@
       'settings.applySuccess': '壁纸应用成功！',
       'settings.selectFirst': '请先选择一张图片。',
       'settings.dialogTitle': '设置',
-      'settings.aboutContent': '<b>Win2K 桌面</b><br>一个用 HTML/CSS/JS 制作的功能性桌面<br><br>这个空间的目的就是让我有一个可以表达自己的个人空间，就像 Instagram，但更好，因为它不受大科技公司控制，完全由我根据自己的喜好和偏好定制<br>在这个人人都争相竞争的快节奏世界中，这是我的一片宁静之地<br><br><br><b>关于作者</b><br><br>你可以叫我 sillky 或简称 ky，我是非二元性别者，任何代词都可以。我是一个科技爱好者，喜欢复古事物和黑客、垃圾摇滚等另类文化<br><br>就这些。祝你探索愉快 :)',
+      'settings.aboutContent': '<b>NSUMNEVSAIDF-88</b> — "não sei um bom nome então vai ser as iniciais dessa frase"<br>一个用 HTML/CSS/JS 制作的功能性桌面<br><br>这个空间的目的就是让我有一个可以表达自己的个人空间，就像 Instagram，但更好，因为它不受大科技公司控制，完全由我根据自己的喜好和偏好定制<br>在这个人人都争相竞争的快节奏世界中，这是我的一片宁静之地<br><br><br><b>关于作者</b><br><br>你可以叫我 sillky 或简称 ky，我是非二元性别者，任何代词都可以。我是一个科技爱好者，喜欢复古事物和黑客、垃圾摇滚等另类文化<br><br>就这些。祝你探索愉快 :)',
 
       /* Terminal */
       'terminal.title': 'C:\\WINDOWS\\system32\\cmd.exe',
@@ -822,7 +831,7 @@
       /* System */
       'system.title': '系统',
       'system.aboutTitle': '系统',
-      'system.aboutMsg': 'Windows 2000 桌面\n\n一个用纯 HTML、CSS 和 JavaScript 制作的业余项目。',
+      'system.aboutMsg': 'NSUMNEVSAIDF-88 — "não sei um bom nome então vai ser as iniciais dessa frase"\n\n一个用纯 HTML、CSS 和 JavaScript 制作的业余项目。',
 
     },
   };

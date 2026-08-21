@@ -213,18 +213,34 @@
     overflow-y: auto;
 }
 
-.sc-pl-item {
+#scPlaylistItems {
     display: flex;
-    align-items: center;
-    padding: 1px 6px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 6px;
+    padding: 6px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.sc-pl-item {
+    flex: 0 0 auto;
+    width: max-content;
+    max-width: 100%;
+    padding: 4px 10px;
     font-size: 14px;
     cursor: pointer;
     color: #000;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    background: #c0c0c0;
-    border-bottom: 1px solid #a0a0a0;
+    background: var(--btn-bg, #c0c0c0);
+    border: 2px solid;
+    border-color: var(--btn-bd, #fff #808080 #808080 #fff);
+    box-shadow:
+        inset 1px 1px 0 #dfdfdf,
+        inset -1px -1px 0 #404040;
     user-select: none;
     transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
 }
@@ -232,13 +248,14 @@
 .sc-pl-item:hover {
     background: var(--clr-highlight, #000080);
     color: var(--clr-text-on-highlight, #fff);
-    padding-left: 8px;
+    padding-left: 10px;
 }
 
 .sc-pl-item-active {
     background: var(--clr-highlight, #000080) !important;
     color: var(--clr-text-on-highlight, #fff) !important;
     font-weight: bold;
+    border-color: var(--btn-bd-active, #808080 #fff #fff #808080) !important;
 }
 
 .sc-artwork {

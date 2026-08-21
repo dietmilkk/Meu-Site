@@ -2,42 +2,6 @@
   "use strict";
 
   /* ================================================================
-       WINDOW SETUP
-       ================================================================ */
-
-  var win = document.getElementById("mainWindow");
-  var handle = document.getElementById("dragHandle");
-
-  (function center() {
-    var w = Math.min(820, Math.max(520, window.innerWidth * 0.55));
-    var h = Math.min(window.innerHeight * 0.82, window.innerHeight - 60);
-    var leftPos = Math.round((window.innerWidth - w) / 2);
-    win.style.left = leftPos + "px";
-    win.style.top = "16px";
-    win.style.width = w + "px";
-    win.style.height = h + "px";
-  })();
-
-  var winBehavior = new WindowBehavior(win, {
-    dragHandle: handle,
-    btnClose: document.getElementById("btnClose"),
-    btnMinimize: document.getElementById("btnMinimize"),
-    btnMaximize: document.getElementById("btnMaximize"),
-    minW: 500,
-    minH: 500,
-    startVisible: false,
-    taskbarIcon:
-      '<img src="system/assets/icons/tango2kde/16x16/apps/dolphin.png" alt="" width="14" height="14" style="flex-shrink:0;">',
-    taskbarLabel: __('links.title'),
-    taskbarAction: 'links',
-    appId: 'links',
-    onInit: function (controls) {
-      // Ensure initial position
-      controls.setMinimized(false);
-    },
-  });
-
-  /* ================================================================
        FULLSCREEN TOGGLE
        ================================================================ */
 
@@ -120,32 +84,14 @@
        SHOW DESKTOP
        ================================================================ */
 
-  // Register main window for show-desktop
-  if (W2K && W2K.AppRegistry) {
-    W2K.AppRegistry.register("links", {
-      label: __('links.title'),
-      show: function () {
-        winBehavior.show();
-      },
-      minimize: function () {
-        winBehavior.minimize();
-      },
-      hasEntry: function () {
-        return winBehavior.hasTaskbarEntry();
-      },
-    });
-  }
   // Legacy registry (for showDesktop fallback path)
   if (window.windowRegistry) {
     window.windowRegistry.push({
       minimize: function () {
-        winBehavior.minimize();
+        if (window.notepadBehavior) window.notepadBehavior.minimize();
       },
       show: function () {
-        winBehavior.show();
-      },
-      hasEntry: function () {
-        return winBehavior.hasTaskbarEntry();
+        if (window.notepadBehavior) window.notepadBehavior.show();
       },
     });
   }
@@ -692,12 +638,6 @@
     var action = item.getAttribute("data-action");
     trackUse(action);
     switch (action) {
-      case "links":
-        if (winBehavior.isMinimized() || win.style.display === "none") {
-          winBehavior.show();
-        }
-        winBehavior.bringToFront();
-        break;
       case "fullscreen":
         window.toggleFullscreen();
         break;
@@ -811,7 +751,7 @@
        ADD / REMOVE DESKTOP SHORTCUT
        ================================================================ */
 
-  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','links','settings'];
+  var _eligibleActions = ['terminal','wakatime','games','soundcloud','chat','randomgif','settings','notepad'];
 
   var _deskIconMap = {
     terminal: { icon: 'system/assets/icons/tango2kde/48x48/apps/terminal.png', labelKey: 'desktop.terminal' },
@@ -820,7 +760,6 @@
     soundcloud: { icon: 'system/assets/icons/tango2kde/48x48/apps/kaudiocreator.png', labelKey: 'desktop.soundcloud' },
     chat: { icon: 'system/assets/icons/tango2kde/48x48/apps/internet-group-chat.png', labelKey: 'desktop.chat' },
     randomgif: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.randomgif' },
-    links: { icon: 'system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png', labelKey: 'desktop.links' },
     settings: { icon: 'system/assets/icons/tango2kde/48x48/categories/redhat-system_tools.png', labelKey: 'desktop.settings' },
     gallery: { icon: 'system/assets/icons/tango2kde/48x48/apps/gwenview.png', labelKey: 'desktop.gallery' },
   };

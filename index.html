@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=1200" />
-        <title>Site de ky</title>
+        <title>NSUMNEVSAIDF-88</title>
         <link
             rel="icon"
             href="system/assets/icons/tango2kde/22x22/devices/system.png"
@@ -46,7 +46,7 @@
                 <div class="welcome-layout">
                     <div class="welcome-titlebar">
                         <span class="welcome-titlebar-logo"></span>
-                        <span class="welcome-titlebar-text">win2000</span>
+                        <span class="welcome-titlebar-text">NSUMNEVSAIDF-88</span>
                     </div>
 
                     <div class="welcome-body">
@@ -73,7 +73,7 @@
                                     data-i18n="welcome.desc"
                                 >
                                     Esse é o meu site pessoal com temática de
-                                    win2000, espero que goste pois é feito com
+                                    NSUMNEVSAIDF-88, espero que goste pois é feito com
                                     carinho, sinta-se à vontade, explore e
                                     aproveite ^^
                                 </p>
@@ -190,47 +190,6 @@
                         <span class="di-label" data-i18n="desktop.notepad"
                             >Bloco de Notas</span
                         >
-                    </div>
-                </div>
-
-                <!-- ===== LINKS PAGE ===== -->
-                <div class="window" id="mainWindow">
-                    <div class="title-bar" id="dragHandle">
-                        <span class="title-bar-text">
-                            <span class="icon">
-                                <img
-                                    src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png"
-                                    alt=""
-                                    width="14"
-                                    height="14"
-                                />
-                            </span>
-                            <span data-i18n="links.title">Links</span>
-                        </span>
-                        <script>
-                            document.write(createWindowButtons(""));
-                        </script>
-                    </div>
-
-                    <div class="window-body" style="padding:0;">
-                        <div class="links-grid">
-                            <div class="links-item" onclick="window.open('https://soundcloud.com/cu11','_blank')" title="soundcloud.com/cu11">
-                                <img src="system/assets/icons/tango2kde/48x48/apps/kaudiocreator.png" alt="">
-                                <span>SoundCloud</span>
-                            </div>
-                            <div class="links-item" onclick="navigator.clipboard.writeText('@sillllky').then(function(){if(typeof playToggleOnSnd==='function')playToggleOnSnd();})" title="@sillllky">
-                                <img src="system/assets/icons/tango2kde/48x48/apps/internet-group-chat.png" alt="">
-                                <span>Discord</span>
-                            </div>
-                            <div class="links-item" onclick="window.open('https://space.bilibili.com/3706931485084517/dynamic','_blank')" title="b23.tv/T4CMrOw">
-                                <img src="system/assets/icons/tango2kde/48x48/apps/internet-web-browser.png" alt="">
-                                <span>Bilibili</span>
-                            </div>
-                            <div class="links-item" onclick="window.open('https://wakatime.com/@pepsicoca','_blank')" title="wakatime.com/@pepsicoca">
-                                <img src="system/assets/icons/tango2kde/48x48/apps/redhat-web-browser.png" alt="">
-                                <span>WakaTime</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -568,7 +527,7 @@
                                         style="line-height: 1.8"
                                         data-i18n-html="settings.aboutContent"
                                     >
-                                        <b>Win2K Desktop</b><br />
+                                        <b>NSUMNEVSAIDF-88</b> — "não sei um bom nome então vai ser as iniciais dessa frase"<br />
                                         Um desktop funcional feito por um maluco
                                         com HTML/CSS/JS<br /><br />
                                         O intuito deste espaço é ser um espaço
@@ -664,11 +623,9 @@
                     </div>
                     <div class="window-body" id="notepadBody">
                         <div class="notepad-menu">
-                            <span data-i18n="notepad.file">Arquivo</span>
-                            <span data-i18n="notepad.edit">Editar</span>
-                            <span class="notepad-menu-toggle" data-i18n="notepad.format">Formatado</span>
-                            <span data-i18n="notepad.view">Exibir</span>
-                            <span data-i18n="notepad.help">Ajuda</span>
+                            <span id="notepadMenuFile" data-i18n="notepad.file">Arquivo</span>
+                            <span id="notepadMenuEdit" class="notepad-menu-mode active" data-i18n="notepad.edit">Editar</span>
+                            <span id="notepadMenuFormat" class="notepad-menu-mode" data-i18n="notepad.format">Formatado</span>
                         </div>
                         <textarea
                             class="notepad-textarea"
@@ -677,6 +634,31 @@
                         ></textarea>
                         <div class="notepad-rendered" id="notepadRendered"></div>
                         <div class="notepad-status" id="notepadStatus"></div>
+                    </div>
+                </div>
+
+                <!-- ===== FILES MANAGER WINDOW ===== -->
+                <div class="window" id="filesWindow" style="display: none">
+                    <div class="title-bar" id="filesDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="system/assets/icons/tango2kde/16x16/apps/dolphin.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="files.title"
+                                >Gerenciador de Arquivos</span
+                            >
+                        </span>
+                        <script>
+                            document.write(createWindowButtons("files"));
+                        </script>
+                    </div>
+                    <div class="window-body" id="filesBody">
+                        <div class="files-list" id="filesList"></div>
                     </div>
                 </div>
 
@@ -985,7 +967,7 @@
 
                 <!-- ===== START MENU ===== -->
                 <div class="start-menu" id="startMenu">
-                    <div class="start-menu-banner" data-i18n="start.header">win2000</div>
+                    <div class="start-menu-banner" data-i18n="start.header">NSUMNEVSAIDF-88</div>
                     <div class="start-menu-body-wrap">
                     <div class="fabric-nav start-menu-fabric">
                         <div class="fabric-nav-inner">
@@ -1015,15 +997,6 @@
                                     <span data-i18n="start.gallery"
                                         >Coleção de imgs</span
                                     >
-                                </div>
-                                <div class="start-menu-item" data-action="links">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.links">Links</span>
                                 </div>
                                 <!--
                                 <div class="start-menu-item" data-action="feed">

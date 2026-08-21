@@ -33,12 +33,13 @@
     display: flex;
     flex-direction: column;
     background: #c0c0c0;
-    border: 2px solid;
+    border: 3px solid;
     border-color: #fff #808080 #808080 #fff;
     box-shadow:
-        0 0 0 1px #000,
-        inset 1px 1px 0 #dfdfdf,
-        inset -1px -1px 0 #404040;
+        0 0 0 2px #000,
+        inset 2px 2px 0 #fff,
+        inset -2px -2px 0 #404040,
+        inset 1px 1px 0 #dfdfdf;
 }
 
 #scPlaylistWin {
@@ -697,19 +698,20 @@
 .sc-player.sc-large #scArtworkWin {
     grid-column: 2;
     grid-row: 1;
-    width: var(--art-size, 360px) !important;
-    height: var(--art-size, 360px) !important;
+    width: var(--art-size, 100%) !important;
+    height: var(--art-size, 100%) !important;
     aspect-ratio: 1 / 1;
-    max-width: 100%;
-    max-height: 100%;
-    justify-self: end;
-    align-self: start;
-    border: 2px solid;
+    max-width: none;
+    max-height: none;
+    justify-self: stretch;
+    align-self: stretch;
+    border: 3px solid;
     border-color: #fff #808080 #808080 #fff;
     box-shadow:
-        0 0 0 1px #000,
-        inset 1px 1px 0 #dfdfdf,
-        inset -1px -1px 0 #404040;
+        0 0 0 2px #000,
+        inset 2px 2px 0 #fff,
+        inset -2px -2px 0 #404040,
+        inset 1px 1px 0 #dfdfdf;
     overflow: hidden;
 }
 
@@ -732,12 +734,13 @@
     max-width: 100%;
     overflow-x: hidden;
     contain: inline-size;
-    border: 2px solid;
+    border: 3px solid;
     border-color: #fff #808080 #808080 #fff;
     box-shadow:
-        0 0 0 1px #000,
-        inset 1px 1px 0 #dfdfdf,
-        inset -1px -1px 0 #404040;
+        0 0 0 2px #000,
+        inset 2px 2px 0 #fff,
+        inset -2px -2px 0 #404040,
+        inset 1px 1px 0 #dfdfdf;
     max-height: 180px;
     overflow-y: auto;
 }
@@ -745,11 +748,14 @@
 .sc-player.sc-large .sc-track-list-wrap {
     grid-column: 1;
     grid-row: 1 / 6;
-    border-right: 2px solid;
+    border-right: 3px solid;
     border-color: #808080 #fff #fff #808080;
     border-top: none;
     background: #fff;
     min-height: 0;
+    box-shadow:
+        inset 2px 2px 0 var(--clr-shadow),
+        inset -1px -1px 0 var(--clr-hilight);
 }
 
 .sc-player.sc-large .sc-info {

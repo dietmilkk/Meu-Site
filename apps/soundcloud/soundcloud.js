@@ -920,9 +920,9 @@
           if (controls) otherH += controls.offsetHeight;
           otherH += 16; // gaps/borders
           var available = playerH - otherH;
-          // artwork 1x1, max vertical
-          var size = Math.max(120, Math.min(available, 560));
-          if (size > 0) el.style.setProperty("--art-size", size + "px");
+          var size = available;
+          if (size < 0) size = 0;
+          el.style.setProperty("--art-size", size + "px");
         });
       } else {
         el.style.removeProperty("--art-size");

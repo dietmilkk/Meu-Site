@@ -34,12 +34,11 @@
     flex-direction: column;
     background: #c0c0c0;
     border: 3px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border-color: var(--btn-bd);
     box-shadow:
-        0 0 0 2px #000,
-        inset 2px 2px 0 #fff,
-        inset -2px -2px 0 #404040,
-        inset 1px 1px 0 #dfdfdf;
+        inset 2px 2px 0 var(--clr-hilight),
+        inset -2px -2px 0 var(--clr-shadow),
+        inset 1px 1px 0 #fff;
 }
 
 #scPlaylistWin {
@@ -120,24 +119,24 @@
     align-self: center;
     aspect-ratio: 1 / 1;
     max-width: 62%;
-    border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border: 3px solid;
+    border-color: var(--btn-bd);
     box-shadow:
-        0 0 0 1px #000,
-        inset 1px 1px 0 #dfdfdf,
-        inset -1px -1px 0 #404040;
+        inset 2px 2px 0 var(--clr-hilight),
+        inset -2px -2px 0 var(--clr-shadow),
+        inset 1px 1px 0 #fff;
 }
 
 .sc-stacked #scPlaylistWin {
     flex: 1 1 auto;
     height: auto !important;
     min-height: 88px;
-    border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border: 3px solid;
+    border-color: var(--btn-bd);
     box-shadow:
-        0 0 0 1px #000,
-        inset 1px 1px 0 #dfdfdf,
-        inset -1px -1px 0 #404040;
+        inset 2px 2px 0 var(--clr-hilight),
+        inset -2px -2px 0 var(--clr-shadow),
+        inset 1px 1px 0 #fff;
 }
 
 .sc-stacked .sc-child-title {
@@ -706,12 +705,11 @@
     justify-self: stretch;
     align-self: stretch;
     border: 3px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border-color: var(--btn-bd);
     box-shadow:
-        0 0 0 2px #000,
-        inset 2px 2px 0 #fff,
-        inset -2px -2px 0 #404040,
-        inset 1px 1px 0 #dfdfdf;
+        inset 2px 2px 0 var(--clr-hilight),
+        inset -2px -2px 0 var(--clr-shadow),
+        inset 1px 1px 0 #fff;
     overflow: hidden;
 }
 
@@ -735,12 +733,11 @@
     overflow-x: hidden;
     contain: inline-size;
     border: 3px solid;
-    border-color: #fff #808080 #808080 #fff;
+    border-color: var(--btn-bd);
     box-shadow:
-        0 0 0 2px #000,
-        inset 2px 2px 0 #fff,
-        inset -2px -2px 0 #404040,
-        inset 1px 1px 0 #dfdfdf;
+        inset 2px 2px 0 var(--clr-hilight),
+        inset -2px -2px 0 var(--clr-shadow),
+        inset 1px 1px 0 #fff;
     max-height: 180px;
     overflow-y: auto;
 }

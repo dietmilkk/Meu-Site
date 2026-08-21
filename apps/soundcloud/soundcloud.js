@@ -741,13 +741,15 @@
     plWin.classList.add("active");
   })();
 
-  /* ===== Adaptive layout: side-by-side MDI <-> stacked (playlists below) ===== */
+  /* ===== Adaptive layout: desativado — sempre MDI janela-dentro-de-janela em todas as larguras ===== */
   (function () {
     var player = document.getElementById("scPlayer");
     var topRow = document.getElementById("scTopRow");
     var plWin = document.getElementById("scPlaylistWin");
     var artWin = document.getElementById("scArtworkWin");
     if (!player || !topRow || !plWin || !artWin) return;
+    // janelas internas MDI ativas em qualquer largura (~389px e demais)
+    return;
 
     var stacked = false;
 
@@ -856,10 +858,12 @@
     updateMode();
   })();
 
-  /* ===== Wide layout detection ===== */
+  /* ===== Wide layout: desativado — sempre MDI janela-dentro-de-janela em todas as larguras ===== */
   (function () {
     var el = document.getElementById("scPlayer");
     if (!el) return;
+    // janelas internas MDI ativas em qualquer largura
+    return;
     var winEl = document.getElementById("scWindow");
     function checkWidth() {
       var measure = winEl && winEl.getBoundingClientRect().width

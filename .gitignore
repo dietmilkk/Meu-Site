@@ -1,7 +1,5 @@
-# Ignore downloaded music tracks (keep index)
-assets/music/tracks/
-assets/music/*.m4a
-assets/music/*.mp3
+# Downloaded music tracks are committed (volume control needs local files)
+# keep index and tracks for site playback
 
 # Python
 __pycache__/
@@ -11,9 +9,15 @@ __pycache__/
 *.part
 *.ytdl
 
-# Audio files in wrong place
+# Audio files in wrong place - allow music tracks
 *.m4a
 *.mp3
+!assets/music/tracks/*.m4a
+!assets/music/tracks/*.mp3
+!assets/music/tracks/**/*.m4a
+!assets/music/tracks/**/*.mp3
+!assets/music/*.m4a
+!assets/music/*.mp3
 
 # Metadata cache
 .metadata_cache.json

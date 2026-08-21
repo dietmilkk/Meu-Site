@@ -140,44 +140,12 @@
       isPlaying = false;
       updatePlayBtn();
       stopPoll();
-      var track = trackList[currentTrackIndex];
-      var isLocalFile = track && track.file && audio.src && audio.src.indexOf("assets/music/tracks") !== -1;
-      if (isLocalFile && track && track.url) {
-        // Tenta fallback via SoundCloud widget quando arquivo local não existe (Vercel sem .m4a)
-        tryFallbackSoundCloud(track);
-      }
     });
 
     // Connect equalizer if available
     if (typeof window._eqConnect === "function") {
       window._eqConnect(audio);
     }
-  }
-
-  function tryFallbackSoundCloud(track) {
-    if (!track || !track.url) return;
-    var wrap = document.getElementById("scIframeWrap");
-    if (!wrap) return;
-    if (wrap.dataset.fallbackFor === String(currentTrackIndex)) return;
-    wrap.dataset.fallbackFor = String(currentTrackIndex);
-    wrap.innerHTML = "";
-    // Mantem widget invisivel (off-screen) — volume continua via arquivo local quando possivel
-    wrap.style.left = "-9999px";
-    wrap.style.top = "0";
-    wrap.style.width = "400px";
-    wrap.style.height = "166px";
-    wrap.style.zIndex = "-1";
-    wrap.style.overflow = "hidden";
-    var iframe = document.createElement("iframe");
-    iframe.width = "100%";
-    iframe.height = "166";
-    iframe.scrolling = "no";
-    iframe.frameBorder = "no";
-    iframe.allow = "autoplay";
-    iframe.src = "https://w.soundcloud.com/player/?url=" + encodeURIComponent(track.url) + "&color=%23000080&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false";
-    wrap.appendChild(iframe);
-    isPlaying = true;
-    updatePlayBtn();
   }
 
   /* ===== Playback ===== */
@@ -192,12 +160,7 @@
 
     audio.src = track.file;
     audio.currentTime = 0;
-    try { await audio.play(); } catch (e) {
-      var isLocalFile = track.file && track.file.indexOf("assets/music/tracks") !== -1;
-      if (isLocalFile && track.url) {
-        tryFallbackSoundCloud(track);
-      }
-    }
+    try { await audio.play(); } catch (e) {}
   }
 
   /* ===== Load index ===== */

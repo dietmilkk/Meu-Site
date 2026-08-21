@@ -687,12 +687,12 @@
 .sc-player.sc-large #scArtworkWin {
     grid-column: 2;
     grid-row: 1;
-    width: auto !important;
-    height: 100% !important;
+    width: 100% !important;
+    height: auto !important;
     aspect-ratio: 1 / 1;
     max-height: 100%;
-    max-width: 65vh;
-    justify-self: end;
+    max-width: 100%;
+    justify-self: stretch;
     align-self: start;
     border: 2px solid;
     border-color: #fff #808080 #808080 #fff;
@@ -770,12 +770,11 @@
 }
 
 .sc-player.sc-large .sc-pl-item {
-    width: 100% !important;
+    flex: 0 0 auto !important;
+    width: max-content !important;
     max-width: 100% !important;
     min-width: 0 !important;
     box-sizing: border-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .sc-player.sc-large #scPlaylistItems {

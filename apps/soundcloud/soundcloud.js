@@ -79,6 +79,13 @@
     return m + ":" + (s < 10 ? "0" : "") + s;
   }
 
+  function fmtCount(n) {
+    if (!n || n <= 0) return "";
+    if (n >= 1000000) return (n/1000000).toFixed(1).replace(/\.0$/,"") + "M";
+    if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,"") + "K";
+    return String(n);
+  }
+
   function __(key) {
     if (typeof window._t === "function") return window._t(key);
     var fallback = {
@@ -154,12 +161,12 @@
     if (wrap.dataset.fallbackFor === String(currentTrackIndex)) return;
     wrap.dataset.fallbackFor = String(currentTrackIndex);
     wrap.innerHTML = "";
-    wrap.style.left = "0";
-    wrap.style.top = "auto";
-    wrap.style.bottom = "0";
-    wrap.style.width = "100%";
+    // Mantem widget invisivel (off-screen) — volume continua via arquivo local quando possivel
+    wrap.style.left = "-9999px";
+    wrap.style.top = "0";
+    wrap.style.width = "400px";
     wrap.style.height = "166px";
-    wrap.style.zIndex = "5";
+    wrap.style.zIndex = "-1";
     wrap.style.overflow = "hidden";
     var iframe = document.createElement("iframe");
     iframe.width = "100%";
@@ -383,9 +390,28 @@
     for (var i = 0; i < trackList.length; i++) {
       (function (idx) {
         var e = document.createElement("div");
-        var t = trackList[idx].title;
-        e.textContent = t || __("soundcloud.trackPrefix") + (idx + 1);
         e.className = "sc-track-item";
+        var t = trackList[idx].title || __("soundcloud.trackPrefix") + (idx + 1);
+        var pc = fmtCount(trackList[idx].play_count);
+        if (pc) {
+          var ts = document.createElement("span");
+          ts.className = "sc-track-title";
+          ts.textContent = t;
+          ts.style.overflow = "hidden";
+          ts.style.textOverflow = "ellipsis";
+          ts.style.whiteSpace = "nowrap";
+          var ps = document.createElement("span");
+          ps.className = "sc-track-plays";
+          ps.textContent = "\u25B6 " + pc;
+          e.appendChild(ts);
+          e.appendChild(ps);
+          e.style.display = "flex";
+          e.style.justifyContent = "space-between";
+          e.style.alignItems = "center";
+          e.style.gap = "8px";
+        } else {
+          e.textContent = t;
+        }
         if (idx === currentTrackIndex) e.classList.add("sc-track-item-active");
         e.addEventListener("click", function () {
           if (typeof playClickSnd === "function") playClickSnd();
@@ -442,6 +468,17 @@
     var s = trackList[currentTrackIndex];
     elTrackName.textContent = s.title || __("soundcloud.trackPrefix") + (currentTrackIndex + 1);
     elArtistName.textContent = s.artist || __("soundcloud.defaultArtist");
+    var playsEl = document.getElementById("scTrackPlays");
+    if (!playsEl) {
+      playsEl = document.createElement("div");
+      playsEl.id = "scTrackPlays";
+      playsEl.className = "sc-track-plays-main";
+      var info = document.querySelector(".sc-info");
+      if (info) info.appendChild(playsEl);
+    }
+    var pc = fmtCount(s.play_count);
+    playsEl.textContent = pc ? "\u25B6 " + pc + " reprodu\u00e7\u00f5es" : "";
+    playsEl.style.display = pc ? "block" : "none";
     updateCounter();
     refreshHighlight();
     scrollActive();

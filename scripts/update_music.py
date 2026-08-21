@@ -115,10 +115,10 @@ def get_all_metadata(yt_cmd, playlist_url, existing_cache):
     if not flat_ids:
         return meta
 
-    # Use cached metadata for tracks we already know about
+    # Use cached metadata for tracks we already know about (re-fetch if play_count missing)
     cached_ids = set()
     for sc_id in flat_ids:
-        if sc_id in existing_cache:
+        if sc_id in existing_cache and "play_count" in existing_cache[sc_id]:
             meta[sc_id] = existing_cache[sc_id]
             cached_ids.add(sc_id)
 
@@ -169,6 +169,7 @@ def get_all_metadata(yt_cmd, playlist_url, existing_cache):
                     "artist": data.get("uploader", "") or "",
                     "artwork": data.get("thumbnail", "") or "",
                     "duration": data.get("duration", 0) or 0,
+                    "play_count": data.get("view_count", 0) or 0,
                 }
                 meta[sc_id] = entry
                 existing_cache[sc_id] = entry
@@ -262,6 +263,7 @@ def sync_playlist(yt_cmd, flat_tracks, playlist_url, cache):
                 "artist": meta["artist"],
                 "artwork": meta["artwork"],
                 "duration": meta["duration"],
+                "play_count": meta.get("play_count", 0) or 0,
                 "url": t["url"],
                 "file": track_file,
             })
@@ -273,6 +275,7 @@ def sync_playlist(yt_cmd, flat_tracks, playlist_url, cache):
                 "artist": "",
                 "artwork": "",
                 "duration": 0,
+                "play_count": 0,
                 "url": t["url"],
                 "file": track_file,
             })

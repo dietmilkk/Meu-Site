@@ -539,6 +539,30 @@
     color: var(--clr-text-on-highlight, #fff);
 }
 
+.sc-track-plays {
+    font-size: 12px;
+    color: #666;
+    flex-shrink: 0;
+    font-family: var(--ff-mono);
+    white-space: nowrap;
+}
+
+.sc-track-item-active .sc-track-plays {
+    color: #000;
+    font-weight: normal;
+}
+
+.sc-track-item:hover .sc-track-plays {
+    color: #fff;
+}
+
+.sc-track-plays-main {
+    font-size: 12px;
+    color: #555;
+    font-family: var(--ff-mono);
+    margin-top: 2px;
+}
+
 .sc-player.sc-wide {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) minmax(240px, 1fr);

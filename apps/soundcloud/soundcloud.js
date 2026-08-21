@@ -133,6 +133,19 @@
       isPlaying = false;
       updatePlayBtn();
       stopPoll();
+      var track = trackList[currentTrackIndex];
+      var isLocalFile = track && track.file && audio.src && audio.src.indexOf("assets/music/tracks") !== -1;
+      var isVercel = window.location.hostname.indexOf("vercel.app") !== -1 || (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1" && window.location.protocol !== "file:");
+      if (isLocalFile && isVercel && typeof xpDialog === "function") {
+        xpDialog({
+          title: "Erro",
+          icon: "!",
+          message: "Arquivo não encontrado no servidor. No Vercel as faixas locais (.m4a) não são hospedadas (774 MB ignorados no git). Rode localmente com python3 -m http.server ou hospede as faixas externamente / use Git LFS. Clique em OK para abrir no SoundCloud.",
+          callback: function(ok) {
+            if (ok && track && track.url) window.open(track.url, "_blank");
+          }
+        });
+      }
     });
 
     // Connect equalizer if available
@@ -153,7 +166,19 @@
 
     audio.src = track.file;
     audio.currentTime = 0;
-    try { await audio.play(); } catch (e) {}
+    try { await audio.play(); } catch (e) {
+      var isLocalFile = track.file && track.file.indexOf("assets/music/tracks") !== -1;
+      var isVercel = window.location.hostname.indexOf("vercel.app") !== -1 || (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1" && window.location.protocol !== "file:");
+      if (isLocalFile && isVercel && typeof xpDialog === "function" && track.url) {
+        xpDialog({
+          title: "Aviso",
+          message: "Reprodução local falhou (arquivo não hospedado no Vercel). Abrir no SoundCloud?",
+          icon: "i",
+          type: "confirm",
+          callback: function(ok) { if (ok) window.open(track.url, "_blank"); }
+        });
+      }
+    }
   }
 
   /* ===== Load index ===== */

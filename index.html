@@ -954,108 +954,67 @@
                     <div class="fabric-nav start-menu-fabric">
                         <div class="fabric-nav-inner">
                             <div class="fabric-nav-content start-menu-body" id="startMenuBody">
-                                <div
-                                    class="start-menu-group-title"
-                                    data-i18n="start.frequent"
-                                >
-                                    Usados frequentemente
+                                <div class="start-menu-group" data-group="escritorio">
+                                    <div class="start-menu-item start-menu-group-header" data-group="escritorio">
+                                        <img src="system/assets/icons/tango2kde/16x16/apps/kwrite.png" alt="" width="16" height="16" />
+                                        <span>ESCRITORIO</span>
+                                        <span class="start-menu-arrow">▶</span>
+                                    </div>
+                                    <div class="start-menu-submenu" id="submenu-escritorio">
+                                        <div class="start-menu-item" data-action="notepad">
+                                            <img src="system/assets/icons/tango2kde/16x16/apps/kwrite.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.notepad">Bloco de Notas</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="start-menu-item" data-action="games">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/categories/applications-games.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.games">Jogos</span>
+                                <div class="start-menu-group" data-group="apps">
+                                    <div class="start-menu-item start-menu-group-header" data-group="apps">
+                                        <img src="system/assets/icons/tango2kde/16x16/categories/applications.png" alt="" width="16" height="16" />
+                                        <span>APPS</span>
+                                        <span class="start-menu-arrow">▶</span>
+                                    </div>
+                                    <div class="start-menu-submenu" id="submenu-apps">
+                                        <div class="start-menu-item" data-action="soundcloud">
+                                            <img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.soundcloud">Music Player</span>
+                                        </div>
+                                        <div class="start-menu-item" data-action="games">
+                                            <img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.games">Jogos</span>
+                                        </div>
+                                        <div class="start-menu-item" data-action="randomgif">
+                                            <img src="system/assets/icons/tango2kde/16x16/apps/gwenview.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.gallery">Coleção de imgs</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="start-menu-item" data-action="randomgif">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/apps/gwenview.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.gallery"
-                                        >Coleção de imgs</span
-                                    >
-                                </div>
-                                <!--
-                                <div class="start-menu-item" data-action="feed">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/apps/text-editor.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.feed">Rede Social</span>
-                                </div>
-                                -->
-                                <div class="start-menu-item" data-action="settings">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.settings"
-                                        >Configurações</span
-                                    >
-                                </div>
-                                <div class="start-menu-item" data-action="soundcloud">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.soundcloud">Music Player</span>
-                                </div>
-                                <div class="start-menu-separator"></div>
-                                <div
-                                    class="start-menu-group-title"
-                                    data-i18n="start.system"
-                                >
-                                    Sistema
-                                </div>
-                                <div class="start-menu-item" data-action="terminal">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/apps/terminal.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.terminal">Terminal</span>
-                                </div>
-                                <div class="start-menu-item" data-action="notepad">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/apps/kwrite.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.notepad">Bloco de Notas</span>
-                                </div>
-                                <div class="start-menu-item" data-action="files">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/apps/dolphin.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.files">Gerenciador de Arquivos</span>
-                                </div>
-                                <div class="start-menu-item" data-action="fullscreen">
-                                    <img
-                                        src="system/assets/icons/tango2kde/16x16/actions/view-fullscreen.png"
-                                        alt=""
-                                        width="16"
-                                        height="16"
-                                    />
-                                    <span data-i18n="start.fullscreen">Tela Cheia</span>
-                                </div>
-                                <div class="start-menu-item" data-action="shutdown">
-                                    <span data-i18n="start.shutdown">Desligar</span>
+                                <div class="start-menu-group" data-group="sistema">
+                                    <div class="start-menu-item start-menu-group-header" data-group="sistema">
+                                        <img src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png" alt="" width="16" height="16" />
+                                        <span>SISTEMA</span>
+                                        <span class="start-menu-arrow">▶</span>
+                                    </div>
+                                    <div class="start-menu-submenu" id="submenu-sistema">
+                                        <div class="start-menu-item" data-action="files">
+                                            <img src="system/assets/icons/tango2kde/16x16/apps/dolphin.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.files">Gerenciador de Arquivos</span>
+                                        </div>
+                                        <div class="start-menu-item" data-action="terminal">
+                                            <img src="system/assets/icons/tango2kde/16x16/apps/terminal.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.terminal">Terminal</span>
+                                        </div>
+                                        <div class="start-menu-item" data-action="settings">
+                                            <img src="system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.settings">Configurações</span>
+                                        </div>
+                                        <div class="start-menu-item" data-action="fullscreen">
+                                            <img src="system/assets/icons/tango2kde/16x16/actions/view-fullscreen.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.fullscreen">Tela Cheia</span>
+                                        </div>
+                                        <div class="start-menu-item" data-action="shutdown">
+                                            <span data-i18n="start.shutdown">Desligar</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

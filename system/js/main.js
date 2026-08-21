@@ -570,6 +570,9 @@
     e.stopPropagation();
     startMenu.classList.toggle("open");
     startBtn.classList.toggle("active", startMenu.classList.contains("open"));
+    if (!startMenu.classList.contains("open")) {
+      document.querySelectorAll(".start-menu-group.open").forEach(function(g) { g.classList.remove("open"); });
+    }
     if (typeof playClickSnd === 'function') playClickSnd();
     if (startMenu.classList.contains("open")) sortMostUsed();
   });
@@ -596,6 +599,7 @@
   function sortMostUsed() {
     var body = document.getElementById("startMenuBody");
     if (!body) return;
+    if (body.querySelector(".start-menu-group")) return;
     var sep = body.querySelector(".start-menu-separator");
     if (!sep) return;
     var items = Array.from(body.querySelectorAll(".start-menu-item"));
@@ -630,11 +634,34 @@
     if (typeof playToggleOnSnd === 'function') playToggleOnSnd();
   });
 
+  // Group hover/click handling (cascading submenus)
+  startMenu.addEventListener("mouseover", function (e) {
+    var header = e.target.closest(".start-menu-group-header");
+    if (header) {
+      var group = header.closest(".start-menu-group");
+      document.querySelectorAll(".start-menu-group.open").forEach(function(g) {
+        if (g !== group) g.classList.remove("open");
+      });
+      group.classList.add("open");
+    }
+  });
+
   startMenu.addEventListener("click", function (e) {
-    var item = e.target.closest(".start-menu-item");
+    var header = e.target.closest(".start-menu-group-header");
+    if (header) {
+      e.stopPropagation();
+      var group = header.closest(".start-menu-group");
+      var isOpen = group.classList.contains("open");
+      document.querySelectorAll(".start-menu-group.open").forEach(function(g) { g.classList.remove("open"); });
+      if (!isOpen) group.classList.add("open");
+      if (typeof playClickSnd === 'function') playClickSnd();
+      return;
+    }
+    var item = e.target.closest(".start-menu-item[data-action]");
     if (!item) return;
     startMenu.classList.remove("open");
     startBtn.classList.remove("active");
+    document.querySelectorAll(".start-menu-group.open").forEach(function(g) { g.classList.remove("open"); });
     var action = item.getAttribute("data-action");
     trackUse(action);
     switch (action) {
@@ -736,6 +763,7 @@
     if (!e.target.closest("#startBtn") && !e.target.closest("#startMenu")) {
       startMenu.classList.remove("open");
       startBtn.classList.remove("active");
+      document.querySelectorAll(".start-menu-group.open").forEach(function(g) { g.classList.remove("open"); });
     }
     if (!e.target.closest("#ctxMenu")) {
       ctxMenu.classList.remove("open");

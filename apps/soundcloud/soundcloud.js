@@ -858,41 +858,29 @@
     updateMode();
   })();
 
-  /* ===== Wide layout: desativado — sempre MDI janela-dentro-de-janela em todas as larguras ===== */
+  /* ===== Large layout >900px: track list ocupa esquerda, artwork 1x1 fixo ===== */
   (function () {
     var el = document.getElementById("scPlayer");
     if (!el) return;
-    // janelas internas MDI ativas em qualquer largura
-    return;
     var winEl = document.getElementById("scWindow");
-    function checkWidth() {
+    function checkLarge() {
       var measure = winEl && winEl.getBoundingClientRect().width
         ? winEl.getBoundingClientRect().width
         : el.getBoundingClientRect().width;
-      var wide = measure >= 588;
-      el.classList.toggle("sc-wide", wide);
-      if (wide) {
-        el.classList.remove("sc-hide-artwork", "sc-hide-playlists");
-        if (elBtnHideArt) elBtnHideArt.classList.remove("sc-btn-hideart-active");
-        if (elBtnHidePl) elBtnHidePl.classList.remove("sc-btn-hidepl-active");
-      }
-      if (elBtnHideArt && elBtnHidePl) {
-        elBtnHideArt.disabled = wide;
-        elBtnHidePl.disabled = wide;
-        elBtnHideArt.classList.toggle("sc-hide-btn-disabled", wide);
-        elBtnHidePl.classList.toggle("sc-hide-btn-disabled", wide);
-      }
+      var large = measure >= 900;
+      el.classList.toggle("sc-large", large);
     }
     if (typeof ResizeObserver !== "undefined") {
-      new ResizeObserver(checkWidth).observe(el);
+      new ResizeObserver(checkLarge).observe(el);
+      if (winEl) new ResizeObserver(checkLarge).observe(winEl);
     }
     window.addEventListener("resize", function () {
-      setTimeout(checkWidth, 50);
+      setTimeout(checkLarge, 50);
     });
     document.addEventListener("fullscreenchange", function () {
-      setTimeout(checkWidth, 100);
+      setTimeout(checkLarge, 100);
     });
-    checkWidth();
+    checkLarge();
   })();
 
   /* ===== Keyboard (works when SC is the active window) ===== */

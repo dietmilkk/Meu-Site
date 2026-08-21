@@ -635,6 +635,95 @@
     font-size: 18px;
 }
 
+/* ===== Large >900px: esquerda = musicas (track list), direita = artwork 1x1 fixo ===== */
+.sc-player.sc-large {
+    display: grid !important;
+    grid-template-columns: 1fr 360px;
+    grid-template-rows: auto 1fr auto auto auto;
+    height: 100%;
+}
+
+.sc-player.sc-large .sc-top-row {
+    display: contents;
+}
+
+.sc-player.sc-large .sc-child-win {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: auto !important;
+    height: auto !important;
+    z-index: auto !important;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    min-height: 0;
+}
+
+.sc-player.sc-large #scArtworkWin {
+    grid-column: 2;
+    grid-row: 1;
+    width: 360px !important;
+    height: 360px !important;
+    aspect-ratio: 1 / 1;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    box-shadow:
+        0 0 0 1px #000,
+        inset 1px 1px 0 #dfdfdf,
+        inset -1px -1px 0 #404040;
+    overflow: hidden;
+}
+
+.sc-player.sc-large #scArtworkWin .sc-artwork {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.sc-player.sc-large #scArtworkWin .sc-artwork img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+}
+
+.sc-player.sc-large #scPlaylistWin {
+    grid-column: 2;
+    grid-row: 2;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    box-shadow:
+        0 0 0 1px #000,
+        inset 1px 1px 0 #dfdfdf,
+        inset -1px -1px 0 #404040;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.sc-player.sc-large .sc-track-list-wrap {
+    grid-column: 1;
+    grid-row: 1 / 6;
+    border-right: 2px solid;
+    border-color: #808080 #fff #fff #808080;
+    border-top: none;
+    background: #fff;
+    min-height: 0;
+}
+
+.sc-player.sc-large .sc-info {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.sc-player.sc-large .sc-progress-container {
+    grid-column: 2 !important;
+    grid-row: 4;
+}
+
+.sc-player.sc-large .sc-controls-row {
+    grid-column: 2;
+    grid-row: 5;
+}
+
 .window-maximized .sc-btn-play {
     width: 64px;
     height: 36px;

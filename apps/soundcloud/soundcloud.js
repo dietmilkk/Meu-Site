@@ -910,17 +910,22 @@
         requestAnimationFrame(function() {
           var plWin = document.getElementById("scPlaylistWin");
           var info = document.querySelector(".sc-info");
-          var progress = document.querySelector(".sc-progress-container");
-          var controls = document.querySelector(".sc-controls-row");
+          var controlsProgress = document.getElementById("scControlsProgress");
           var playerH = el.clientHeight;
           var otherH = 0;
           if (plWin) otherH += plWin.offsetHeight;
           if (info) otherH += info.offsetHeight;
-          if (progress) otherH += progress.offsetHeight;
-          if (controls) otherH += controls.offsetHeight;
+          if (controlsProgress) otherH += controlsProgress.offsetHeight;
+          else {
+            var progress = document.querySelector(".sc-progress-container");
+            var controls = document.querySelector(".sc-controls-row");
+            if (progress) otherH += progress.offsetHeight;
+            if (controls) otherH += controls.offsetHeight;
+          }
           otherH += 16; // gaps/borders
           var available = playerH - otherH;
-          var size = available;
+          var size = Math.min(available, 280);
+          if (size < 120) size = 120;
           if (size < 0) size = 0;
           el.style.setProperty("--art-size", size + "px");
         });

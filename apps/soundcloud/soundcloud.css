@@ -697,12 +697,12 @@
 .sc-player.sc-large #scArtworkWin {
     grid-column: 2;
     grid-row: 1;
-    width: 100% !important;
-    height: auto !important;
+    width: var(--art-size, 360px) !important;
+    height: var(--art-size, 360px) !important;
     aspect-ratio: 1 / 1;
-    max-height: 100%;
     max-width: 100%;
-    justify-self: stretch;
+    max-height: 100%;
+    justify-self: end;
     align-self: start;
     border: 2px solid;
     border-color: #fff #808080 #808080 #fff;

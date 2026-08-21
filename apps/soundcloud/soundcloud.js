@@ -908,11 +908,21 @@
       el.classList.toggle("sc-large", large);
       if (large) {
         requestAnimationFrame(function() {
-          var artWin = document.getElementById("scArtworkWin");
-          if (artWin) {
-            var h = artWin.getBoundingClientRect().height;
-            if (h > 0) el.style.setProperty("--art-size", h + "px");
-          }
+          var plWin = document.getElementById("scPlaylistWin");
+          var info = document.querySelector(".sc-info");
+          var progress = document.querySelector(".sc-progress-container");
+          var controls = document.querySelector(".sc-controls-row");
+          var playerH = el.clientHeight;
+          var otherH = 0;
+          if (plWin) otherH += plWin.offsetHeight;
+          if (info) otherH += info.offsetHeight;
+          if (progress) otherH += progress.offsetHeight;
+          if (controls) otherH += controls.offsetHeight;
+          otherH += 16; // gaps/borders
+          var available = playerH - otherH;
+          // artwork 1x1, max vertical
+          var size = Math.max(120, Math.min(available, 560));
+          if (size > 0) el.style.setProperty("--art-size", size + "px");
         });
       } else {
         el.style.removeProperty("--art-size");

@@ -63,8 +63,12 @@
     right: 6px;
     top: 6px;
     width: 63%;
-    height: calc(100% - 12px);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    max-height: none;
+    max-width: none;
     z-index: 2;
+    align-self: center;
 }
 
 .sc-child-title {
@@ -417,7 +421,7 @@
 /* Large >900px: track list left, artwork 1x1 right */
 .sc-player.sc-large {
     display: grid;
-    grid-template-columns: 1fr 360px;
+    grid-template-columns: 1fr auto;
     grid-template-rows: 1fr auto auto;
     height: 100%;
     gap: 6px;

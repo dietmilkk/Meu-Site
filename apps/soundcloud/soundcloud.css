@@ -88,6 +88,30 @@
     background: var(--clr-title-bar, #000080);
 }
 
+.sc-meta-window {
+    border: 3px solid;
+    border-color: var(--btn-bd);
+    box-shadow:
+        inset 2px 2px 0 var(--clr-hilight),
+        inset -2px -2px 0 var(--clr-shadow),
+        inset 1px 1px 0 #fff;
+    background: var(--clr-window-bg);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sc-meta-window .sc-info,
+.sc-meta-window .sc-progress-container,
+.sc-meta-window .sc-controls-row {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+    gap: 6px;
+}
+
 .sc-info,
 .sc-progress-container,
 .sc-controls-row,
@@ -702,7 +726,7 @@
 .sc-player.sc-large {
     display: grid !important;
     grid-template-columns: 1fr var(--art-size, 360px);
-    grid-template-rows: 1fr auto auto auto;
+    grid-template-rows: 1fr auto auto;
     height: 100%;
     gap: 6px;
     padding: 6px;
@@ -759,7 +783,7 @@
 
 .sc-player.sc-large #scPlaylistWin {
     grid-column: 2;
-    grid-row: 4;
+    grid-row: 3;
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -777,7 +801,7 @@
 
 .sc-player.sc-large .sc-track-list-wrap {
     grid-column: 1;
-    grid-row: 1 / 5;
+    grid-row: 1 / 4;
     border: 3px solid;
     border-color: var(--btn-bd);
     box-shadow:
@@ -789,13 +813,22 @@
     padding: 0;
 }
 
-.sc-player.sc-large .sc-info {
+.sc-player.sc-large .sc-meta-window {
     grid-column: 2;
     grid-row: 2;
+    border: 3px solid;
+    border-color: var(--btn-bd);
+    box-shadow:
+        inset 2px 2px 0 var(--clr-hilight),
+        inset -2px -2px 0 var(--clr-shadow),
+        inset 1px 1px 0 #fff;
+    background: var(--clr-window-bg);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     min-width: 0;
     max-width: 100%;
-    overflow: hidden;
-    contain: inline-size;
 }
 
 .sc-player.sc-large .sc-info .sc-track-name,

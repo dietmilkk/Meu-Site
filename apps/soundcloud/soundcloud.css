@@ -258,12 +258,14 @@
 }
 
 .sc-playlist-bar {
-    flex: 1;
+    flex: none;
     min-height: 0;
     background: #c0c0c0;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: visible;
+    height: auto;
+    max-height: none;
 }
 
 #scPlaylistItems {
@@ -522,8 +524,10 @@
 }
 
 .sc-track-list {
-    flex: 1;
-    overflow-y: auto;
+    flex: none;
+    overflow: visible;
+    height: auto;
+    max-height: none;
     background: #fff;
     scrollbar-width: none;
 }
@@ -727,7 +731,8 @@
     display: grid !important;
     grid-template-columns: 1fr var(--art-size, 360px);
     grid-template-rows: 1fr auto auto;
-    height: 100%;
+    height: auto;
+    min-height: 100%;
     gap: 6px;
     padding: 6px;
     background: #c0c0c0;
@@ -787,16 +792,16 @@
     width: 100%;
     min-width: 0;
     max-width: 100%;
-    overflow-x: hidden;
-    contain: inline-size;
+    overflow: visible;
+    height: auto;
+    max-height: none;
+    contain: none;
     border: 3px solid;
     border-color: var(--btn-bd);
     box-shadow:
         inset 2px 2px 0 var(--clr-hilight),
         inset -2px -2px 0 var(--clr-shadow),
         inset 1px 1px 0 #fff;
-    max-height: 180px;
-    overflow-y: auto;
 }
 
 .sc-player.sc-large .sc-track-list-wrap {
@@ -810,6 +815,9 @@
         inset 1px 1px 0 #fff;
     background: #fff;
     min-height: 0;
+    height: auto;
+    max-height: none;
+    overflow: visible;
     padding: 0;
 }
 

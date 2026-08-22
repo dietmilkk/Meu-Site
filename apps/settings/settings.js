@@ -564,9 +564,17 @@
       // ORIGINAL considera equalizador customizado (analisador pós-filtro)
       var hasEqData = !!(musicDb && musicDb.rms > -60);
       var originalNow = original || hasEqData;
+      var liveNow = liveOn && originalNow;
+      if (live) {
+        if (liveNow) live.classList.add("active");
+        else live.classList.remove("active");
+      }
+      if (statusEl) {
+        if (liveNow) statusEl.classList.add("live");
+        else statusEl.classList.remove("live");
+      }
       if (originalNow && db) {
         statusEl.textContent = __("settings.eqWaveOriginal");
-        statusEl.classList.add("live");
         var pct = Math.max(0, Math.min(1, (db.rms + 60) / 60));
         // Atualiza texto com throttle para não ficar confuso/rapido
         var now = Date.now();
@@ -580,13 +588,15 @@
           fillEl.classList.toggle("bad", !healthy);
         }
         fillEl.style.width = (pct * 100).toFixed(1) + "%";
+        // Integra medidor dentro da barra de volume do sistema (sem %)
+        if (window._volumeLiveUpdate) window._volumeLiveUpdate(pct);
       } else {
         statusEl.textContent = __("settings.eqWaveSimulated");
-        statusEl.classList.remove("live");
         dbEl.textContent = "--%";
         dbEl.classList.remove("ok", "bad");
         fillEl.classList.remove("bad");
         fillEl.style.width = "0%";
+        if (window._volumeLiveUpdate) window._volumeLiveUpdate(0);
       }
     }
   }

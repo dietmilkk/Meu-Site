@@ -314,6 +314,7 @@
       "</span>" +
       '<div class="volume-slider-wrap" id="volSliderWrap">' +
       '<div class="volume-track">' +
+      '<div class="volume-live-fill" id="volLiveFill"></div>' +
       '<div class="volume-fill" id="volFill"></div>' +
       "</div>" +
       '<div class="volume-thumb" id="volThumb"></div>' +
@@ -322,7 +323,6 @@
       '<img src="system/assets/icons/tango2kde/16x16/apps/kmix.png" alt="" width="14" height="14">' +
       "</span>" +
       "</div>" +
-      '<div class="volume-gauge" id="volGauge">100%</div>' +
       '<div class="volume-reset-row">' +
       '<span class="volume-reset-btn" id="volResetBtn" title="' + __('tray.muteTitle') + '">' +
       '<svg viewBox="0 0 16 16" width="14" height="14"><path d="M2 5h3l4-3v12L5 11H2V5z" fill="currentColor"/><line x1="10" y1="6" x2="14" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="6" x2="10" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
@@ -344,13 +344,20 @@
       thumbEl.style.left = pct + "%";
     }
 
-    /* ===== Volume gauge ===== */
+    window._volumeLiveUpdate = function(pct) {
+      var liveFill = document.getElementById("volLiveFill");
+      if (!liveFill) return;
+      var w = Math.max(0, Math.min(100, (isNaN(pct) ? 0 : pct * 100)));
+      liveFill.style.width = w.toFixed(1) + "%";
+    };
+
+    /* ===== Volume gauge (removido, medidor integrado na barra) ===== */
     var gaugeEl = document.getElementById("volGauge");
 
     function updateUI() {
       var pct = Math.round(_volume * 100);
       setSliderVisual(pct);
-      gaugeEl.textContent = pct + "%";
+      if (gaugeEl) gaugeEl.textContent = pct + "%";
       updateTrayIcon();
     }
 

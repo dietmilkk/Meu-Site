@@ -342,6 +342,7 @@
     function setSliderVisual(pct) {
       fillEl.style.width = pct + "%";
       thumbEl.style.left = pct + "%";
+      thumbEl.style.zIndex = "10";
     }
 
     window._volumeLiveUpdate = function(pct) {
@@ -424,40 +425,20 @@
   function updateTrayIcon() {
     if (!volIcon) return;
     volIcon.innerHTML = "";
-    var img = document.createElement("img");
-    img.src = "system/assets/icons/tango2kde/22x22/apps/kmix.png";
-    img.alt = "";
-    img.width = 18;
-    img.height = 18;
-
     if (_volume === 0) {
-      var wrap = document.createElement("span");
-      wrap.style.cssText = "position:relative;display:inline-flex;";
-      wrap.appendChild(img);
       var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("viewBox", "0 0 18 18");
-      svg.style.cssText = "position:absolute;top:0;left:0;width:18px;height:18px;";
-      var l1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      l1.setAttribute("x1", "5");
-      l1.setAttribute("y1", "5");
-      l1.setAttribute("x2", "13");
-      l1.setAttribute("y2", "13");
-      l1.setAttribute("stroke", "#c00");
-      l1.setAttribute("stroke-width", "2");
-      l1.setAttribute("stroke-linecap", "square");
-      svg.appendChild(l1);
-      var l2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      l2.setAttribute("x1", "13");
-      l2.setAttribute("y1", "5");
-      l2.setAttribute("x2", "5");
-      l2.setAttribute("y2", "13");
-      l2.setAttribute("stroke", "#c00");
-      l2.setAttribute("stroke-width", "2");
-      l2.setAttribute("stroke-linecap", "square");
-      svg.appendChild(l2);
-      wrap.appendChild(svg);
-      volIcon.appendChild(wrap);
+      svg.setAttribute("viewBox", "0 0 16 16");
+      svg.setAttribute("width", "18");
+      svg.setAttribute("height", "18");
+      svg.innerHTML = '<path d="M2 5h3l4-3v12L5 11H2V5z" fill="currentColor"/><line x1="10" y1="6" x2="14" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="6" x2="10" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>';
+      svg.style.color = "#000";
+      volIcon.appendChild(svg);
     } else {
+      var img = document.createElement("img");
+      img.src = "system/assets/icons/tango2kde/22x22/apps/kmix.png";
+      img.alt = "";
+      img.width = 18;
+      img.height = 18;
       volIcon.appendChild(img);
     }
   }

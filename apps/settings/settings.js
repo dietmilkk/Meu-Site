@@ -544,10 +544,6 @@
       if (bar) bar.style.height = h.toFixed(1) + "%";
     }
     _waveT += 0.03;
-    if (live) {
-      if (liveOn) live.classList.add("active");
-      else live.classList.remove("active");
-    }
     var statusEl = document.getElementById("eqWaveStatus");
     var dbEl = document.getElementById("eqWaveDb");
     var fillEl = document.getElementById("eqWaveDbFill");
@@ -561,9 +557,14 @@
       var musicActive = !!audioEl && !audioEl.paused && !audioEl.ended;
       var siteActive = !!siteDb && siteDb.peak >= -28;
       var original = musicActive || siteActive;
-      // ORIGINAL considera equalizador customizado (analisador pós-filtro)
       var hasEqData = !!(musicDb && musicDb.rms > -60);
-      var originalNow = original || hasEqData;
+      // Custom EQ ativo quando algum ganho != 0
+      var isCustomEq = false;
+      if (typeof window._eqGetBands === "function") {
+        var _bands = window._eqGetBands();
+        for (var _i = 0; _i < _bands.length; _i++) if (_bands[_i] !== 0) { isCustomEq = true; break; }
+      }
+      var originalNow = original || hasEqData || (isCustomEq && liveOn);
       var liveNow = liveOn && originalNow;
       if (live) {
         if (liveNow) live.classList.add("active");
@@ -578,12 +579,13 @@
         var rms = db.rms;
         var peak = db.peak;
         var pct = Math.max(0, Math.min(1, (rms + 60) / 60));
-        // Valor real em dBFS (0 = max, -60 = silencio) com throttle
         var now = Date.now();
         if (!window._eqLastDbUpdate || now - window._eqLastDbUpdate > 140) {
           window._eqLastDbUpdate = now;
-          dbEl.textContent = rms.toFixed(1) + " dB";
-          // Saudavel real: -30 a -6 dB RMS audivel sem clipping (pico < -1 dB)
+          // Mostra 0-100 (0 silencio, 100 max) com valor real dB como tooltip
+          var level = Math.round(pct * 100);
+          dbEl.textContent = level;
+          dbEl.title = rms.toFixed(1) + " dBFS (0 max, maior = mais alto)";
           var healthy = rms >= -30 && rms <= -6 && peak < -1 && peak > -60;
           dbEl.classList.toggle("ok", healthy);
           dbEl.classList.toggle("bad", !healthy);
@@ -593,7 +595,8 @@
         if (window._volumeLiveUpdate) window._volumeLiveUpdate(pct);
       } else {
         statusEl.textContent = __("settings.eqWaveSimulated");
-        dbEl.textContent = "-- dB";
+        dbEl.textContent = "--";
+        dbEl.title = "";
         dbEl.classList.remove("ok", "bad");
         fillEl.classList.remove("bad");
         fillEl.style.width = "0%";

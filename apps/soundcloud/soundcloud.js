@@ -915,31 +915,7 @@
         }
       }
       if (large) {
-        requestAnimationFrame(function() {
-          var plWin = document.getElementById("scPlaylistWin");
-          var metaWin = document.getElementById("scMetaWindow");
-          var playerH = el.clientHeight;
-          var otherH = 0;
-          if (plWin) otherH += plWin.offsetHeight;
-          if (metaWin) otherH += metaWin.offsetHeight;
-          else {
-            var info = document.querySelector(".sc-info");
-            var controlsProgress = document.getElementById("scControlsProgress");
-            if (info) otherH += info.offsetHeight;
-            if (controlsProgress) otherH += controlsProgress.offsetHeight;
-            else {
-              var progress = document.querySelector(".sc-progress-container");
-              var controls = document.querySelector(".sc-controls-row");
-              if (progress) otherH += progress.offsetHeight;
-              if (controls) otherH += controls.offsetHeight;
-            }
-          }
-          otherH += 16; // gaps/borders
-          var available = playerH - otherH;
-          var size = available;
-          if (size < 0) size = 0;
-          el.style.setProperty("--art-size", size + "px");
-        });
+        el.style.removeProperty("--art-size");
       } else {
         el.style.removeProperty("--art-size");
       }

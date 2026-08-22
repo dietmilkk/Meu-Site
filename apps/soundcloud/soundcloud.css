@@ -729,10 +729,11 @@
 /* ===== Large >900px: esquerda = musicas (track list), direita = artwork 1x1 max vertical ===== */
 .sc-player.sc-large {
     display: grid !important;
-    grid-template-columns: 1fr var(--art-size, 360px);
+    grid-template-columns: 1fr auto;
     grid-template-rows: 1fr auto auto;
-    height: auto;
-    min-height: 100%;
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
     gap: 6px;
     padding: 6px;
     background: #c0c0c0;
@@ -759,13 +760,14 @@
 .sc-player.sc-large #scArtworkWin {
     grid-column: 2;
     grid-row: 1;
-    width: var(--art-size, 100%) !important;
-    height: var(--art-size, 100%) !important;
+    width: auto !important;
+    height: auto !important;
     aspect-ratio: 1 / 1;
-    max-width: none;
-    max-height: none;
-    justify-self: stretch;
-    align-self: stretch;
+    max-width: 100%;
+    max-height: 100%;
+    justify-self: center;
+    align-self: center;
+    place-self: center;
     border: 3px solid;
     border-color: var(--btn-bd);
     box-shadow:
@@ -773,6 +775,10 @@
         inset -2px -2px 0 var(--clr-shadow),
         inset 1px 1px 0 #fff;
     overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+    align-self: center;
+    justify-self: center;
 }
 
 .sc-player.sc-large #scArtworkWin .sc-artwork {

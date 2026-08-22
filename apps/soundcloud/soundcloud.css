@@ -219,6 +219,12 @@
     font-size: 15px;
     color: #555;
     margin-top: 2px;
+    cursor: pointer;
+}
+
+.sc-artist-name:hover {
+    color: var(--clr-highlight, #000080);
+    text-decoration: underline;
 }
 
 .sc-progress-container {

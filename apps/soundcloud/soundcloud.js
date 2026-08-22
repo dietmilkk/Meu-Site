@@ -254,6 +254,12 @@
   // ============================================================
   function switchPlaylist(id) {
     if (loadingPlaylist) return;
+    if (isArtistFiltered) {
+      isArtistFiltered = false;
+      savedTrackList = null;
+      const hdr = document.getElementById("scArtistFilterHeader");
+      if (hdr) hdr.remove();
+    }
     if (activePlaylistId && activePlaylistId !== id) {
       if (audio) {
         audio.pause();
@@ -448,6 +454,31 @@
     }
   }
 
+  let isArtistFiltered = false;
+  let savedTrackList = null;
+  let savedPlaylistId = null;
+  let savedTrackIndex = 0;
+
+  function collectArtistTracks(artist) {
+    if (!artist || artist === __("soundcloud.defaultArtist")) return [];
+    const seen = new Set();
+    const out = [];
+    for (const pid in playlistData) {
+      const pl = playlistData[pid];
+      if (!pl || !pl.tracks) continue;
+      for (const t of pl.tracks) {
+        if (t.artist === artist) {
+          const key = t.file || (t.title + "|" + t.artist);
+          if (!seen.has(key)) {
+            seen.add(key);
+            out.push(t);
+          }
+        }
+      }
+    }
+    return out;
+  }
+
   // ============================================================
   // Display current track
   // ============================================================
@@ -459,6 +490,8 @@
     const s = trackList[currentTrackIndex];
     elTrackName.textContent = s.title || __("soundcloud.trackPrefix") + (currentTrackIndex + 1);
     elArtistName.textContent = s.artist || __("soundcloud.defaultArtist");
+    elArtistName.style.cursor = "pointer";
+    elArtistName.title = "Clique para ver todas as músicas deste artista";
     let playsEl = document.getElementById("scTrackPlays");
     if (!playsEl) {
       playsEl = document.createElement("div");
@@ -477,6 +510,59 @@
     loadArt(currentTrackIndex);
     _updateNowPlaying();
     updateArtUI();
+  }
+
+  if (elArtistName) {
+    elArtistName.addEventListener("click", function() {
+      var cur = trackList[currentTrackIndex];
+      var artist = cur ? cur.artist : "";
+      if (!artist || artist === __("soundcloud.defaultArtist")) return;
+      if (typeof playClickSnd === "function") playClickSnd();
+      if (isArtistFiltered) {
+        if (savedTrackList) {
+          trackList = savedTrackList;
+          activePlaylistId = savedPlaylistId;
+          totalTracks = trackList.length;
+          currentTrackIndex = savedTrackIndex;
+          isArtistFiltered = false;
+          savedTrackList = null;
+          renderTrackList();
+          var hdr = document.getElementById("scArtistFilterHeader");
+          if (hdr) hdr.remove();
+          displayTrack();
+          updateCounter();
+        }
+        return;
+      }
+      var filtered = collectArtistTracks(artist);
+      if (!filtered.length) return;
+      savedTrackList = trackList.slice();
+      savedPlaylistId = activePlaylistId;
+      savedTrackIndex = currentTrackIndex;
+      var newIdx = 0;
+      for (var i = 0; i < filtered.length; i++) {
+        if (filtered[i].file === cur.file) { newIdx = i; break; }
+      }
+      trackList = filtered;
+      totalTracks = trackList.length;
+      currentTrackIndex = newIdx;
+      isArtistFiltered = true;
+      renderTrackList();
+      if (elTrackList) {
+        var existing = document.getElementById("scArtistFilterHeader");
+        if (existing) existing.remove();
+        var hdr = document.createElement("div");
+        hdr.id = "scArtistFilterHeader";
+        hdr.style.cssText = "padding:6px 8px; font-size:13px; background:var(--clr-highlight); color:var(--clr-text-on-highlight); display:flex; justify-content:space-between; align-items:center; cursor:pointer; border-bottom:2px solid #000; flex-shrink:0;";
+        hdr.innerHTML = '<span>\u25B6 ' + artist.replace(/</g,"&lt;") + ' (' + filtered.length + ')</span><span style="font-size:11px; opacity:0.9;">\u2715 voltar</span>';
+        hdr.addEventListener("click", function() { if (elArtistName) elArtistName.click(); });
+        elTrackList.insertBefore(hdr, elTrackList.firstChild);
+      }
+      displayTrack();
+      updateCounter();
+    });
+    elArtistName.addEventListener("mouseenter", function() { elArtistName.style.textDecoration = "underline"; });
+    elArtistName.addEventListener("mouseleave", function() { elArtistName.style.textDecoration = "none"; });
   }
 
   // ============================================================

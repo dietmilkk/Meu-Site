@@ -621,7 +621,7 @@
 
   if (elBtnHidePl) {
     elBtnHidePl.addEventListener("click", function () {
-      if (elBtnHidePl.disabled || scPlayer.classList.contains("sc-wide")) return;
+      if (elBtnHidePl.disabled || scPlayer.classList.contains("sc-wide") || scPlayer.classList.contains("sc-large")) return;
       var hidden = scPlayer.classList.toggle("sc-hide-playlists");
       elBtnHidePl.classList.toggle("sc-btn-hidepl-active", hidden);
       if (typeof playToggleOnSnd === "function") {
@@ -632,7 +632,7 @@
 
   if (elBtnHideArt) {
     elBtnHideArt.addEventListener("click", function () {
-      if (elBtnHideArt.disabled || scPlayer.classList.contains("sc-wide")) return;
+      if (elBtnHideArt.disabled || scPlayer.classList.contains("sc-wide") || scPlayer.classList.contains("sc-large")) return;
       if (scPlayer.classList.contains("sc-art-mode")) {
         exitArtMode();
       } else if (win.classList.contains("window-maximized")) {
@@ -906,6 +906,14 @@
         : el.getBoundingClientRect().width;
       var large = measure >= 900;
       el.classList.toggle("sc-large", large);
+      if (elBtnHideArt) {
+        elBtnHideArt.disabled = large;
+        elBtnHideArt.classList.toggle("sc-hide-btn-disabled", large);
+        if (large) {
+          elBtnHideArt.classList.remove("sc-btn-hideart-active");
+          el.classList.remove("sc-hide-artwork");
+        }
+      }
       if (large) {
         requestAnimationFrame(function() {
           var plWin = document.getElementById("scPlaylistWin");

@@ -575,24 +575,25 @@
       }
       if (originalNow && db) {
         statusEl.textContent = __("settings.eqWaveOriginal");
-        var pct = Math.max(0, Math.min(1, (db.rms + 60) / 60));
-        // Atualiza texto com throttle para não ficar confuso/rapido
+        var rms = db.rms;
+        var peak = db.peak;
+        var pct = Math.max(0, Math.min(1, (rms + 60) / 60));
+        // Valor real em dBFS (0 = max, -60 = silencio) com throttle
         var now = Date.now();
         if (!window._eqLastDbUpdate || now - window._eqLastDbUpdate > 140) {
           window._eqLastDbUpdate = now;
-          var level = Math.round(pct * 100);
-          dbEl.textContent = level + "%";
-          var healthy = pct > 0.08 && pct < 0.88;
+          dbEl.textContent = rms.toFixed(1) + " dB";
+          // Saudavel real: -30 a -6 dB RMS audivel sem clipping (pico < -1 dB)
+          var healthy = rms >= -30 && rms <= -6 && peak < -1 && peak > -60;
           dbEl.classList.toggle("ok", healthy);
           dbEl.classList.toggle("bad", !healthy);
           fillEl.classList.toggle("bad", !healthy);
         }
         fillEl.style.width = (pct * 100).toFixed(1) + "%";
-        // Integra medidor dentro da barra de volume do sistema (sem %)
         if (window._volumeLiveUpdate) window._volumeLiveUpdate(pct);
       } else {
         statusEl.textContent = __("settings.eqWaveSimulated");
-        dbEl.textContent = "--%";
+        dbEl.textContent = "-- dB";
         dbEl.classList.remove("ok", "bad");
         fillEl.classList.remove("bad");
         fillEl.style.width = "0%";

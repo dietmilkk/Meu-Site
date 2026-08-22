@@ -561,21 +561,29 @@
       var musicActive = !!audioEl && !audioEl.paused && !audioEl.ended;
       var siteActive = !!siteDb && siteDb.peak >= -28;
       var original = musicActive || siteActive;
-      if (original && db) {
+      // ORIGINAL considera equalizador customizado (analisador pós-filtro)
+      var hasEqData = !!(musicDb && musicDb.rms > -60);
+      var originalNow = original || hasEqData;
+      if (originalNow && db) {
         statusEl.textContent = __("settings.eqWaveOriginal");
         statusEl.classList.add("live");
-        var rms = db.rms;
-        dbEl.textContent = rms.toFixed(1) + " dB";
-        var healthy = rms >= -40 && db.peak < -1;
-        dbEl.classList.toggle("ok", healthy);
-        dbEl.classList.toggle("bad", !healthy);
-        fillEl.classList.toggle("bad", !healthy);
-        var pct = Math.max(0, Math.min(1, (rms + 48) / 47));
+        var pct = Math.max(0, Math.min(1, (db.rms + 60) / 60));
+        // Atualiza texto com throttle para não ficar confuso/rapido
+        var now = Date.now();
+        if (!window._eqLastDbUpdate || now - window._eqLastDbUpdate > 140) {
+          window._eqLastDbUpdate = now;
+          var level = Math.round(pct * 100);
+          dbEl.textContent = level + "%";
+          var healthy = pct > 0.08 && pct < 0.88;
+          dbEl.classList.toggle("ok", healthy);
+          dbEl.classList.toggle("bad", !healthy);
+          fillEl.classList.toggle("bad", !healthy);
+        }
         fillEl.style.width = (pct * 100).toFixed(1) + "%";
       } else {
         statusEl.textContent = __("settings.eqWaveSimulated");
         statusEl.classList.remove("live");
-        dbEl.textContent = "--.- dB";
+        dbEl.textContent = "--%";
         dbEl.classList.remove("ok", "bad");
         fillEl.classList.remove("bad");
         fillEl.style.width = "0%";

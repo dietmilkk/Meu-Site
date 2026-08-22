@@ -83,12 +83,12 @@
       source.disconnect();
     } catch(e) {}
     var chain = [source];
-    if (analyser) chain.push(analyser);
     if (!bypassed) {
       for (var i = 0; i < filters.length; i++) {
         chain.push(filters[i]);
       }
     }
+    if (analyser) chain.push(analyser);
     chain.push(ctx.destination);
     for (var i = 0; i < chain.length - 1; i++) {
       chain[i].connect(chain[i+1]);

@@ -207,7 +207,17 @@
 
   var FILES = {
     notas: { name: "notas.txt", icon: "system/assets/icons/tango2kde/16x16/apps/kwrite.png", text: NOTEPAD_TEXT },
-    links: { name: "links.txt", icon: "system/assets/icons/tango2kde/16x16/apps/redhat-web-browser.png", text: LINKS_TEXT }
+    links: { name: "links.txt", icon: "system/assets/icons/tango2kde/16x16/apps/kwrite.png", text: LINKS_TEXT }
+  };
+
+  var PROGRAMS = {
+    notepad: { name: "Bloco de Notas", icon: "system/assets/icons/tango2kde/16x16/apps/kwrite.png", action: "notepad" },
+    files: { name: "Gerenciador de Arquivos", icon: "system/assets/icons/tango2kde/16x16/apps/dolphin.png", action: "files" },
+    soundcloud: { name: "Music Player", icon: "system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png", action: "soundcloud" },
+    games: { name: "Jogos", icon: "system/assets/icons/tango2kde/16x16/categories/applications-games.png", action: "games" },
+    gallery: { name: "Coleção de imgs", icon: "system/assets/icons/tango2kde/16x16/apps/gwenview.png", action: "randomgif" },
+    terminal: { name: "Terminal", icon: "system/assets/icons/tango2kde/16x16/apps/terminal.png", action: "terminal" },
+    settings: { name: "Configurações", icon: "system/assets/icons/tango2kde/16x16/categories/redhat-system_tools.png", action: "settings" }
   };
   var currentFile = "notas";
 
@@ -332,6 +342,10 @@
     if (!filesList) return;
     filesList.innerHTML = "";
     var ids = ["notas", "links"];
+    var titleFiles = document.createElement("div");
+    titleFiles.className = "files-section-title";
+    titleFiles.textContent = "Arquivos";
+    filesList.appendChild(titleFiles);
     for (var i = 0; i < ids.length; i++) {
       (function (id) {
         var meta = FILES[id];
@@ -347,8 +361,34 @@
         row.addEventListener("click", function () {
           openFile(id);
         });
+        row.addEventListener("dblclick", function () {
+          openFile(id);
+          if (window.notepadBehavior) window.notepadBehavior.bringToFront();
+        });
         filesList.appendChild(row);
       })(ids[i]);
+    }
+    var titleProg = document.createElement("div");
+    titleProg.className = "files-section-title";
+    titleProg.textContent = "Programas";
+    filesList.appendChild(titleProg);
+    var progIds = ["notepad", "files", "soundcloud", "games", "gallery", "terminal", "settings"];
+    for (var j = 0; j < progIds.length; j++) {
+      (function (pid) {
+        var prog = PROGRAMS[pid];
+        if (!prog) return;
+        var prow = document.createElement("div");
+        prow.className = "files-row";
+        prow.innerHTML =
+          '<img src="' + prog.icon + '" alt="" width="20" height="20">' +
+          '<span class="files-row-name">' + prog.name + '</span>' +
+          '<span class="files-row-size">▶</span>';
+        prow.addEventListener("click", function () {
+          if (typeof playClickSnd === "function") playClickSnd();
+          if (W2K && W2K.AppRegistry) W2K.AppRegistry.launch(prog.action);
+        });
+        filesList.appendChild(prow);
+      })(progIds[j]);
     }
   }
 

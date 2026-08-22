@@ -201,3 +201,19 @@
 .files-row.active .files-row-size {
     opacity: 1;
 }
+
+.files-section-title {
+    padding: 6px 8px 2px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #808080;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: var(--ff-ui);
+    border-bottom: 1px solid #c0c0c0;
+    margin-top: 4px;
+}
+
+.files-section-title:first-child {
+    margin-top: 0;
+}

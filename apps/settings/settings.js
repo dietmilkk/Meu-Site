@@ -544,10 +544,9 @@
       if (bar) bar.style.height = h.toFixed(1) + "%";
     }
     _waveT += 0.03;
-    var statusEl = document.getElementById("eqWaveStatus");
     var dbEl = document.getElementById("eqWaveDb");
     var fillEl = document.getElementById("eqWaveDbFill");
-    if (statusEl && dbEl && fillEl) {
+    if (dbEl && fillEl) {
       var musicDb = typeof window._eqGetDb === "function" ? window._eqGetDb() : null;
       var siteDb = typeof window._eqGetSiteDb === "function" ? window._eqGetSiteDb() : null;
       var db = null;
@@ -570,12 +569,7 @@
         if (liveNow) live.classList.add("active");
         else live.classList.remove("active");
       }
-      if (statusEl) {
-        if (liveNow) statusEl.classList.add("live");
-        else statusEl.classList.remove("live");
-      }
       if (originalNow && db) {
-        statusEl.textContent = __("settings.eqWaveOriginal");
         var rms = db.rms;
         var peak = db.peak;
         var pct = Math.max(0, Math.min(1, (rms + 60) / 60));
@@ -594,7 +588,6 @@
         fillEl.style.width = (pct * 100).toFixed(1) + "%";
         if (window._volumeLiveUpdate) window._volumeLiveUpdate(pct);
       } else {
-        statusEl.textContent = __("settings.eqWaveSimulated");
         dbEl.textContent = "--";
         dbEl.title = "";
         dbEl.classList.remove("ok", "bad");

@@ -352,6 +352,30 @@
       liveFill.style.width = w.toFixed(1) + "%";
     };
 
+    // Polling global para manter medidor vivo mesmo com Config fechada
+    (function startVolLivePoll() {
+      var lastPct = -1;
+      setInterval(function() {
+        var settingsWin = document.getElementById("settingsWindow");
+        var settingsOpen = !!(settingsWin && settingsWin.offsetParent !== null);
+        if (settingsOpen) return;
+        var pct = 0;
+        try {
+          if (typeof window._eqGetDb === "function") {
+            var db = window._eqGetDb();
+            if (db && db.rms > -60) pct = Math.max(0, Math.min(1, (db.rms + 60) / 60));
+            else if (typeof window._eqGetSiteDb === "function") {
+              var sdb = window._eqGetSiteDb();
+              if (sdb && sdb.rms > -60) pct = Math.max(0, Math.min(1, (sdb.rms + 60) / 60));
+            }
+          }
+        } catch(e) {}
+        if (Math.abs(pct - lastPct) < 0.008 && pct !== 0) return;
+        lastPct = pct;
+        window._volumeLiveUpdate(pct);
+      }, 90);
+    })();
+
     /* ===== Volume gauge (removido, medidor integrado na barra) ===== */
     var gaugeEl = document.getElementById("volGauge");
 

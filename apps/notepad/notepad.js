@@ -21,174 +21,69 @@
   var fmtOn = false;
 
   var NOTEPAD_TEXT =
-    "# I. A PREMISSA\n" +
+    "# Um desabafo — e um convite\n" +
     "\n" +
-    "Somos todos iguais. Ossos, carne, cérebro. Livres por natureza — mas condicionados pelas complexidades da nossa capacidade de previsão, forjada nos dados que processamos ao longo da vida.\n" +
+    "Quero te contar como tenho enxergado as coisas. Não como verdade final, mas como um jeito de organizar o que sinto. Se algo ressoar, me conta o que pensou. Se discordar, também.\n" +
     "\n" +
-    "Não nascemos prontos. Nascemos abertos. Porém, desde cedo, aprendemos a antecipar o mundo: o que é seguro, o que é perigoso, o que dá recompensa, o que traz castigo, o que rende amor, o que rende exclusão.\n" +
+    "Somos parecidos no essencial — corpo, mente, desejo de viver com dignidade. Nascemos abertos, curiosos. Aos poucos aprendemos a prever o mundo: o que é seguro, o que machuca, o que dá afeto, o que cobra um preço.\n" +
     "\n" +
-    "Essa capacidade de prever nos protege. Mas também nos prende. Quando o cérebro repete padrões antigos como verdades eternas, a liberdade se reduz a um roteiro invisível. Muitas vezes não escolhemos: apenas repetimos o que aprendemos a esperar.\n" +
-    "\n" +
-    "Aí está a forma mais profunda de escravidão: **parecer livre enquanto se obedece a condicionamentos que nem percebemos.**\n" +
+    "Prever nos protege. Mas também nos prende. Quando repetimos sem perceber padrões antigos como se fossem leis, a liberdade vira um roteiro invisível. **Parecer livre enquanto se obedece sem notar** é uma forma silenciosa de prisão. Já se pegou fazendo isso?\n" +
     "\n" +
     "---\n" +
     "\n" +
-    "## II. O DIAGNÓSTICO: A VIDA COMO MERCADORIA\n" +
+    "# O que pesa\n" +
     "\n" +
-    "A vida humana não pode ser reduzida a mercadoria. No entanto, o mundo contemporâneo tenta fazer exatamente isso. Transforma presença em audiência, corpo em produto, tempo em lucro, fé em espetáculo, desejo em consumo, dor em fracasso. A pessoa deixa de ser fim em si mesma e passa a valer pelo que produz, aparenta, compra, entrega, rende.\n" +
+    "Tenho pensado em como a vida virou produto sem percebermos. Presença vira audiência, corpo vira vitrine, tempo vira lucro. A gente passa a se medir pelo que entrega, não pelo que é. E isso machuca por dentro: se descansa, culpa; se erra, vergonha; se não rende, medo de não ter valor. **Não é defeito nosso precisar de descanso, vínculo e sentido. Defeito é um sistema que transforma necessidade em fraqueza para vender solução.**\n" +
     "\n" +
-    "Há uma violência silenciosa nesse processo. Ela não aparece apenas como opressão externa. Instala-se dentro. A pessoa se cobra como empresa. Se descansa, sente culpa. Se erra, sente vergonha. Se envelhece, sente medo. Se não performa, sente que perdeu valor. O sistema não precisa apenas explorar o corpo: explora a mente. Ensina cada indivíduo a se vigiar, se corrigir e se punir.\n" +
-    "\n" +
-    "O corpo sente. O corpo cansa. O corpo muda. O corpo precisa de tempo, vínculo, sentido e descanso. Nada disso é defeito. **Defeito é uma organização social que transforma necessidades humanas em fraquezas para vender soluções.**\n" +
-    "\n" +
-    "Unhas gastas, pés sujos, mãos ásperas, rostos sem cirurgias, lágrimas sem disfarce, dúvidas sinceras, cansaços reais — tudo isso pertence à existência. A dignidade não depende de aparência lucrativa.\n" +
-    "\n" +
-    "A felicidade também foi sequestrada. Transformaram-na em promessa permanente: compre, alcance, conquiste, apareça, melhore, corrija, acumule. Mas a felicidade vendida assim não pacifica — inquieta. Cria a sensação de que sempre falta algo. E enquanto falta, o presente é sacrificado.\n" +
+    "O que me ajuda é lembrar: cansaço, dúvida, marcas do tempo e lágrimas não tiram dignidade. São sinais de vida. E felicidade não precisa ser essa promessa infinita de comprar e conquistar — ela pode ser mais simples, no presente. O que te faz sentir em paz hoje, mesmo que pequeno?\n" +
     "\n" +
     "---\n" +
     "\n" +
-    "## III. O TEMPO ROUBADO\n" +
+    "## Tempo, ídolos e fé\n" +
     "\n" +
-    "O dinheiro não é mau em si. É instrumento. O problema surge quando se torna medida absoluta — quando define quem merece respeito, descanso, cuidado, futuro. Para quem vive com abundância, dinheiro é número. Para quem vive com escassez, dinheiro é tempo. E tempo é vida.\n" +
+    "Dinheiro é útil, mas virou régua para tudo: quem merece respeito, descanso, futuro. Para quem tem pouco, dinheiro é tempo — e tempo é vida. **Roubar tempo é roubar vida.** E depois nos vendem caro o que nos foi tomado: descanso, silêncio, saúde. Como você tem protegido seu tempo?\n" +
     "\n" +
-    "Se alguém precisa vender todas as suas horas para sobreviver, não está apenas trabalhando: está entregando pedaços da própria existência.\n" +
-    "\n" +
-    "**Roubar tempo é roubar vida.** E depois o sistema devolve em forma de produto aquilo que tomou: vende descanso caro, lazer caro, paz cara, natureza cara, silêncio caro, saúde cara, liberdade cara. Se você não protege seu tempo, alguém o transforma em lucro e cobra para que você tenha acesso.\n" +
+    "Também me pego pensando nos ídolos discretos: fama, corpo perfeito, aprovação digital, sucesso a qualquer custo. Quando a aparência vale mais que a verdade, a gente vira performance. E há o outro extremo que me preocupa: quando a fé vira arma para justificar ódio. O sagrado, para mim, só faz sentido se amplia compaixão. Quando humilha, já se perdeu. Qual fé te aproxima da vida, e qual te fecha?\n" +
     "\n" +
     "---\n" +
     "\n" +
-    "## IV. OS ÍDOLOS E A FÉ ARMADA\n" +
+    "## Como nos prendem\n" +
     "\n" +
-    "Existe uma idolatria moderna, mais sutil do que parece. O ídolo contemporâneo nem sempre é imagem religiosa. Pode ser fama, dinheiro, corpo perfeito, aprovação digital, poder, consumo, sucesso a qualquer custo. Quando a aparência vale mais que a verdade, tudo vira performance. Quando o aplauso vale mais que a consciência, a pessoa se perde.\n" +
+    "Tecnologia e linguagem me fascinam e me assustam. A mesma rede que cura e conecta também vigia e polariza. E palavras importam: chamar guerra de 'estratégia' tenta limpar o que, no chão, é casa destruída e gente com medo. **Se aceitamos as palavras deles, aceitamos o mundo deles.** Você percebe quando as palavras tentam suavizar o inaceitável?\n" +
     "\n" +
-    "A arte é legítima. A cultura é viva. O entretenimento pode ser descanso e expressão. O problema começa quando o espetáculo substitui o sentido.\n" +
+    "O medo é outra ferramenta silenciosa. Ensina a se calar antes de ser silenciado, a aceitar menos por ter aprendido que desejar é perigoso. Uma sociedade com medo aceita qualquer promessa de segurança, mesmo que venha de quem machuca. **Coragem não é ausência de medo, é não deixar o medo governar.** O que você tem feito mesmo com medo?\n" +
     "\n" +
-    "Mas há também o perigo oposto: **quando a fé vira arma.** Quando o nome de Deus justifica ódio. Quando a espiritualidade é sequestrada pela intolerância. Quando a linguagem do amor é usada para condenar. Quando a religião deixa de ser caminho de encontro e passa a ser instrumento de poder.\n" +
-    "\n" +
-    "A intolerância religiosa aprendeu a usar a linguagem da fé para parecer amor. Diz *\"estou te alertando\"* enquanto despreza. Diz *\"estou orando por você\"* enquanto exclui.\n" +
-    "\n" +
-    "**O sagrado não precisa de crueldade para se sustentar. A fé que apaga a compaixão já perdeu o centro. A verdade que humilha não liberta — apenas domina.**\n" +
-    "\n" +
-    "O ser humano precisa de sentido, beleza, mistério, transcendência, pertencimento. Mas precisa também de lucidez. O sagrado pode libertar; a idolatria pode aprisionar. A fé pode humanizar; o dogma pode desumanizar. A diferença está no respeito à vida.\n" +
+    "Também vejo a inversão de valores: quem sente e pede ajuda é chamado de fraco, enquanto quem humilha posa de forte. Isso me parece uma armadilha para manter tudo como está. O fraco, para mim, é quem precisa diminuir o outro para se sentir grande.\n" +
     "\n" +
     "---\n" +
     "\n" +
-    "## V. AS FERRAMENTAS DE DOMINAÇÃO\n" +
+    "## Liberdade e chão\n" +
     "\n" +
-    "### A tecnologia\n" +
+    "Se somos condicionados, podemos nos recondicionar. Não escolhemos tudo que nos formou — família, classe, medos —, mas podemos escolher o que fazer com isso. **Liberdade real é tomar posição diante do que nos formou.** E ela precisa de chão: tempo, pão, casa, saúde, vínculo. Sem isso, vira só discurso.\n" +
     "\n" +
-    "Ela cura, conecta, facilita, descobre. Mas também vigia, manipula, polariza, transforma atenção em produto e guerra em espetáculo. A tecnologia não é neutra. Depende de quem a financia, quem a controla, quem lucra com ela.\n" +
-    "\n" +
-    "Dizer que o futuro é tecnológico sem perguntar *a serviço de quem* é apenas propaganda. Se concentra poder, precariza o trabalho, alimenta-se de dados pessoais e aumenta a capacidade de destruição, não é progresso. **É disputa.** E sem ética, será mais uma ferramenta de dominação.\n" +
-    "\n" +
-    "### A linguagem\n" +
-    "\n" +
-    "Querem chamar guerra de política, invasão de ordem, massacre de estratégia, morte de efeito colateral. A linguagem do poder tenta higienizar o crime. Mas a guerra, vista de baixo, é casa destruída, criança morta, mãe sem filho, fome, medo, trauma, fuga.\n" +
-    "\n" +
-    "O que é assassinato precisa ser chamado de assassinato. O que é roubo precisa ser chamado de roubo. O que é opressão precisa ser chamado de opressão. **Se aceitamos as palavras deles, aceitamos o mundo deles.**\n" +
-    "\n" +
-    "### O medo\n" +
-    "\n" +
-    "O medo é a principal ferramenta de condicionamento. Ensina a antecipar o castigo. Faz a pessoa se calar antes de ser silenciada. Encolher-se antes de ser atacada. Aceitar menos do que merece porque aprendeu que desejar é perigoso.\n" +
-    "\n" +
-    "Medo de falar. De olhar. De ser visto. De amar. De ser amado. De errar. De desejar. De mudar. De existir sem máscara.\n" +
-    "\n" +
-    "Uma sociedade que produz medo produz obediência. Quem vive com medo aceita qualquer promessa de segurança: líderes cruéis, verdades falsas, relações ruins, trabalhos destrutivos, religiões opressoras, normalidades doentes. O medo paralisa. Faz o futuro parecer repetição do pior. E quando o futuro é só ameaça, a pessoa desiste de criar.\n" +
-    "\n" +
-    "**A coragem não é ausência de medo. É a decisão de não deixar o medo governar.**\n" +
-    "\n" +
-    "### A inversão de valores\n" +
-    "\n" +
-    "O fraco moral não é quem chora, sente, erra, pede ajuda. O fraco moral é quem mata, humilha, explora, tortura, destrói — e ainda posa de civilizado. Transformar vítima em problema e opressor em autoridade é uma das armas mais eficazes da dominação.\n" +
+    "O que me alivia é aceitar a imperfeição como prova de vida. Um corpo cansado, uma rotina simples, uma dúvida sincera não tiram valor. Ser autêntico, para mim, tem sido recusar viver como personagem só para caber. E rebeldia, menos sobre gritar e mais sobre lucidez: perceber que obediência nem sempre é virtude, que normalidade nem sempre é saúde. **Se aprendemos a nos ver como mercadoria, podemos reaprender a nos ver como gente.** O que você gostaria de reaprender?\n" +
     "\n" +
     "---\n" +
     "\n" +
-    "## VI. A AMÉRICA LATINA NÃO É QUINTAL\n" +
+    "## O custo e o convite\n" +
     "\n" +
-    "A América Latina não é atrasada, carente, caótica, perigosa. Essa narrativa foi construída para justificar saque. Se somos inferiores, é fácil explorar. Se somos caóticos, é fácil controlar. Se somos perigosos, é fácil intervir.\n" +
+    "Liberdade custa. Mas submissão custa mais. Já me perguntei quanto custa acordar sendo quem não sou, trabalhar até esgotar para quem nem me vê, medir a vida só pelo que produzo. Se não protejo meu tempo e minha verdade, alguém transforma em produto e ocupa meu lugar.\n" +
     "\n" +
-    "Mas a América Latina é memória, resistência, corpo, floresta, rio, língua, sabedoria ancestral, criatividade e luta. Guarda formas de viver que o mundo precisa reaprender. Uma delas: **a Terra não é depósito, não é mercadoria. É casa, corpo, mãe, origem e condição da vida.**\n" +
+    "A finitude me ajuda a voltar ao presente: lembrar que o tempo é finito diz *ame agora, fale agora, escolha agora*. Não para romantizar o fim, mas para não viver no automático. **Existir com sentido** me parece mais importante que apenas sobreviver — e sentido se constrói, não se compra. O que tem te dado sentido ultimamente, mesmo que pequeno?\n" +
     "\n" +
-    "Tratar a natureza como recurso infinito é suicídio coletivo. Desmatamento, envenenamento de rios, expulsão de comunidades, morte de lideranças, mineração predatória — nada disso é progresso. É repetição da lógica colonial com tecnologia nova. Tirar, concentrar, destruir e culpar os pobres pela miséria.\n" +
-    "\n" +
-    "Desenvolvimento não pode significar destruição. Futuro não pode ser construído sobre terra arrasada. Riqueza não pode ser acumulação de poucos à custa da fome de muitos.\n" +
+    "No fim, penso que previsão pode ser prisão ou porta. Se nos abre a novas experiências — encontro, estudo, silêncio, natureza, cuidado —, ela liberta. **O que faremos com a vida que ainda está em nossas mãos?** Eu não tenho resposta pronta, e tudo bem. Queria te convidar a pensar junto: o que você quer proteger, o que quer deixar, e o que quer cultivar daqui para frente?\n" +
     "\n" +
     "---\n" +
     "\n" +
-    "## VII. A LIBERDADE SITUADA\n" +
+    "## A vida não se vende\n" +
     "\n" +
-    "Se somos condicionados, podemos ser recondicionados. Se aprendemos padrões, podemos questioná-los. Se fomos treinados para obedecer, podemos aprender a escolher.\n" +
-    "\n" +
-    "A liberdade não é ausência de influência. Ninguém nasce fora da cultura, da linguagem, da família, da história. **A liberdade real é a capacidade de tomar posição diante do que nos formou.** Não escolhemos tudo o que nos aconteceu. Mas podemos escolher o que faremos com aquilo que fizeram de nós.\n" +
-    "\n" +
-    "Existência vem antes de essência. Não somos destino fechado. Somos ser em construção. Mas essa construção não ocorre no vazio: ocorre dentro de condições concretas — corpo, classe, território, história, trauma, acesso, linguagem, medo, desejo.\n" +
-    "\n" +
-    "A liberdade não é mágica. É situada. E justamente por isso precisa ser defendida socialmente. Não basta dizer que todos são livres se alguns não têm tempo, pão, casa, saúde, educação ou segurança.\n" +
-    "\n" +
-    "**Liberdade sem condições materiais vira discurso. Liberdade real exige dignidade concreta.**\n" +
-    "\n" +
-    "---\n" +
-    "\n" +
-    "## VIII. AUTENTICIDADE E REBELDIA\n" +
-    "\n" +
-    "A autenticidade nasce quando deixamos de confundir valor com aprovação. Há uma ditadura silenciosa da perfeição: corpo perfeito, rosto perfeito, família perfeita, fé perfeita, desempenho perfeito, felicidade permanente. Mas a vida real é atravessada por contradições, quedas, dúvidas, cansaços, desejos, recomeços.\n" +
-    "\n" +
-    "A imperfeição não é mancha. É prova de vida. Um corpo envelhecido não é menos belo. Uma vida simples não é inferior.\n" +
-    "\n" +
-    "Ser autêntico não é transformar tudo em confissão pública. É recusar viver como personagem. Não trocar verdade por aceitação. Não vender o rosto para caber no mundo. Não apagar a própria história para ser aceito por quem nunca nos viu de verdade.\n" +
-    "\n" +
-    "A rebeldia necessária não é destruição. É lucidez. Os rebeldes percebem o condicionamento. Entendem que o mundo não precisa ser como está. Que obediência nem sempre é virtude. Que normalidade nem sempre é saúde. Que ordem nem sempre é justiça. Que sucesso nem sempre é vida.\n" +
-    "\n" +
-    "Há rebeldes silenciosos. Rebeldes que cuidam. Que plantam. Que estudam. Que escrevem. Que amam. Que não se vendem. Que dizem não quando todos dizem sim. Que permanecem humanos quando o mundo pede frieza. Que escolhem verdade quando a mentira é conveniente. Que defendem a vida quando a vida não dá lucro.\n" +
-    "\n" +
-    "**A rebeldia começa na mente.** Surge quando questionamos os dados que recebemos. Se aprendemos que somos mercadoria, podemos aprender que somos vida. Se aprendemos que medo é destino, podemos aprender que coragem é prática. Se aprendemos que obedecer é seguro, podemos aprender que consciência é risco necessário. Se aprendemos que o mundo é assim mesmo, podemos perceber que ele foi feito assim — e pode ser desfeito.\n" +
-    "\n" +
-    "---\n" +
-    "\n" +
-    "## IX. O CUSTO\n" +
-    "\n" +
-    "A liberdade custa caro. Mas a submissão custa mais.\n" +
-    "\n" +
-    "Quanto custa acordar todos os dias sendo quem você não é? Quanto custa trabalhar até o esgotamento para enriquecer quem não te vê? Quanto custa aceitar que sua vida seja medida pelo que você produz? Quanto custa silenciar sua dor para não incomodar? Quanto custa morrer por dentro para continuar aceito por fora?\n" +
-    "\n" +
-    "Se você não defende sua liberdade, alguém a transforma em produto. Se não protege seu tempo, alguém o vende. Se não cuida da sua verdade, alguém a substitui por narrativa. Se não ocupa sua vida, alguém a ocupa por você.\n" +
-    "\n" +
-    "Liberdade não é apenas fazer o que se quer. É ter condições reais de existir com dignidade. Voz, escolha, tempo, pão, casa, saúde, vínculo, paz. Liberdade sem justiça é privilégio. Liberdade sem responsabilidade é caos. **Liberdade verdadeira é compromisso com a vida — a própria e a dos outros.**\n" +
-    "\n" +
-    "---\n" +
-    "\n" +
-    "## X. A FINITUDE E O DESPERTAR\n" +
-    "\n" +
-    "A morte precisa ser encarada. Não para romantizar o fim, mas para aprender a viver. A consciência da finitude destrói a ilusão de tempo infinito. Ela diz: *ame agora, fale agora, escolha agora, defenda agora, viva agora.*\n" +
-    "\n" +
-    "Perder a vida não é apenas morrer fisicamente. É existir sem presença. Trabalhar sem sentido. Amar sem verdade. Crer sem amor. Obedecer sem consciência. Aceitar o inaceitável. Trocar o essencial por distração. Esquecer que somos finitos.\n" +
-    "\n" +
-    "É melhor morrer defendendo dignidade do que viver morto por dentro. Essa frase não glorifica a morte — glorifica a vida. Afirma que há algo mais importante do que apenas sobreviver: **existir com sentido.** E sentido não se compra. Sentido se constrói.\n" +
-    "\n" +
-    "---\n" +
-    "\n" +
-    "## XI. A ESCOLHA\n" +
-    "\n" +
-    "Nossa capacidade de previsão pode ser prisão, mas também pode ser porta. Se repete padrões, aprisiona. Se se abre a novas experiências, liberta. A vida nova começa quando inserimos novos dados: encontro, estudo, silêncio, natureza, amor, luta, verdade, justiça, beleza, cuidado.\n" +
-    "\n" +
-    "No fim, a questão é simples e dura: **o que faremos com a vida que ainda está em nossas mãos?**\n" +
-    "\n" +
-    "Podemos obedecer por hábito. Consumir por vazio. Temer por treinamento. Fingir por conveniência. Aceitar o inaceitável por cansaço. Viver como se não fôssemos morrer. Trocar o essencial por conforto. Vender nosso tempo até sobrar só exaustão.\n" +
-    "\n" +
-    "Ou podemos despertar.\n" +
-    "\n" +
-    "Despertar é reconhecer que somos iguais em dignidade, livres em natureza e condicionados por histórias que podem ser interrogadas. É não aceitar que a vida seja medida apenas por lucro. É defender tempo, terra, verdade, corpo, amor, justiça e consciência. É viver sem máscara, mesmo quando a máscara seria mais fácil. É escolher presença em vez de fuga. Responsabilidade em vez de submissão.\n" +
-    "\n" +
-    "---\n" +
-    "\n" +
-    "## XII. A VIDA NÃO SE VENDE\n" +
-    "\n" +
-    "A vida não é produto. É tarefa, escolha, luta e vínculo. É finita, mas não é pequena. Frágil, mas não é desprezível. Incerta, mas não é vazia. Pode ser dura, mas também pode ser bela. E só se torna verdadeiramente bela quando deixamos de ser mercadoria e voltamos a ser gente.\n" +
+    "A vida não é produto. É tarefa, escolha, luta e vínculo. É finita, mas não é pequena. Pode ser dura, mas também pode ser bela. E só se torna verdadeiramente bela quando deixamos de ser mercadoria e voltamos a ser gente.\n" +
     "\n" +
     "Gente com história no rosto. Gente com medo no peito, mas coragem nas mãos. Gente que erra, aprende, cai, levanta. Gente que ama. Que cuida. Que pensa. Que questiona. Que recusa ser vendida.\n" +
     "\n" +
     "**A vida não se vende.**\n" +
-    "**A vida se vive.**";
+    "**A vida se vive.**\n" +
+    "";
 
   var LINKS_TEXT =
     "LINKS — plataformas onde estou ativo :)\n" +

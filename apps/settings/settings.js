@@ -422,6 +422,15 @@
   var _waveBars = [];
   var _waveN = 48;
 
+  /* Config das linhas moles: cores, espessura e personalidade de onda */
+  var _softCfg = [
+    { color: "rgba(30,110,255,0.85)", w: 3.5, step: 4, speed: 1.9,  freq: 0.42, wob: 7,  amp: 1.0,  yoff: -3 },
+    { color: "rgba(255,130,20,0.70)", w: 2.5, step: 6, speed: -2.6, freq: 0.27, wob: 11, amp: 0.62, yoff: -9 },
+    { color: "rgba(40,185,90,0.60)",  w: 2,   step: 8, speed: 3.4,  freq: 0.60, wob: 5,  amp: 0.38, yoff: -15 }
+  ];
+  var _softPts = null;   // pontos suavizados por linha (mola)
+  var _softEnergy = 0;   /* energia global suavizada (0..1) — dá o quique */
+
   function buildEqWave() {
     var track = document.getElementById("eqWaveTrack");
     if (!track || _waveBars.length) return;
@@ -432,6 +441,21 @@
       track.appendChild(bar);
       _waveBars.push(bar);
     }
+    // linhas moles: curvas SVG que ondulam com o som por cima das barras
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.id = "eqSoftLines";
+    svg.setAttribute("viewBox", "0 0 100 100");
+    svg.setAttribute("preserveAspectRatio", "none");
+    _softCfg.forEach(function (cfg, li) {
+      var p = document.createElementNS(NS, "path");
+      p.setAttribute("class", "eq-soft-line eq-soft-line-" + li);
+      p.setAttribute("vector-effect", "non-scaling-stroke");
+      p.style.stroke = cfg.color;
+      p.style.strokeWidth = cfg.w + "px";
+      svg.appendChild(p);
+    });
+    track.appendChild(svg);
     function sizeTrack() {
       if (!track || !win || win.offsetParent === null) return;
       var h = Math.max(72, Math.min(260, Math.round(win.offsetHeight * 0.4)));
@@ -544,6 +568,44 @@
       if (bar) bar.style.height = h.toFixed(1) + "%";
     }
     _waveT += 0.03;
+
+    /* ---- linhas moles ---- */
+    var svg = document.getElementById("eqSoftLines");
+    if (svg && svg.childNodes.length === _softCfg.length) {
+      _softEnergy += (combinedPeak - _softEnergy) * 0.14;
+      if (!_softPts) {
+        _softPts = _softCfg.map(function () {
+          return new Array(_waveN).fill(60);
+        });
+      }
+      _softCfg.forEach(function (cfg, li) {
+        var pts = _softPts[li];
+        // alvo: altura suavizada da banda + senoide viajante divertida
+        for (var i = 0; i < _waveN; i++) {
+          var band = 4 + Math.pow(_waveSmooth[i] || 0, 0.9) * 88 * cfg.amp;
+          var wob = Math.sin(_waveT * cfg.speed + i * cfg.freq) *
+                    cfg.wob * (0.35 + _softEnergy * 2.2);
+          var target = 100 - band + wob + cfg.yoff;
+          pts[i] += (target - pts[i]) * 0.16; // mola macia
+        }
+        // amostra esparsa e traça curva suave por pontos médios
+        var sx = [], sy = [];
+        for (var j = 0; j < _waveN; j += cfg.step) {
+          sx.push((j / (_waveN - 1)) * 100);
+          sy.push(pts[j]);
+        }
+        if ((_waveN - 1) % cfg.step !== 0) { sx.push(100); sy.push(pts[_waveN - 1]); }
+        var d = "M " + sx[0].toFixed(1) + " " + sy[0].toFixed(1);
+        for (var q = 1; q < sx.length - 1; q++) {
+          d += " Q " + sx[q].toFixed(1) + " " + sy[q].toFixed(1) +
+               " " + ((sx[q] + sx[q + 1]) / 2).toFixed(1) +
+               " " + ((sy[q] + sy[q + 1]) / 2).toFixed(1);
+        }
+        d += " L " + sx[sx.length - 1].toFixed(1) + " " + sy[sy.length - 1].toFixed(1);
+        svg.childNodes[li].setAttribute("d", d);
+      });
+    }
+
     var dbEl = document.getElementById("eqWaveDb");
     var fillEl = document.getElementById("eqWaveDbFill");
     if (dbEl && fillEl) {

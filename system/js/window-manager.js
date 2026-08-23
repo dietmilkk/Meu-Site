@@ -1229,15 +1229,32 @@
     var dragState = null;
     var resizeState = null;
 
+    // Área de posicionamento REAL: os filhos absolute são posicionados
+    // a partir do PADDING BOX do pai (dentro das bordas). Usar
+    // getBoundingClientRect().width direto inclui as bordas e faz os
+    // painéis vazarem alguns px para a direita/baixo.
+    function parentArea() {
+      var pr = parent.getBoundingClientRect();
+      var cs = getComputedStyle(parent);
+      var bl = parseFloat(cs.borderLeftWidth) || 0;
+      var bt = parseFloat(cs.borderTopWidth) || 0;
+      return {
+        ox: pr.left + bl,
+        oy: pr.top + bt,
+        w: parent.clientWidth,
+        h: parent.clientHeight,
+      };
+    }
+
     function obstacleBounds() {
       if (!obstacle) return null;
-      var pr = parent.getBoundingClientRect();
+      var a = parentArea();
       var or = obstacle.getBoundingClientRect();
       var pCenter = panel.getBoundingClientRect().left + panel.offsetWidth / 2;
       var oCenter = or.left + or.width / 2;
       return {
-        left: or.left - pr.left,
-        right: or.left - pr.left + or.width,
+        left: or.left - a.ox,
+        right: or.left - a.ox + or.width,
         isLeft: pCenter < oCenter,
       };
     }
@@ -1250,19 +1267,19 @@
     // Mantém o painel 100% dentro do pai (sc-top-row)
     function clampIntoParent() {
       if (!isFloating()) return;
-      var pr = parent.getBoundingClientRect();
-      if (pr.width < 20 || pr.height < 20) return;
-      var availW = Math.max(40, Math.min(panel.offsetWidth, pr.width - margin * 2));
-      var availH = Math.max(40, Math.min(panel.offsetHeight, pr.height - margin * 2));
+      var a = parentArea();
+      if (a.w < 20 || a.h < 20) return;
+      var availW = Math.max(40, Math.min(panel.offsetWidth, a.w - margin * 2));
+      var availH = Math.max(40, Math.min(panel.offsetHeight, a.h - margin * 2));
       if (square) {
         var side = Math.min(availW, availH);
         availW = availH = side;
       }
       var r = panel.getBoundingClientRect();
-      var left = r.left - pr.left;
-      var top = r.top - pr.top;
-      left = Math.max(margin, Math.min(left, pr.width - margin - availW));
-      top = Math.max(margin, Math.min(top, pr.height - margin - availH));
+      var left = r.left - a.ox;
+      var top = r.top - a.oy;
+      left = Math.max(margin, Math.min(left, a.w - margin - availW));
+      top = Math.max(margin, Math.min(top, a.h - margin - availH));
       global.__domWrite(function () {
         panel.style.right = 'auto';
         panel.style.left = left + 'px';
@@ -1336,17 +1353,19 @@
 
     document.addEventListener('mousemove', function (e) {
       if (dragState) {
-        var pr = parent.getBoundingClientRect();
-        var x = e.clientX - pr.left - dragState.ox;
-        var y = e.clientY - pr.top - dragState.oy;
-        x = Math.max(0, Math.min(x, pr.width - panel.offsetWidth));
-        y = Math.max(0, Math.min(y, pr.height - panel.offsetHeight));
+        var a = parentArea();
+        var x = e.clientX - a.ox - dragState.ox;
+        var y = e.clientY - a.oy - dragState.oy;
+        x = Math.max(margin, Math.min(x, a.w - margin - panel.offsetWidth));
+        y = Math.max(margin, Math.min(y, a.h - margin - panel.offsetHeight));
         if (dragState.obs) {
           if (dragState.obs.isLeft) {
             x = Math.min(x, dragState.obs.left - gap - panel.offsetWidth);
           } else {
             x = Math.max(x, dragState.obs.right + gap);
           }
+          // obstáculo não pode vencer a contenção do pai
+          x = Math.max(margin, Math.min(x, a.w - margin - panel.offsetWidth));
         }
         global.__domWrite(function () {
           panel.style.left = x + 'px';
@@ -1358,8 +1377,9 @@
       var s = resizeState;
       var dx = e.clientX - s.startX;
       var dy = e.clientY - s.startY;
-      var pr = parent.getBoundingClientRect();
-      var newL = s.startLeft - pr.left, newT = s.startTop - pr.top;
+      var pr = parentArea();
+      var a = pr;
+      var newL = s.startLeft - pr.ox, newT = s.startTop - pr.oy;
       var newW = s.startW, newH = s.startH;
       var edge = s.edge;
 
@@ -1368,48 +1388,51 @@
         if (edge === 'l' || edge === 'r') side = newW + (edge === 'l' ? -dx : dx);
         else if (edge === 't' || edge === 'b') side = newH + (edge === 't' ? -dy : dy);
         else side = Math.max(newW, newH) + Math.max(dx, dy);
-        var maxSideW = pr.width - margin * 2, maxSideH = pr.height - margin * 2;
+        var maxSideW = a.w - margin * 2, maxSideH = a.h - margin * 2;
         side = Math.max(Math.min(minW, maxSideW), Math.min(side, maxSideW));
         side = Math.max(Math.min(minH, maxSideH), Math.min(side, maxSideH));
-        if (edge.indexOf('l') !== -1) newL = (s.startLeft - pr.left) + s.startW - side;
-        if (edge.indexOf('t') !== -1) newT = (s.startTop - pr.top) + s.startH - side;
+        if (edge.indexOf('l') !== -1) newL = (s.startLeft - pr.ox) + s.startW - side;
+        if (edge.indexOf('t') !== -1) newT = (s.startTop - pr.oy) + s.startH - side;
         newW = newH = side;
       } else {
         if (edge.indexOf('l') !== -1) {
           newL = newL + dx;
           newW = s.startW - dx;
-          if (newW < minW) { newW = minW; newL = s.startLeft + s.startW - minW - pr.left; }
+          if (newW < minW) { newW = minW; newL = s.startLeft + s.startW - minW - pr.ox; }
           newL = Math.max(0, newL);
-          newW = Math.min(newW, pr.width - newL);
+          newW = Math.min(newW, a.w - newL);
         } else if (edge.indexOf('r') !== -1) {
           newW = s.startW + dx;
-          newW = Math.max(minW, Math.min(newW, pr.width - newL));
+          newW = Math.max(minW, Math.min(newW, a.w - newL));
         }
 
         if (edge.indexOf('t') !== -1) {
           newT = newT + dy;
           newH = s.startH - dy;
-          if (newH < minH) { newH = minH; newT = s.startTop + s.startH - minH - pr.top; }
+          if (newH < minH) { newH = minH; newT = s.startTop + s.startH - minH - pr.oy; }
           newT = Math.max(0, newT);
-          newH = Math.min(newH, pr.height - newT);
+          newH = Math.min(newH, a.h - newT);
         } else if (edge.indexOf('b') !== -1) {
           newH = s.startH + dy;
-          newH = Math.max(minH, Math.min(newH, pr.height - newT));
+          newH = Math.max(minH, Math.min(newH, a.h - newT));
         }
       }
 
       // Contenção: nunca sair do pai
-      newL = Math.max(margin, Math.min(newL, pr.width - margin - newW));
-      newT = Math.max(margin, Math.min(newT, pr.height - margin - newH));
+      newL = Math.max(margin, Math.min(newL, a.w - margin - newW));
+      newT = Math.max(margin, Math.min(newT, a.h - margin - newH));
 
       if (s.obs) {
         if (s.obs.isLeft && edge.indexOf('r') !== -1) {
           newW = Math.max(40, Math.min(newW, s.obs.left - gap - newL));
         } else if (!s.obs.isLeft && edge.indexOf('l') !== -1) {
-          newL = Math.min(newL, pr.width - margin - newW);
+          newL = Math.min(newL, a.w - margin - newW);
           newL = Math.max(newL, s.obs.right + gap);
-          newL = Math.min(newL, pr.width - margin - newW);
+          newL = Math.min(newL, a.w - margin - newW);
         }
+        // contenção do pai sempre por cima do obstáculo
+        newL = Math.max(margin, Math.min(newL, a.w - margin - newW));
+        newT = Math.max(margin, Math.min(newT, a.h - margin - newH));
       }
 
       global.__domWrite(function () {

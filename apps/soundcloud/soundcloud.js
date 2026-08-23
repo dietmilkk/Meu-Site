@@ -967,23 +967,32 @@
     const winPl = document.getElementById("scPlaylistWin");
     if (!winPl) return;
     if (scPlayer.classList.contains("sc-large")) {
-      // no modo grande a barra tem max-height próprio (scroll horizontal)
+      // no modo grande a barra tem max-height próprio (scroll vertical)
       winPl.style.removeProperty("min-height");
       return;
     }
     const title = document.getElementById("scPlaylistDrag");
-    const bar = document.getElementById("scPlaylistBar");
-    if (!title || !bar) return;
-    const h = title.offsetHeight + bar.offsetHeight + 4; // bordas 2px topo/base
+    const items = document.getElementById("scPlaylistItems");
+    const topRow = document.getElementById("scTopRow");
+    if (!title || !items) return;
+    // necessidade real do conteúdo (scrollHeight ignora esmagamento flex)
+    let h = title.offsetHeight + items.scrollHeight + 4; // bordas 2px topo/base
+    // nunca exigir mais altura do que o pai (scTopRow) oferece
+    if (topRow && topRow.contains(winPl)) {
+      h = Math.min(h, Math.max(80, topRow.clientHeight - 12));
+    }
     winPl.style.minHeight = Math.max(80, h) + "px";
   }
   (function () {
     const items = document.getElementById("scPlaylistItems");
-    if (!items || typeof ResizeObserver === "undefined") return;
-    new ResizeObserver(() => {
+    const topRow = document.getElementById("scTopRow");
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
       cancelAnimationFrame(__plMinHRAF);
       __plMinHRAF = requestAnimationFrame(updatePlaylistMinHeight);
-    }).observe(items);
+    });
+    if (items) ro.observe(items);
+    if (topRow) ro.observe(topRow);
   })();
 
   // ============================================================

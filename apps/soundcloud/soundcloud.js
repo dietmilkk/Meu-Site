@@ -566,13 +566,16 @@
   }
 
   // ============================================================
-  // Artwork — com limitador de taxa para ver carregamento progressivo
+  // Artwork — limitador de taxa REAL: cada chunk recebido pela rede
+  // é pintado na hora (blob parcial re-decodificado), com delay
+  // proporcional entre um bloco e outro (ver a imagem sendo montada)
   // ============================================================
   const ART_RATE_KBPS = 80;
+  const ART_BLOCK_BYTES = 16 * 1024;
   const ART_ESTIMATE_BYTES = 280 * 1024;
   let artLoadToken = 0;
 
-  async function fetchWithThrottle(url, onProgress) {
+  async function fetchArtThrottled(url, onChunk) {
     const res = await fetch(url);
     if (!res.ok || !res.body) throw new Error("fetch failed " + res.status);
     const reader = res.body.getReader();
@@ -580,18 +583,26 @@
     let loaded = 0;
     let total = parseInt(res.headers.get("content-length") || "0", 10);
     if (!total) total = ART_ESTIMATE_BYTES;
+    // delay por bloco para taxa constante de ART_RATE_KBPS
+    const blockDelayMs = (ART_BLOCK_BYTES / (ART_RATE_KBPS * 1024)) * 1000;
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      chunks.push(value);
-      loaded += value.length;
-      if (onProgress) onProgress(Math.min((loaded / total) * 100, loaded < total ? 95 : 100));
-      // throttling: delay proporcional ao tamanho do chunk
-      const delayMs = (value.length / (ART_RATE_KBPS * 1024)) * 1000;
-      if (delayMs > 0) await new Promise(r => setTimeout(r, delayMs));
+      // mesmo que a rede entregue tudo de uma vez, fatia em blocos
+      // fixos para pintar a imagem chegando bloco a bloco em tempo real
+      for (let off = 0; off < value.length; off += ART_BLOCK_BYTES) {
+        chunks.push(value.subarray(off, Math.min(off + ART_BLOCK_BYTES, value.length)));
+        loaded += chunks[chunks.length - 1].length;
+        // onChunk retorna false para abortar (troca de faixa no meio)
+        if (onChunk(chunks, loaded, total) === false) {
+          try { reader.cancel(); } catch (e) {}
+          return null;
+        }
+        if (blockDelayMs > 0) await sleep(blockDelayMs);
+      }
     }
-    const blob = new Blob(chunks);
-    return URL.createObjectURL(blob);
+    return URL.createObjectURL(new Blob(chunks));
   }
 
   function showArtProgress(pct) {
@@ -607,78 +618,57 @@
     bar.style.display = pct >= 100 ? "none" : "block";
   }
 
-  function loadArt(idx) {
-    const track = trackList && trackList[idx];
-    if (!track || !track.artwork) {
-      elArtImg.style.display = "none";
-      showArtProgress(100);
-      return;
-    }
+  function progressiveArtLoad(srcUrl) {
     const token = ++artLoadToken;
     elArtImg.style.display = "block";
-    elArtImg.style.opacity = "0.35";
-    elArtImg.style.filter = "blur(6px)";
-    elArtImg.style.transition = "opacity 0.3s ease, filter 0.3s ease";
+    elArtImg.style.opacity = "1";
+    elArtImg.style.filter = "none";
     showArtProgress(0);
-    fetchWithThrottle(track.artwork, (pct) => {
-      if (token !== artLoadToken) return;
-      showArtProgress(pct);
-    }).then(url => {
-      if (token !== artLoadToken) return;
-      elArtImg.onload = () => {
-        elArtImg.style.opacity = "1";
-        elArtImg.style.filter = "blur(0px)";
-        showArtProgress(100);
-        setTimeout(() => URL.revokeObjectURL(url), 10000);
-      };
-      elArtImg.onerror = () => {
-        elArtImg.style.display = "none";
-        showArtProgress(100);
-      };
-      elArtImg.src = url;
+    let lastPartial = null;
+    return fetchArtThrottled(srcUrl, (chunks, loaded, total) => {
+      if (token !== artLoadToken) return false;
+      showArtProgress(Math.min((loaded / total) * 100, loaded < total ? 95 : 100));
+      // pinta o pedaço recebido até agora: o navegador decodifica o
+      // prefixo do arquivo e exibe as linhas já baixadas em tempo real
+      const purl = URL.createObjectURL(new Blob(chunks));
+      if (lastPartial) URL.revokeObjectURL(lastPartial);
+      lastPartial = purl;
+      elArtImg.src = purl;
+      return true;
+    }).then(finalUrl => {
+      if (token !== artLoadToken || !finalUrl) return;
+      if (lastPartial && lastPartial !== finalUrl) URL.revokeObjectURL(lastPartial);
+      elArtImg.src = finalUrl;
+      showArtProgress(100);
     }).catch(() => {
       if (token !== artLoadToken) return;
       // fallback direto sem throttle
-      elArtImg.style.opacity = "1";
-      elArtImg.style.filter = "blur(0px)";
-      elArtImg.src = track.artwork;
+      elArtImg.src = srcUrl;
       showArtProgress(100);
     });
   }
 
-  function setArt(src) {
-    if (!src) {
+  function loadArt(idx) {
+    const track = trackList && trackList[idx];
+    if (!track || !track.artwork) {
+      artLoadToken++;
+      elArtImg.removeAttribute("src");
       elArtImg.style.display = "none";
       showArtProgress(100);
       return;
     }
-    const token = ++artLoadToken;
-    elArtImg.style.display = "block";
-    elArtImg.style.opacity = "0.35";
-    elArtImg.style.filter = "blur(6px)";
-    showArtProgress(0);
-    fetchWithThrottle(src, (pct) => {
-      if (token !== artLoadToken) return;
-      showArtProgress(pct);
-    }).then(url => {
-      if (token !== artLoadToken) return;
-      elArtImg.onload = () => {
-        elArtImg.style.opacity = "1";
-        elArtImg.style.filter = "blur(0px)";
-        showArtProgress(100);
-      };
-      elArtImg.onerror = () => {
-        elArtImg.style.display = "none";
-        showArtProgress(100);
-      };
-      elArtImg.src = url;
-    }).catch(() => {
-      if (token !== artLoadToken) return;
-      elArtImg.style.opacity = "1";
-      elArtImg.style.filter = "blur(0px)";
-      elArtImg.src = src;
+    progressiveArtLoad(track.artwork);
+  }
+
+  function setArt(src) {
+    if (!src) {
+      artLoadToken++;
+      elArtImg.removeAttribute("src");
+      elArtImg.style.display = "none";
       showArtProgress(100);
-    });
+      return;
+    }
+    progressiveArtLoad(src);
   }
 
   // ============================================================

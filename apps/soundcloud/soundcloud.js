@@ -571,9 +571,14 @@
   // é pintado na hora (blob parcial re-decodificado), com delay
   // proporcional entre um bloco e outro (ver a imagem sendo montada)
   // ============================================================
-  const ART_RATE_KBPS = 80;
   const ART_BLOCK_BYTES = 16 * 1024;
   const ART_ESTIMATE_BYTES = 280 * 1024;
+  // progressivo acelerando: começa devagar e a cada 3s a taxa sobe 30%
+  const ART_RATE_START_KBPS = 60;
+  const ART_RATE_ACCEL = 1.3;
+  const ART_RATE_STEP_MS = 3000;
+  // cada artwork é baixada UMA vez; depois vem do cache (instantâneo)
+  const artCache = new Map(); // url -> objectURL final
   let artLoadToken = 0;
 
   async function fetchArtThrottled(url, onChunk) {
@@ -584,9 +589,13 @@
     let loaded = 0;
     let total = parseInt(res.headers.get("content-length") || "0", 10);
     if (!total) total = ART_ESTIMATE_BYTES;
-    // delay por bloco para taxa constante de ART_RATE_KBPS
-    const blockDelayMs = (ART_BLOCK_BYTES / (ART_RATE_KBPS * 1024)) * 1000;
+    const startTime = Date.now();
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    // taxa atual: ART_RATE_START_KBPS no início, +30% a cada 3s decorridos
+    function currentRateKBps() {
+      const steps = Math.floor((Date.now() - startTime) / ART_RATE_STEP_MS);
+      return ART_RATE_START_KBPS * Math.pow(ART_RATE_ACCEL, steps);
+    }
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -600,7 +609,8 @@
           try { reader.cancel(); } catch (e) {}
           return null;
         }
-        if (blockDelayMs > 0) await sleep(blockDelayMs);
+        const delayMs = (ART_BLOCK_BYTES / (currentRateKBps() * 1024)) * 1000;
+        if (delayMs > 0) await sleep(delayMs);
       }
     }
     return URL.createObjectURL(new Blob(chunks));
@@ -620,6 +630,15 @@
   }
 
   function progressiveArtLoad(srcUrl) {
+    // já baixada antes? mostra direto do cache, sem rede e sem barra
+    if (artCache.has(srcUrl)) {
+      elArtImg.style.display = "block";
+      elArtImg.style.opacity = "1";
+      elArtImg.style.filter = "none";
+      elArtImg.src = artCache.get(srcUrl);
+      showArtProgress(100);
+      return;
+    }
     const token = ++artLoadToken;
     elArtImg.style.display = "block";
     elArtImg.style.opacity = "1";
@@ -639,6 +658,7 @@
     }).then(finalUrl => {
       if (token !== artLoadToken || !finalUrl) return;
       if (lastPartial && lastPartial !== finalUrl) URL.revokeObjectURL(lastPartial);
+      artCache.set(srcUrl, finalUrl); // baixada uma vez, fica guardada
       elArtImg.src = finalUrl;
       showArtProgress(100);
     }).catch(() => {

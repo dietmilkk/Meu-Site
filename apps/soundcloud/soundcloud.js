@@ -349,6 +349,7 @@
       });
       elPlaylistItems.appendChild(e);
     }
+    updatePlaylistMinHeight();
     renderMobilePlaylists();
   }
 
@@ -958,6 +959,34 @@
   })();
 
   // ============================================================
+  // Altura mínima da janela de playlists: cabe todas as playlists
+  // com quebra de linha na largura atual (recalculada ao redimensionar)
+  // ============================================================
+  let __plMinHRAF = 0;
+  function updatePlaylistMinHeight() {
+    const winPl = document.getElementById("scPlaylistWin");
+    if (!winPl) return;
+    if (scPlayer.classList.contains("sc-large")) {
+      // no modo grande a barra tem max-height próprio (scroll horizontal)
+      winPl.style.removeProperty("min-height");
+      return;
+    }
+    const title = document.getElementById("scPlaylistDrag");
+    const bar = document.getElementById("scPlaylistBar");
+    if (!title || !bar) return;
+    const h = title.offsetHeight + bar.offsetHeight + 4; // bordas 2px topo/base
+    winPl.style.minHeight = Math.max(80, h) + "px";
+  }
+  (function () {
+    const items = document.getElementById("scPlaylistItems");
+    if (!items || typeof ResizeObserver === "undefined") return;
+    new ResizeObserver(() => {
+      cancelAnimationFrame(__plMinHRAF);
+      __plMinHRAF = requestAnimationFrame(updatePlaylistMinHeight);
+    }).observe(items);
+  })();
+
+  // ============================================================
   // Large layout >900px: simple grid - track list left,
   // artwork 1x1 + playlist + meta on the right.
   // Pure CSS layout via .sc-large — no JS size calculations.
@@ -1005,6 +1034,7 @@
         window.__scMdiClamp();
       }
       applyLargeSizing();
+      updatePlaylistMinHeight();
       if (elBtnHideArt) {
         elBtnHideArt.disabled = large;
         elBtnHideArt.classList.toggle("sc-hide-btn-disabled", large);

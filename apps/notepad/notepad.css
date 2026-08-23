@@ -177,7 +177,8 @@
     color: var(--clr-text-on-highlight, #fff);
 }
 
-.files-row.active {
+.files-row.active,
+.files-row.selected {
     background: var(--clr-highlight, #000080);
     color: var(--clr-text-on-highlight, #fff);
     border-color: #000080;
@@ -198,7 +199,8 @@
 }
 
 .files-row:hover .files-row-size,
-.files-row.active .files-row-size {
+.files-row.active .files-row-size,
+.files-row.selected .files-row-size {
     opacity: 1;
 }
 

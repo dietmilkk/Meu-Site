@@ -120,7 +120,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    padding: 2px 14px 2px 5px;
+    padding: 2px 10px;
     height: 30px;
     background: var(--btn-bg);
     border: 2px solid;
@@ -129,19 +129,6 @@
         inset 1px 1px 0 var(--clr-hilight),
         inset -1px -1px 0 var(--clr-shadow);
 }
-
-.start-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.start-logo img {
-    display: block;
-    image-rendering: pixelated;
-}
-
 
 .start-btn:active,
 .start-btn.active {
@@ -558,9 +545,11 @@
     justify-content: center;
     width: 26px;
     height: 26px;
-    border: 1px solid #888480;
+    border: 1px solid transparent;
     padding: 2px;
-    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 .tray-icon:hover {
     background: var(--clr-panel-bg);
@@ -570,7 +559,6 @@
 .tray-icon:active {
     background: #808080;
     border-color: #6a6660;
-    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
 }
 
 .tray-clock {

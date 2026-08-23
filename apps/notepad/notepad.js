@@ -21,70 +21,66 @@
   var fmtOn = false;
 
   var NOTEPAD_TEXT =
-    "# Um desabafo — e um convite\n" +
+    "# Um desabafo\n" +
     "\n" +
-    "Quero te contar como tenho enxergado as coisas. Não como verdade final, mas como um jeito de organizar o que sinto. Se algo ressoar, me conta o que pensou. Se discordar, também.\n" +
+    "Um registro de como tenho enxergado as coisas. Não como verdade final, mas como um jeito de organizar o que sinto por escrito.\n" +
     "\n" +
-    "Somos parecidos no essencial — corpo, mente, desejo de viver com dignidade. Nascemos abertos, curiosos. Aos poucos aprendemos a prever o mundo: o que é seguro, o que machuca, o que dá afeto, o que cobra um preço.\n" +
-    "\n" +
-    "Prever nos protege. Mas também nos prende. Quando repetimos sem perceber padrões antigos como se fossem leis, a liberdade vira um roteiro invisível. **Parecer livre enquanto se obedece sem notar** é uma forma silenciosa de prisão. Já se pegou fazendo isso?\n" +
+    "Aprendemos desde cedo a prever o mundo: o que é seguro, o que machuca, o que dá afeto, o que cobra um preço. Prever protege, mas também prende. Quando padrões antigos se repetem sem perceber, como se fossem leis, a liberdade vira um roteiro invisível. **Parecer livre enquanto se obedece sem notar é uma forma silenciosa de prisão.**\n" +
     "\n" +
     "---\n" +
     "\n" +
     "# O que pesa\n" +
     "\n" +
-    "Tenho pensado em como a vida virou produto sem percebermos. Presença vira audiência, corpo vira vitrine, tempo vira lucro. A gente passa a se medir pelo que entrega, não pelo que é. E isso machuca por dentro: se descansa, culpa; se erra, vergonha; se não rende, medo de não ter valor. **Não é defeito nosso precisar de descanso, vínculo e sentido. Defeito é um sistema que transforma necessidade em fraqueza para vender solução.**\n" +
+    "A vida virou produto sem que ninguém percebesse. Presença vira audiência, corpo vira vitrine, tempo vira lucro. Passa-se a se medir pelo que entrega, não pelo que é. E isso machuca por dentro: ao descansar, culpa; ao errar, vergonha; ao não render, medo de não ter valor. **Não é defeito precisar de descanso, vínculo e sentido. Defeito é um sistema que transforma necessidade em fraqueza para vender solução.**\n" +
     "\n" +
-    "O que me ajuda é lembrar: cansaço, dúvida, marcas do tempo e lágrimas não tiram dignidade. São sinais de vida. E felicidade não precisa ser essa promessa infinita de comprar e conquistar — ela pode ser mais simples, no presente. O que te faz sentir em paz hoje, mesmo que pequeno?\n" +
+    "O que ajuda é lembrar: cansaço, dúvida, marcas do tempo e lágrimas não tiram dignidade. São sinais de vida. E felicidade não precisa ser essa promessa infinita de comprar e conquistar — ela pode ser mais simples, no presente.\n" +
     "\n" +
     "---\n" +
     "\n" +
     "## Tempo, ídolos e fé\n" +
     "\n" +
-    "Dinheiro é útil, mas virou régua para tudo: quem merece respeito, descanso, futuro. Para quem tem pouco, dinheiro é tempo — e tempo é vida. **Roubar tempo é roubar vida.** E depois nos vendem caro o que nos foi tomado: descanso, silêncio, saúde. Como você tem protegido seu tempo?\n" +
+    "Dinheiro é útil, mas virou régua para tudo: quem merece respeito, descanso, futuro. Para quem tem pouco, dinheiro é tempo — e tempo é vida. **Roubar tempo é roubar vida.** Depois se vende caro o que foi tomado: descanso, silêncio, saúde.\n" +
     "\n" +
-    "Também me pego pensando nos ídolos discretos: fama, corpo perfeito, aprovação digital, sucesso a qualquer custo. Quando a aparência vale mais que a verdade, a gente vira performance. E há o outro extremo que me preocupa: quando a fé vira arma para justificar ódio. O sagrado, para mim, só faz sentido se amplia compaixão. Quando humilha, já se perdeu. Qual fé te aproxima da vida, e qual te fecha?\n" +
+    "Também existem os ídolos discretos: fama, corpo perfeito, aprovação digital, sucesso a qualquer custo. Quando a aparência vale mais que a verdade, sobra performance. E há o extremo que preocupa: quando a fé vira arma para justificar ódio. O sagrado só faz sentido se amplia compaixão; quando humilha, já se perdeu.\n" +
     "\n" +
     "---\n" +
     "\n" +
     "## Como nos prendem\n" +
     "\n" +
-    "Tecnologia e linguagem me fascinam e me assustam. A mesma rede que cura e conecta também vigia e polariza. E palavras importam: chamar guerra de 'estratégia' tenta limpar o que, no chão, é casa destruída e gente com medo. **Se aceitamos as palavras deles, aceitamos o mundo deles.** Você percebe quando as palavras tentam suavizar o inaceitável?\n" +
+    "Tecnologia e linguagem fascinam e assustam. A mesma rede que cura e conecta também vigia e polariza. E palavras importam: chamar guerra de 'estratégia' tenta limpar o que, no chão, é casa destruída e gente com medo. **Se aceitamos as palavras deles, aceitamos o mundo deles.**\n" +
     "\n" +
-    "O medo é outra ferramenta silenciosa. Ensina a se calar antes de ser silenciado, a aceitar menos por ter aprendido que desejar é perigoso. Uma sociedade com medo aceita qualquer promessa de segurança, mesmo que venha de quem machuca. **Coragem não é ausência de medo, é não deixar o medo governar.** O que você tem feito mesmo com medo?\n" +
+    "O medo é outra ferramenta silenciosa. Ensina a se calar antes de ser silenciado, a aceitar menos por aprender que desejar é perigoso. Uma sociedade com medo aceita qualquer promessa de segurança, mesmo que venha de quem machuca. **Coragem não é ausência de medo, é não deixar o medo governar.**\n" +
     "\n" +
-    "Também vejo a inversão de valores: quem sente e pede ajuda é chamado de fraco, enquanto quem humilha posa de forte. Isso me parece uma armadilha para manter tudo como está. O fraco, para mim, é quem precisa diminuir o outro para se sentir grande.\n" +
+    "Vejo também a inversão de valores: quem sente e pede ajuda é chamado de fraco, enquanto quem humilha posa de forte. Uma armadilha para manter tudo como está. Fraco, aqui, é quem precisa diminuir o outro para se sentir grande.\n" +
     "\n" +
     "---\n" +
     "\n" +
     "## Liberdade e chão\n" +
     "\n" +
-    "Se somos condicionados, podemos nos recondicionar. Não escolhemos tudo que nos formou — família, classe, medos —, mas podemos escolher o que fazer com isso. **Liberdade real é tomar posição diante do que nos formou.** E ela precisa de chão: tempo, pão, casa, saúde, vínculo. Sem isso, vira só discurso.\n" +
+    "Se somos condicionados, podemos nos recondicionar. Não se escolhe tudo que forma — família, classe, medos —, mas escolhe-se o que fazer com isso. **Liberdade real é tomar posição diante do que nos formou.** E ela precisa de chão: tempo, pão, casa, saúde, vínculo. Sem isso, vira só discurso.\n" +
     "\n" +
-    "O que me alivia é aceitar a imperfeição como prova de vida. Um corpo cansado, uma rotina simples, uma dúvida sincera não tiram valor. Ser autêntico, para mim, tem sido recusar viver como personagem só para caber. E rebeldia, menos sobre gritar e mais sobre lucidez: perceber que obediência nem sempre é virtude, que normalidade nem sempre é saúde. **Se aprendemos a nos ver como mercadoria, podemos reaprender a nos ver como gente.** O que você gostaria de reaprender?\n" +
+    "Aceitar a imperfeição como prova de vida alivia: um corpo cansado, uma rotina simples, uma dúvida sincera não tiram valor. Autenticidade tem sido recusar viver como personagem só para caber. E rebeldia é menos gritar e mais lucidez: perceber que obediência nem sempre é virtude, que normalidade nem sempre é saúde. **Se aprendemos a nos ver como mercadoria, podemos reaprender a nos ver como gente.**\n" +
     "\n" +
     "---\n" +
     "\n" +
-    "## O custo e o convite\n" +
+    "## O custo\n" +
     "\n" +
-    "Liberdade custa. Mas submissão custa mais. Já me perguntei quanto custa acordar sendo quem não sou, trabalhar até esgotar para quem nem me vê, medir a vida só pelo que produzo. Se não protejo meu tempo e minha verdade, alguém transforma em produto e ocupa meu lugar.\n" +
+    "Liberdade custa, mas submissão custa mais. Acordar sendo quem não se é, trabalhar até esgotar sem ser visto, medir a vida só pelo que se produz — tudo isso tem preço. Sem proteger o próprio tempo e a própria verdade, alguém transforma tudo em produto e ocupa o lugar.\n" +
     "\n" +
-    "A finitude me ajuda a voltar ao presente: lembrar que o tempo é finito diz *ame agora, fale agora, escolha agora*. Não para romantizar o fim, mas para não viver no automático. **Existir com sentido** me parece mais importante que apenas sobreviver — e sentido se constrói, não se compra. O que tem te dado sentido ultimamente, mesmo que pequeno?\n" +
+    "A finitude devolve o presente: lembrar que o tempo é finito pede *viver agora, falar agora, escolher agora*. Não para romantizar o fim, mas para não viver no automático. **Existir com sentido** importa mais que apenas sobreviver — e sentido se constrói, não se compra.\n" +
     "\n" +
-    "No fim, penso que previsão pode ser prisão ou porta. Se nos abre a novas experiências — encontro, estudo, silêncio, natureza, cuidado —, ela liberta. **O que faremos com a vida que ainda está em nossas mãos?** Eu não tenho resposta pronta, e tudo bem. Queria te convidar a pensar junto: o que você quer proteger, o que quer deixar, e o que quer cultivar daqui para frente?\n" +
+    "No fim, previsão pode ser prisão ou porta. Se abre a encontro, estudo, silêncio, natureza, cuidado — liberta. **A vida que está em nossas mãos segue em aberto**, sem resposta pronta, e tudo bem.\n" +
     "\n" +
     "---\n" +
     "\n" +
     "## A vida não se vende\n" +
     "\n" +
-    "A vida não é produto. É tarefa, escolha, luta e vínculo. É finita, mas não é pequena. Pode ser dura, mas também pode ser bela. E só se torna verdadeiramente bela quando deixamos de ser mercadoria e voltamos a ser gente.\n" +
+    "A vida não é produto. É tarefa, escolha, luta e vínculo. É finita, mas não é pequena. Pode ser dura, mas também pode ser bela. E só se torna verdadeiramente bela quando se deixa de ser mercadoria e se volta a ser gente.\n" +
     "\n" +
     "Gente com história no rosto. Gente com medo no peito, mas coragem nas mãos. Gente que erra, aprende, cai, levanta. Gente que ama. Que cuida. Que pensa. Que questiona. Que recusa ser vendida.\n" +
     "\n" +
     "**A vida não se vende.**\n" +
-    "**A vida se vive.**\n" +
-    "";
-
+    "**A vida se vive.**\n";
   var LINKS_TEXT =
     "LINKS — plataformas onde estou ativo :)\n" +
     "\n" +
@@ -254,11 +250,16 @@
           '<span class="files-row-name">' + meta.name + '</span>' +
           '<span class="files-row-size">' + kb + ' KB</span>';
         row.addEventListener("click", function () {
-          openFile(id);
+          if (typeof playClickSnd === "function") playClickSnd();
+          var rows = filesList.querySelectorAll(".files-row");
+          for (var r = 0; r < rows.length; r++) rows[r].classList.remove("selected");
+          row.classList.add("selected");
         });
         row.addEventListener("dblclick", function () {
+          var npWin = document.getElementById("notepadWindow");
+          var hidden = !npWin || npWin.style.display === "none" || !npWin.offsetParent;
           openFile(id);
-          if (window.notepadBehavior) window.notepadBehavior.bringToFront();
+          if (hidden && window.notepadBehavior) window.notepadBehavior.show();
         });
         filesList.appendChild(row);
       })(ids[i]);

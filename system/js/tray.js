@@ -319,8 +319,9 @@
       "</span>" +
       '<div class="volume-slider-wrap" id="volSliderWrap">' +
       '<div class="volume-track">' +
+      '<div class="volume-fill" id="volFill">' +
       '<div class="volume-live-fill" id="volLiveFill"></div>' +
-      '<div class="volume-fill" id="volFill"></div>' +
+      "</div>" +
       "</div>" +
       '<div class="volume-thumb" id="volThumb"></div>' +
       "</div>" +

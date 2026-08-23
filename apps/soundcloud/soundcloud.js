@@ -1035,14 +1035,28 @@
           const meta = document.getElementById("scMetaWindow");
           const pl = document.getElementById("scPlaylistWin");
           const gaps = 24; // 2 gaps de 6px entre as 3 linhas + folga
-          const fixedH =
-            (meta ? meta.offsetHeight : 0) + (pl ? pl.offsetHeight : 0) + gaps;
+          // altura BASE da playlist: ignora o que o usuário esticou
+          // com a alça, para não esmagar a artwork no recálculo
+          const plH = pl
+            ? Math.max(0, pl.offsetHeight - (pl.__plGrowExtra || 0))
+            : 0;
+          const fixedH = (meta ? meta.offsetHeight : 0) + plH + gaps;
           const avail = el.clientHeight - 12 - fixedH;
           let side = Math.min(avail, Math.round(el.clientWidth * 0.5));
           side = Math.max(120, Math.round(side));
           el.style.setProperty("--art-side", side + "px");
         })
       );
+    }
+
+    function resetPlaylistGrow() {
+      const bar = document.getElementById("scPlaylistBar");
+      const plWin = document.getElementById("scPlaylistWin");
+      if (bar) bar.style.removeProperty("max-height");
+      if (plWin) {
+        plWin.__plGrowExtra = 0;
+        plWin.__plBaseBarH = null;
+      }
     }
 
     function checkLarge() {
@@ -1058,9 +1072,13 @@
           const p = document.getElementById(id);
           if (p) ["width", "height", "left", "top", "right"].forEach((k) => (p.style[k] = ""));
         });
+        resetPlaylistGrow();
       }
-      if (!large && prev && typeof window.__scMdiClamp === "function") {
-        window.__scMdiClamp();
+      if (!large && prev) {
+        resetPlaylistGrow();
+        if (typeof window.__scMdiClamp === "function") {
+          window.__scMdiClamp();
+        }
       }
       applyLargeSizing();
       updatePlaylistMinHeight();
@@ -1081,6 +1099,46 @@
     window.addEventListener("resize", () => setTimeout(checkLarge, 50));
     document.addEventListener("fullscreenchange", () => setTimeout(checkLarge, 100));
     checkLarge();
+
+    // ============================================================
+    // Alça de crescimento da playlist no modo grande:
+    // estica a janela usando apenas a folga livre da coluna
+    // ============================================================
+    (function () {
+      const plWin = document.getElementById("scPlaylistWin");
+      const bar = document.getElementById("scPlaylistBar");
+      const grow = document.getElementById("scPlGrow");
+      if (!plWin || !bar || !grow) return;
+      let st = null;
+      function freeSpace() {
+        const art = document.getElementById("scArtworkWin");
+        const meta = document.getElementById("scMetaWindow");
+        if (!art) return 0;
+        const ar = art.getBoundingClientRect();
+        const nextTop = meta && meta.getBoundingClientRect().height
+          ? meta.getBoundingClientRect().top
+          : plWin.getBoundingClientRect().top;
+        return Math.max(0, nextTop - ar.bottom - 6);
+      }
+      grow.addEventListener("mousedown", function (e) {
+        if (!el.classList.contains("sc-large")) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (plWin.__plBaseBarH == null) plWin.__plBaseBarH = bar.offsetHeight;
+        const h = bar.offsetHeight;
+        st = { y: e.clientY, h: h, max: h + freeSpace() };
+      });
+      document.addEventListener("mousemove", function (e) {
+        if (!st) return;
+        const nh = Math.max(
+          96,
+          Math.min(st.h + (e.clientY - st.y), Math.max(st.max, st.h))
+        );
+        bar.style.maxHeight = nh + "px";
+        plWin.__plGrowExtra = Math.max(0, nh - (plWin.__plBaseBarH || nh));
+      });
+      document.addEventListener("mouseup", function () { st = null; });
+    })();
   })();
 
   // ============================================================

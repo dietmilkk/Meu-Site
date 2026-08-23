@@ -1223,6 +1223,8 @@
     var minH = opts.minH || 90;
     var gap = opts.gap || 0;
     var obstacle = opts.obstacle || null;
+    var square = !!opts.square;
+    var margin = opts.margin != null ? opts.margin : 6;
 
     var dragState = null;
     var resizeState = null;
@@ -1243,6 +1245,31 @@
     function isFloating() {
       if (document.body.classList.contains('mobile-mode')) return false;
       return getComputedStyle(panel).position === 'absolute';
+    }
+
+    // Mantém o painel 100% dentro do pai (sc-top-row)
+    function clampIntoParent() {
+      if (!isFloating()) return;
+      var pr = parent.getBoundingClientRect();
+      if (pr.width < 20 || pr.height < 20) return;
+      var availW = Math.max(40, Math.min(panel.offsetWidth, pr.width - margin * 2));
+      var availH = Math.max(40, Math.min(panel.offsetHeight, pr.height - margin * 2));
+      if (square) {
+        var side = Math.min(availW, availH);
+        availW = availH = side;
+      }
+      var r = panel.getBoundingClientRect();
+      var left = r.left - pr.left;
+      var top = r.top - pr.top;
+      left = Math.max(margin, Math.min(left, pr.width - margin - availW));
+      top = Math.max(margin, Math.min(top, pr.height - margin - availH));
+      global.__domWrite(function () {
+        panel.style.right = 'auto';
+        panel.style.left = left + 'px';
+        panel.style.top = top + 'px';
+        panel.style.width = availW + 'px';
+        panel.style.height = availH + 'px';
+      });
     }
 
     function raise() {
@@ -1336,33 +1363,52 @@
       var newW = s.startW, newH = s.startH;
       var edge = s.edge;
 
-      if (edge.indexOf('l') !== -1) {
-        newL = newL + dx;
-        newW = s.startW - dx;
-        if (newW < minW) { newW = minW; newL = s.startLeft + s.startW - minW - pr.left; }
-        newL = Math.max(0, newL);
-        newW = Math.min(newW, pr.width - newL);
-      } else if (edge.indexOf('r') !== -1) {
-        newW = s.startW + dx;
-        newW = Math.max(minW, Math.min(newW, pr.width - newL));
+      if (square) {
+        var side;
+        if (edge === 'l' || edge === 'r') side = newW + (edge === 'l' ? -dx : dx);
+        else if (edge === 't' || edge === 'b') side = newH + (edge === 't' ? -dy : dy);
+        else side = Math.max(newW, newH) + Math.max(dx, dy);
+        var maxSideW = pr.width - margin * 2, maxSideH = pr.height - margin * 2;
+        side = Math.max(Math.min(minW, maxSideW), Math.min(side, maxSideW));
+        side = Math.max(Math.min(minH, maxSideH), Math.min(side, maxSideH));
+        if (edge.indexOf('l') !== -1) newL = (s.startLeft - pr.left) + s.startW - side;
+        if (edge.indexOf('t') !== -1) newT = (s.startTop - pr.top) + s.startH - side;
+        newW = newH = side;
+      } else {
+        if (edge.indexOf('l') !== -1) {
+          newL = newL + dx;
+          newW = s.startW - dx;
+          if (newW < minW) { newW = minW; newL = s.startLeft + s.startW - minW - pr.left; }
+          newL = Math.max(0, newL);
+          newW = Math.min(newW, pr.width - newL);
+        } else if (edge.indexOf('r') !== -1) {
+          newW = s.startW + dx;
+          newW = Math.max(minW, Math.min(newW, pr.width - newL));
+        }
+
+        if (edge.indexOf('t') !== -1) {
+          newT = newT + dy;
+          newH = s.startH - dy;
+          if (newH < minH) { newH = minH; newT = s.startTop + s.startH - minH - pr.top; }
+          newT = Math.max(0, newT);
+          newH = Math.min(newH, pr.height - newT);
+        } else if (edge.indexOf('b') !== -1) {
+          newH = s.startH + dy;
+          newH = Math.max(minH, Math.min(newH, pr.height - newT));
+        }
       }
 
-      if (edge.indexOf('t') !== -1) {
-        newT = newT + dy;
-        newH = s.startH - dy;
-        if (newH < minH) { newH = minH; newT = s.startTop + s.startH - minH - pr.top; }
-        newT = Math.max(0, newT);
-        newH = Math.min(newH, pr.height - newT);
-      } else if (edge.indexOf('b') !== -1) {
-        newH = s.startH + dy;
-        newH = Math.max(minH, Math.min(newH, pr.height - newT));
-      }
+      // Contenção: nunca sair do pai
+      newL = Math.max(margin, Math.min(newL, pr.width - margin - newW));
+      newT = Math.max(margin, Math.min(newT, pr.height - margin - newH));
 
       if (s.obs) {
         if (s.obs.isLeft && edge.indexOf('r') !== -1) {
-          newW = Math.min(newW, s.obs.left - gap - newL);
+          newW = Math.max(40, Math.min(newW, s.obs.left - gap - newL));
         } else if (!s.obs.isLeft && edge.indexOf('l') !== -1) {
+          newL = Math.min(newL, pr.width - margin - newW);
           newL = Math.max(newL, s.obs.right + gap);
+          newL = Math.min(newL, pr.width - margin - newW);
         }
       }
 
@@ -1380,9 +1426,18 @@
       panel.style.cursor = '';
     });
 
+    // Contenção inicial e ao redimensionar o pai (janela do player)
+    requestAnimationFrame(function () {
+      requestAnimationFrame(clampIntoParent);
+    });
+    if (typeof ResizeObserver === 'function' && parent) {
+      new ResizeObserver(function () { clampIntoParent(); }).observe(parent);
+    }
+
     return {
       isFloating: isFloating,
       raise: raise,
+      clampIntoParent: clampIntoParent,
     };
   };
 })(window);

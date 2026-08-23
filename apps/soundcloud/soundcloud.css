@@ -42,13 +42,10 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    background: #c0c0c0;
-    border: 3px solid;
-    border-color: var(--btn-bd);
-    box-shadow:
-        inset 2px 2px 0 var(--clr-hilight),
-        inset -2px -2px 0 var(--clr-shadow),
-        inset 1px 1px 0 #fff;
+    background: var(--clr-panel-bg);
+    border: 2px solid;
+    border-color: var(--clr-hilight) var(--clr-shadow) var(--clr-shadow) var(--clr-hilight);
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
 }
 
 #scPlaylistWin {

@@ -958,6 +958,7 @@
       gap: 6,
       minW: 200,
       minH: 120,
+      square: true,
     });
     plWin.classList.add("active");
   })();

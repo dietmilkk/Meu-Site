@@ -487,13 +487,13 @@
 }
 
 .sc-player.sc-large #scPlaylistWin .sc-playlist-bar {
-    max-height: 96px;
+    max-height: 38vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .sc-player.sc-large #scPlaylistItems {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
+    flex-wrap: wrap;
 }
 
 .sc-player.sc-large .sc-track-list-wrap {

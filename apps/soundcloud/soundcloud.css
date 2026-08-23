@@ -419,7 +419,7 @@
 .sc-player.sc-large {
     display: grid;
     grid-template-columns: 1fr auto;
-    grid-template-rows: 1fr auto auto;
+    grid-template-rows: minmax(0, 1fr) auto auto;
     height: 100%;
     gap: 6px;
     padding: 6px;
@@ -432,11 +432,12 @@
 }
 
 .sc-player.sc-large .sc-child-win {
-    position: static;
-    left: auto;
-    top: auto;
-    width: auto;
-    height: auto;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    width: auto !important;
+    height: auto !important;
     z-index: auto;
     border: none;
     box-shadow: none;
@@ -447,12 +448,9 @@
 .sc-player.sc-large #scArtworkWin {
     grid-column: 2;
     grid-row: 1;
-    width: auto !important;
-    height: 100% !important;
-    aspect-ratio: 1 / 1;
-    max-width: 100%;
-    max-height: 100%;
-    place-self: center;
+    width: var(--art-side, 240px) !important;
+    height: var(--art-side, 240px) !important;
+    place-self: start center;
     border: 3px solid;
     border-color: var(--btn-bd);
     box-shadow:
@@ -476,13 +474,26 @@
 .sc-player.sc-large #scPlaylistWin {
     grid-column: 2;
     grid-row: 3;
-    width: 100%;
+    width: var(--art-side, 240px) !important;
+    min-width: 0;
+    justify-self: center;
+    overflow: hidden;
     border: 3px solid;
     border-color: var(--btn-bd);
     box-shadow:
         inset 2px 2px 0 var(--clr-hilight),
         inset -2px -2px 0 var(--clr-shadow),
         inset 1px 1px 0 #fff;
+}
+
+.sc-player.sc-large #scPlaylistWin .sc-playlist-bar {
+    max-height: 96px;
+}
+
+.sc-player.sc-large #scPlaylistItems {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .sc-player.sc-large .sc-track-list-wrap {
@@ -509,6 +520,10 @@
 .sc-player.sc-large .sc-meta-window {
     grid-column: 2;
     grid-row: 2;
+    width: var(--art-side, 240px) !important;
+    min-width: 0;
+    justify-self: center;
+    overflow: hidden;
     border: 3px solid;
     border-color: var(--btn-bd);
     box-shadow:
@@ -529,6 +544,26 @@
     box-shadow: none;
     background: transparent;
     padding: 0;
+    min-width: 0;
+}
+
+.sc-player.sc-large .sc-meta-window .sc-progress-container,
+.sc-player.sc-large .sc-meta-window .sc-controls-row {
+    max-width: 100%;
+}
+
+.sc-player.sc-large .sc-meta-window .sc-time {
+    font-size: 11px;
+}
+
+.sc-player.sc-large .sc-meta-window .sc-artist-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sc-player.sc-large .sc-meta-window .sc-controls-row {
+    flex-wrap: wrap;
 }
 
 .sc-player.sc-large .sc-info .sc-track-name,

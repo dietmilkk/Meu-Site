@@ -943,7 +943,7 @@
     const artWin = document.getElementById("scArtworkWin");
     if (!topRow || !plWin || !artWin) return;
     if (typeof window.createChildPanel !== "function") return;
-    window.createChildPanel(plWin, {
+    const plApi = window.createChildPanel(plWin, {
       parent: topRow,
       handle: document.getElementById("scPlaylistDrag"),
       obstacle: artWin,
@@ -951,7 +951,7 @@
       minW: 140,
       minH: 80,
     });
-    window.createChildPanel(artWin, {
+    const artApi = window.createChildPanel(artWin, {
       parent: topRow,
       handle: document.getElementById("scArtworkDrag"),
       obstacle: plWin,
@@ -960,6 +960,10 @@
       minH: 120,
       square: true,
     });
+    window.__scMdiClamp = function () {
+      try { plApi.clampIntoParent(); } catch (e) {}
+      try { artApi.clampIntoParent(); } catch (e) {}
+    };
     plWin.classList.add("active");
   })();
 
@@ -973,12 +977,44 @@
     if (!el) return;
     const winEl = win;
 
+    function applyLargeSizing() {
+      if (!el.classList.contains("sc-large")) {
+        el.style.removeProperty("--art-side");
+        return;
+      }
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          const meta = document.getElementById("scMetaWindow");
+          const pl = document.getElementById("scPlaylistWin");
+          const gaps = 24; // 2 gaps de 6px entre as 3 linhas + folga
+          const fixedH =
+            (meta ? meta.offsetHeight : 0) + (pl ? pl.offsetHeight : 0) + gaps;
+          const avail = el.clientHeight - 12 - fixedH;
+          let side = Math.min(avail, Math.round(el.clientWidth * 0.5));
+          side = Math.max(120, Math.round(side));
+          el.style.setProperty("--art-side", side + "px");
+        })
+      );
+    }
+
     function checkLarge() {
       const measure = winEl && winEl.getBoundingClientRect().width
         ? winEl.getBoundingClientRect().width
         : el.getBoundingClientRect().width;
       const large = measure >= 900;
+      const prev = el.classList.contains("sc-large");
       el.classList.toggle("sc-large", large);
+      if (large && !prev) {
+        // limpa estilos inline do modo MDI para o grid assumir
+        ["scPlaylistWin", "scArtworkWin"].forEach((id) => {
+          const p = document.getElementById(id);
+          if (p) ["width", "height", "left", "top", "right"].forEach((k) => (p.style[k] = ""));
+        });
+      }
+      if (!large && prev && typeof window.__scMdiClamp === "function") {
+        window.__scMdiClamp();
+      }
+      applyLargeSizing();
       if (elBtnHideArt) {
         elBtnHideArt.disabled = large;
         elBtnHideArt.classList.toggle("sc-hide-btn-disabled", large);

@@ -566,33 +566,119 @@
   }
 
   // ============================================================
-  // Artwork
+  // Artwork — com limitador de taxa para ver carregamento progressivo
   // ============================================================
+  const ART_RATE_KBPS = 80;
+  const ART_ESTIMATE_BYTES = 280 * 1024;
+  let artLoadToken = 0;
+
+  async function fetchWithThrottle(url, onProgress) {
+    const res = await fetch(url);
+    if (!res.ok || !res.body) throw new Error("fetch failed " + res.status);
+    const reader = res.body.getReader();
+    const chunks = [];
+    let loaded = 0;
+    let total = parseInt(res.headers.get("content-length") || "0", 10);
+    if (!total) total = ART_ESTIMATE_BYTES;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      loaded += value.length;
+      if (onProgress) onProgress(Math.min((loaded / total) * 100, loaded < total ? 95 : 100));
+      // throttling: delay proporcional ao tamanho do chunk
+      const delayMs = (value.length / (ART_RATE_KBPS * 1024)) * 1000;
+      if (delayMs > 0) await new Promise(r => setTimeout(r, delayMs));
+    }
+    const blob = new Blob(chunks);
+    return URL.createObjectURL(blob);
+  }
+
+  function showArtProgress(pct) {
+    let bar = document.getElementById("scArtProgress");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "scArtProgress";
+      bar.style.cssText = "position:absolute; left:0; bottom:0; height:4px; background:var(--clr-highlight); width:0%; transition: width 0.08s linear; z-index:3; pointer-events:none;";
+      const wrap = document.getElementById("scArtwork");
+      if (wrap) wrap.appendChild(bar);
+    }
+    bar.style.width = Math.max(0, Math.min(100, pct)) + "%";
+    bar.style.display = pct >= 100 ? "none" : "block";
+  }
+
   function loadArt(idx) {
     const track = trackList && trackList[idx];
     if (!track || !track.artwork) {
       elArtImg.style.display = "none";
+      showArtProgress(100);
       return;
     }
-    elArtImg.onload = () => {};
-    elArtImg.onerror = () => {
-      elArtImg.style.display = "none";
-    };
-    elArtImg.src = track.artwork;
+    const token = ++artLoadToken;
     elArtImg.style.display = "block";
+    elArtImg.style.opacity = "0.35";
+    elArtImg.style.filter = "blur(6px)";
+    elArtImg.style.transition = "opacity 0.3s ease, filter 0.3s ease";
+    showArtProgress(0);
+    fetchWithThrottle(track.artwork, (pct) => {
+      if (token !== artLoadToken) return;
+      showArtProgress(pct);
+    }).then(url => {
+      if (token !== artLoadToken) return;
+      elArtImg.onload = () => {
+        elArtImg.style.opacity = "1";
+        elArtImg.style.filter = "blur(0px)";
+        showArtProgress(100);
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+      };
+      elArtImg.onerror = () => {
+        elArtImg.style.display = "none";
+        showArtProgress(100);
+      };
+      elArtImg.src = url;
+    }).catch(() => {
+      if (token !== artLoadToken) return;
+      // fallback direto sem throttle
+      elArtImg.style.opacity = "1";
+      elArtImg.style.filter = "blur(0px)";
+      elArtImg.src = track.artwork;
+      showArtProgress(100);
+    });
   }
 
   function setArt(src) {
     if (!src) {
       elArtImg.style.display = "none";
+      showArtProgress(100);
       return;
     }
-    elArtImg.onerror = () => {
-      elArtImg.style.display = "none";
-    };
-    elArtImg.onload = () => {};
-    elArtImg.src = src;
+    const token = ++artLoadToken;
     elArtImg.style.display = "block";
+    elArtImg.style.opacity = "0.35";
+    elArtImg.style.filter = "blur(6px)";
+    showArtProgress(0);
+    fetchWithThrottle(src, (pct) => {
+      if (token !== artLoadToken) return;
+      showArtProgress(pct);
+    }).then(url => {
+      if (token !== artLoadToken) return;
+      elArtImg.onload = () => {
+        elArtImg.style.opacity = "1";
+        elArtImg.style.filter = "blur(0px)";
+        showArtProgress(100);
+      };
+      elArtImg.onerror = () => {
+        elArtImg.style.display = "none";
+        showArtProgress(100);
+      };
+      elArtImg.src = url;
+    }).catch(() => {
+      if (token !== artLoadToken) return;
+      elArtImg.style.opacity = "1";
+      elArtImg.style.filter = "blur(0px)";
+      elArtImg.src = src;
+      showArtProgress(100);
+    });
   }
 
   // ============================================================

@@ -1,0 +1,662 @@
+/* ===== CLUB APP — Patreon-style content with payment gate ===== */
+
+.club-window {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--clr-window-bg, #c0c0c0);
+    font-family: var(--ff-ui, "Tahoma", "MS Sans Serif", sans-serif);
+    font-size: 13px;
+    color: var(--clr-text, #000);
+}
+
+.club-header {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    background: linear-gradient(180deg, var(--clr-title-bar, #000080) 0%, #000060 100%);
+    border-bottom: 2px solid;
+    border-color: var(--clr-hilight) var(--clr-shadow);
+    color: var(--clr-title-text, #fff);
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.club-header-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.club-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    background: radial-gradient(circle at 30% 30%, #ff6b9d, #c44569);
+    box-shadow: inset 1px 1px 0 #ffb3c6, inset -1px -1px 0 #803040;
+    flex-shrink: 0;
+}
+
+.club-title-group {
+    flex: 1;
+    min-width: 0;
+}
+
+.club-name {
+    font-size: 15px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.club-subtitle {
+    font-size: 11px;
+    font-weight: normal;
+    opacity: 0.85;
+    margin-top: 1px;
+}
+
+.club-tier-badge {
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: bold;
+    border: 1px solid;
+    border-radius: 3px;
+    background: var(--clr-btn-bg, #c0c0c0);
+    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+    white-space: nowrap;
+}
+
+.club-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Payment gate screen */
+.club-gate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 24px;
+    text-align: center;
+    gap: 16px;
+}
+
+.club-gate-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid;
+    border-color: var(--clr-hilight) var(--clr-shadow) var(--clr-shadow) var(--clr-hilight);
+    background: radial-gradient(circle at 30% 30%, #ffeaa7, #fdcb6e);
+    box-shadow: inset 2px 2px 0 #fff9c4, inset -2px -2px 0 #e6c050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+}
+
+.club-gate-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--clr-text, #000);
+}
+
+.club-gate-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--clr-text-dim, #404040);
+    max-width: 380px;
+}
+
+.club-gate-benefits {
+    background: var(--clr-panel-bg, #c0c0c0);
+    border: 2px solid;
+    border-color: var(--clr-border-dark) var(--clr-border-light) var(--clr-border-light) var(--clr-border-dark);
+    padding: 16px;
+    width: 100%;
+    max-width: 400px;
+    text-align: left;
+}
+
+.club-gate-benefits h4 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--clr-border-dark);
+    padding-bottom: 4px;
+}
+
+.club-gate-benefits ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--clr-text, #000);
+}
+
+.club-gate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: bold;
+    font-family: inherit;
+    color: #fff;
+    background: linear-gradient(180deg, #e74c3c, #c0392b);
+    border: 2px solid;
+    border-color: #f5a9a9 #8b2d2d #8b2d2d #f5a9a9;
+    cursor: pointer;
+    box-shadow: inset 1px 1px 0 #fadbd8, inset -1px -1px 0 #7b2424;
+    transition: all 0.08s;
+}
+
+.club-gate-btn:hover {
+    background: linear-gradient(180deg, #ec7063, #e74c3c);
+}
+
+.club-gate-btn:active {
+    background: linear-gradient(180deg, #c0392b, #962d1e);
+    border-color: #8b2d2d #f5a9a9 #f5a9a9 #8b2d2d;
+    transform: scale(0.98);
+}
+
+.club-gate-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.club-gate-note {
+    font-size: 11px;
+    color: var(--clr-text-dim, #606060);
+    max-width: 400px;
+}
+
+/* Content area (after payment) */
+.club-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.club-nav {
+    flex-shrink: 0;
+    display: flex;
+    background: var(--clr-panel-bg, #c0c0c0);
+    border-bottom: 2px solid;
+    border-color: var(--clr-border-dark) var(--clr-border-light);
+    padding: 4px 8px;
+    gap: 4px;
+}
+
+.club-nav-btn {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: inherit;
+    color: var(--clr-text, #000);
+    background: var(--clr-btn-bg, #c0c0c0);
+    border: 2px solid;
+    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
+    cursor: pointer;
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+    transition: all 0.06s;
+}
+
+.club-nav-btn:hover {
+    background: var(--clr-hilight, #000080);
+    color: var(--clr-text-on-highlight, #fff);
+    border-color: var(--clr-hilight) var(--clr-hilight) var(--clr-hilight) var(--clr-hilight);
+}
+
+.club-nav-btn.active {
+    background: var(--clr-hilight, #000080);
+    color: var(--clr-text-on-highlight, #fff);
+    border-color: var(--clr-border-dark) var(--clr-border-light) var(--clr-border-light) var(--clr-border-dark);
+    box-shadow: inset 1px 1px 0 #000060, inset -1px -1px 0 #000040;
+}
+
+.club-feed {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px;
+    background: var(--clr-window-bg, #c0c0c0);
+}
+
+.club-post {
+    background: #fff;
+    border: 2px solid;
+    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #c0c0c0;
+    margin-bottom: 12px;
+    padding: 12px;
+    position: relative;
+}
+
+.club-post-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.club-post-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    background: radial-gradient(circle at 30% 30%, #ff6b9d, #c44569);
+    flex-shrink: 0;
+}
+
+.club-post-author {
+    flex: 1;
+    min-width: 0;
+}
+
+.club-post-name {
+    font-weight: bold;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.club-post-meta {
+    font-size: 10px;
+    color: var(--clr-text-dim, #606060);
+}
+
+.club-post-tier-tag {
+    padding: 1px 6px;
+    font-size: 9px;
+    font-weight: bold;
+    border-radius: 2px;
+    background: var(--clr-hilight, #000080);
+    color: var(--clr-text-on-highlight, #fff);
+    white-space: nowrap;
+}
+
+.club-post-body {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--clr-text, #000);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.club-post-media {
+    margin-top: 10px;
+    border-top: 1px solid var(--clr-border-dark);
+    padding-top: 10px;
+}
+
+.club-post-media img,
+.club-post-media video,
+.club-post-media audio {
+    max-width: 100%;
+    border: 1px solid var(--clr-border-dark);
+    background: #000;
+    display: block;
+}
+
+.club-post-media audio {
+    width: 100%;
+    height: 32px;
+}
+
+.club-post-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--clr-border-dark);
+}
+
+.club-action-btn {
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    font-family: inherit;
+    background: var(--clr-btn-bg, #c0c0c0);
+    border: 2px solid;
+    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
+    cursor: pointer;
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+    color: var(--clr-text, #000);
+    transition: all 0.06s;
+}
+
+.club-action-btn:hover {
+    background: var(--clr-hilight, #000080);
+    color: var(--clr-text-on-highlight, #fff);
+}
+
+.club-action-btn.liked {
+    background: #e74c3c;
+    color: #fff;
+    border-color: #c0392b #f5a9a9 #f5a9a9 #c0392b;
+}
+
+.club-post-comments {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--clr-border-dark);
+}
+
+.club-comment {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--clr-border-dark);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.club-comment:last-child {
+    border-bottom: none;
+}
+
+.club-comment-header {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+.club-comment-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--clr-border-dark);
+    background: radial-gradient(circle at 30% 30%, #74b9ff, #0984e3);
+    flex-shrink: 0;
+}
+
+.club-comment-author {
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.club-comment-time {
+    font-size: 10px;
+    color: var(--clr-text-dim, #808080);
+    margin-left: auto;
+}
+
+.club-comment-text {
+    margin-left: 30px;
+    color: var(--clr-text, #000);
+}
+
+.club-comment-form {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.club-comment-input {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 12px;
+    font-family: inherit;
+    border: 2px solid;
+    border-color: var(--clr-border-dark) var(--clr-border-light) var(--clr-border-light) var(--clr-border-dark);
+    background: #fff;
+    box-shadow: inset 1px 1px 0 #c0c0c0;
+}
+
+.club-comment-input:focus {
+    outline: none;
+    border-color: var(--clr-hilight);
+}
+
+.club-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 12px;
+    color: var(--clr-text-dim, #606060);
+}
+
+.club-loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--clr-border-dark);
+    border-top-color: var(--clr-hilight, #000080);
+    border-radius: 50%;
+    animation: clubSpin 0.8s linear infinite;
+}
+
+@keyframes clubSpin {
+    to { transform: rotate(360deg); }
+}
+
+.club-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 24px;
+    color: var(--clr-text-dim, #606060);
+    gap: 8px;
+}
+
+.club-empty-icon {
+    font-size: 48px;
+    opacity: 0.4;
+}
+
+/* Tier selector modal (for payment flow) */
+.club-tier-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.club-tier-modal.hidden {
+    display: none;
+}
+
+.club-tier-box {
+    background: var(--clr-window-bg, #c0c0c0);
+    border: 3px solid;
+    border-color: var(--clr-hilight) var(--clr-shadow) var(--clr-shadow) var(--clr-hilight);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+    max-width: 480px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.club-tier-header {
+    padding: 10px 14px;
+    background: linear-gradient(180deg, var(--clr-title-bar, #000080) 0%, #000060 100%);
+    color: var(--clr-title-text, #fff);
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.club-tier-close {
+    width: 20px;
+    height: 20px;
+    border: 2px solid;
+    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
+    background: var(--clr-btn-bg, #c0c0c0);
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+    color: var(--clr-title-text, #fff);
+}
+
+.club-tier-close:hover {
+    background: #e74c3c;
+    border-color: #8b2d2d #f5a9a9 #f5a9a9 #8b2d2d;
+}
+
+.club-tier-list {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.club-tier-card {
+    background: var(--clr-panel-bg, #c0c0c0);
+    border: 2px solid;
+    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.06s;
+    position: relative;
+}
+
+.club-tier-card:hover {
+    border-color: var(--clr-hilight);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight);
+}
+
+.club-tier-card.featured {
+    border-color: #f39c12;
+    box-shadow: inset 1px 1px 0 #fef9e7, inset -1px -1px 0 #b7950b;
+}
+
+.club-tier-card.featured::before {
+    content: "✦ RECOMENDADO";
+    position: absolute;
+    top: -8px;
+    left: 14px;
+    font-size: 9px;
+    font-weight: bold;
+    color: #b7950b;
+    background: var(--clr-panel-bg, #c0c0c0);
+    padding: 0 6px;
+}
+
+.club-tier-name {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.club-tier-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--clr-hilight, #000080);
+    margin-bottom: 8px;
+}
+
+.club-tier-features {
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--clr-text, #000);
+    margin-bottom: 10px;
+}
+
+.club-tier-select {
+    width: 100%;
+    padding: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: inherit;
+    background: linear-gradient(180deg, #27ae60, #1e8c49);
+    color: #fff;
+    border: 2px solid;
+    border-color: #7dcea0 #145a32 #145a32 #7dcea0;
+    cursor: pointer;
+    box-shadow: inset 1px 1px 0 #a9dfbf, inset -1px -1px 0 #145a32;
+}
+
+.club-tier-select:hover {
+    background: linear-gradient(180deg, #2ecc71, #27ae60);
+}
+
+/* Hotmart iframe container (placeholder) */
+.club-hotmart-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+    display: block;
+}
+
+.club-hotmart-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    background: #fff;
+}
+
+.club-hotmart-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.03);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Scrollbar styling for club feed */
+.club-feed::-webkit-scrollbar {
+    width: 14px;
+}
+
+.club-feed::-webkit-scrollbar-track {
+    background: var(--clr-btn-bg, #c0c0c0);
+    border: 1px solid var(--clr-border-dark);
+}
+
+.club-feed::-webkit-scrollbar-thumb {
+    background: var(--clr-btn-bg, #c0c0c0);
+    border: 2px solid;
+    border-color: var(--clr-hilight) var(--clr-shadow) var(--clr-shadow) var(--clr-hilight);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+}
+
+.club-feed::-webkit-scrollbar-thumb:hover {
+    background: var(--clr-hilight, #000080);
+}
+
+.club-feed::-webkit-scrollbar-corner {
+    background: var(--clr-btn-bg, #c0c0c0);
+}
+
+/* Status bar */
+.club-status {
+    flex-shrink: 0;
+    padding: 3px 8px;
+    font-size: 11px;
+    color: var(--clr-text-dim, #606060);
+    background: var(--clr-panel-bg, #c0c0c0);
+    border-top: 1px solid var(--clr-border-light);
+    border-bottom: 1px solid var(--clr-border-dark);
+}

@@ -164,6 +164,20 @@
                         >
                     </div>
 
+                    <div class="desk-icon" data-action="club">
+                        <span class="di-icon">
+                            <img
+                                src="system/assets/icons/tango2kde/48x48/apps/korganizer.png"
+                                alt=""
+                                width="36"
+                                height="36"
+                            />
+                        </span>
+                        <span class="di-label" data-i18n="desktop.club"
+                            >Clube NSUM</span
+                        >
+                    </div>
+
                     <div class="desk-icon" data-action="settings">
                         <span class="di-icon">
                             <img
@@ -873,6 +887,89 @@
                     </div>
                 </div>
 
+                <!-- ===== CLUB (Patreon-style content with Hotmart payment) ===== -->
+                <div class="window" id="clubWindow" style="display: none; width: 640px; height: 720px;">
+                    <div class="title-bar" id="clubDragHandle">
+                        <span class="title-bar-text">
+                            <span class="icon">
+                                <img
+                                    src="system/assets/icons/tango2kde/16x16/apps/korganizer.png"
+                                    alt=""
+                                    width="14"
+                                    height="14"
+                                />
+                            </span>
+                            <span data-i18n="club.title">Clube NSUM</span>
+                        </span>
+                        <script>
+                            document.write(createWindowButtons("club"));
+                        </script>
+                    </div>
+                    <div class="window-body" id="clubBody">
+                        <!-- Tela de pagamento/bloqueio -->
+                        <div class="club-gate" id="clubGateScreen" style="display: none;">
+                            <div class="club-gate-icon">🔒</div>
+                            <h2 class="club-gate-title" data-i18n="club.gateTitle">Conteúdo Exclusivo</h2>
+                            <p class="club-gate-desc" data-i18n="club.gateDesc">
+                                Este é um espaço de conteúdo profundo, bastidores, arquivos exclusivos e conversas
+                                que não cabem nas redes sociais. O acesso é restrito a membros do clube.
+                            </p>
+                            <div class="club-gate-benefits">
+                                <h4 data-i18n="club.gateBenefits">O que você ganha ao entrar:</h4>
+                                <ul>
+                                    <li data-i18n="club.benefit1">Posts semanais exclusivos (textos, áudios, imagens, vídeos)</li>
+                                    <li data-i18n="club.benefit2">Conteúdo antecipado (48h antes do público)</li>
+                                    <li data-i18n="club.benefit3">Acesso ao Discord privado da comunidade</li>
+                                    <li data-i18n="club.benefit4">Enquetes para decidir próximos temas e projetos</li>
+                                    <li data-i18n="club.benefit5">Downloads de wallpapers, ícones e assets em alta resolução</li>
+                                    <li data-i18n="club.benefit6">Lives mensais exclusivas + chamadas trimestrais (Fundadores)</li>
+                                </ul>
+                            </div>
+                            <button class="club-gate-btn" id="clubGateBtn" onclick="clubOpenTierModal()" data-i18n="club.gateBtn">
+                                🔓  Escolher plano e assinar via Hotmart
+                            </button>
+                            <p class="club-gate-note" data-i18n="club.gateNote">
+                                O pagamento é processado com segurança pela Hotmart. Após a confirmação,
+                                seu acesso é liberado instantaneamente. Pode cancelar quando quiser.
+                            </p>
+                        </div>
+
+                        <!-- Tela de conteúdo (após pagamento) -->
+                        <div class="club-content" id="clubContentScreen" style="display: none;">
+                            <div class="club-nav">
+                                <button class="club-nav-btn active" id="clubNavPosts" data-i18n="club.navPosts">📝 Posts</button>
+                                <button class="club-nav-btn" id="clubNavTiers" data-i18n="club.navTiers">💎 Meu Plano</button>
+                                <button class="club-nav-btn" id="clubNavCommunity" data-i18n="club.navCommunity">👥 Comunidade</button>
+                            </div>
+                            <div class="club-feed" id="clubFeed"></div>
+                            <div class="club-status" id="clubStatus">Verificando acesso...</div>
+                        </div>
+
+                        <!-- Modal de seleção de tier (Hotmart checkout) -->
+                        <div class="club-tier-modal hidden" id="clubTierModal">
+                            <div class="club-tier-box">
+                                <div class="club-tier-header">
+                                    <span data-i18n="club.modalTitle">Escolha seu plano</span>
+                                    <button class="club-tier-close" id="clubTierClose" aria-label="Fechar">×</button>
+                                </div>
+                                <div class="club-tier-list" id="clubTierList"></div>
+                            </div>
+                        </div>
+
+                        <!-- Container para iframe Hotmart (placeholder - pronto para uso) -->
+                        <div class="club-hotmart-container" id="clubHotmartContainer" style="display: none;">
+                            <!-- Quando for integrar o Hotmart real, descomente e configure:
+                            <iframe class="club-hotmart-frame"
+                                src="https://pay.hotmart.com/SEU_PRODUCT_ID?checkoutMode=10&bid=..."
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                            <div class="club-hotmart-overlay"></div>
+                            -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ===== REDE SOCIAL ===== -->
                 <div class="window" id="feedWindow" style="display: none">
                     <div class="title-bar" id="feedDragHandle">
@@ -972,6 +1069,10 @@
                                             <img src="system/assets/icons/tango2kde/16x16/apps/kaudiocreator.png" alt="" width="16" height="16" />
                                             <span data-i18n="start.soundcloud">Music Player</span>
                                         </div>
+                                        <div class="start-menu-item" data-action="club">
+                                            <img src="system/assets/icons/tango2kde/16x16/apps/korganizer.png" alt="" width="16" height="16" />
+                                            <span data-i18n="start.club">Clube NSUM</span>
+                                        </div>
                                         <div class="start-menu-item" data-action="games">
                                             <img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="16" height="16" />
                                             <span data-i18n="start.games">Jogos</span>
@@ -1069,6 +1170,7 @@
         <script src="apps/games/games.js"></script>
 
         <script src="apps/soundcloud/soundcloud.js"></script>
+        <script src="apps/club/club.js"></script>
         <!-- <script src="apps/feed/feed.js"></script> -->
 
         <script src="system/js/main.js"></script>

@@ -274,9 +274,11 @@
             '</div>'
         ) : "";
 
-        var tierTagHtml = post.tier !== "Público" ? (
+        var tierTagHtml = post.tier && post.tier !== "Público" ? (
             '<span class="club-post-tier-tag" style="background:' + escHtml(post.tierColor) + '">' + escHtml(post.tier) + '</span>'
-        ) : "";
+        ) : (post.tier === "Público" ? (
+            '<span class="club-post-tier-tag" style="background:#95a5a6">Público</span>'
+        ) : "");
 
         div.innerHTML =
             '<div class="club-post-header">' +
@@ -338,12 +340,28 @@
     function showGate() {
         if (gateScreen) gateScreen.style.display = "flex";
         if (contentScreen) contentScreen.style.display = "none";
+        var ubar = document.getElementById("clubUserBar");
+        if (ubar) ubar.style.display = "none";
+        if (hotmartContainer) hotmartContainer.style.display = "none";
+        if (feedEl) feedEl.innerHTML = "";
+        renderFeed();
         if (statusEl) statusEl.textContent = "Acesso restrito — faça login ou assine para continuar";
     }
 
     function showContent() {
         if (gateScreen) gateScreen.style.display = "none";
         if (contentScreen) contentScreen.style.display = "flex";
+        var ubar = document.getElementById("clubUserBar");
+        if (ubar) {
+            ubar.style.display = "flex";
+            var avatar = document.getElementById("clubUserAvatar");
+            var nameEl = document.getElementById("clubUserName");
+            var tierEl = document.getElementById("clubUserTier");
+            if (avatar && currentUser) avatar.style.background = TIER_DEFINITIONS.find(function(t){return t.id===currentUser.tier})?.color || "#95a5a6";
+            if (nameEl && currentUser) nameEl.textContent = currentUser.tierName || currentUser.tier || "Membro";
+            if (tierEl && currentUser) tierEl.textContent = currentUser.tier + " • expira em " + new Date(currentUser.expires).toLocaleDateString("pt-BR");
+        }
+        if (hotmartContainer) hotmartContainer.style.display = "none";
         if (statusEl) statusEl.textContent = "Conectado como " + (currentUser && currentUser.tier ? currentUser.tier : "Visitante");
         renderFeed();
     }
@@ -502,6 +520,11 @@
     window.clubSubmitComment = clubSubmitComment;
     window.clubSharePost = clubSharePost;
     window.simulateHotmartCallback = simulateHotmartCallback;
+    window.clubLogout = function () {
+        clearUserAccess();
+        showGate();
+    };
+    window.clubCheckAccess = checkAccess;
 
     // WindowBehavior
     if (typeof WindowBehavior !== "undefined" && win) {
@@ -549,7 +572,16 @@
     initNav();
     if (tierClose) tierClose.addEventListener("click", clubCloseTierModal);
     if (tierModal) tierModal.addEventListener("click", function (e) { if (e.target === tierModal) clubCloseTierModal(); });
+    var logoutBtn = document.getElementById("clubUserLogout");
+    if (logoutBtn) logoutBtn.addEventListener("click", function () { window.clubLogout(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && tierModal && !tierModal.classList.contains("hidden")) clubCloseTierModal(); });
+    // Reage a mudanças no localStorage (logout em outra aba, etc.)
+    window.addEventListener("storage", function (e) {
+        if (e.key === "clubUserAccess") {
+            currentUser = null;
+            checkAccess();
+        }
+    });
 
     postsData = SAMPLE_POSTS;
     checkAccess();

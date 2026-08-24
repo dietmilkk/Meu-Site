@@ -906,6 +906,18 @@
                         </script>
                     </div>
                     <div class="window-body" id="clubBody">
+                        <!-- Header com info do usuário (quando logado) -->
+                        <div class="club-user-bar" id="clubUserBar" style="display: none;">
+                            <div class="club-user-info">
+                                <span class="club-user-avatar" id="clubUserAvatar"></span>
+                                <div>
+                                    <div class="club-user-name" id="clubUserName"></div>
+                                    <div class="club-user-tier" id="clubUserTier"></div>
+                                </div>
+                            </div>
+                            <button class="club-user-logout" id="clubUserLogout" data-i18n="club.logout">Sair</button>
+                        </div>
+
                         <!-- Tela de pagamento/bloqueio -->
                         <div class="club-gate" id="clubGateScreen" style="display: none;">
                             <div class="club-gate-icon">🔒</div>

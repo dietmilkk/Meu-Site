@@ -233,6 +233,7 @@
       'club.navPosts': '📝 Posts',
       'club.navTiers': '💎 Meu Plano',
       'club.navCommunity': '👥 Comunidade',
+      'club.logout': 'Sair',
       'club.modalTitle': 'Escolha seu plano',
 
       /* Feed */
@@ -532,6 +533,7 @@
       'club.navPosts': '📝 Posts',
       'club.navTiers': '💎 My Plan',
       'club.navCommunity': '👥 Community',
+      'club.logout': 'Logout',
       'club.modalTitle': 'Choose your plan',
 
       /* Feed */
@@ -830,6 +832,7 @@
       'club.navPosts': '📝 动态',
       'club.navTiers': '💎 我的方案',
       'club.navCommunity': '👥 社区',
+      'club.logout': '退出',
       'club.modalTitle': '选择您的方案',
 
       /* Feed */

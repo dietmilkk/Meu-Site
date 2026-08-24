@@ -418,370 +418,44 @@
     startEqAnimation();
   }
 
-  /* ================================================================
-   *  SPECTRUM VISUALIZER — Matemática aplicada ao áudio
-   *  ----------------------------------------------------------------
-   *  Princípios:
-   *  • Mapeamento psicoacústico: loudness (dB SPL) → brilho/energia
-   *  • Análise espectral: 10 bandas bark → 48 barras via interpolação
-   *  • Física de molas adaptativas: amortecimento = f(energia, frequência)
-   *  • Ruído de Perlin 1D: movimento orgânico sem repetição óbvia
-   *  • Série harmônica: visualização de parciais (fundamental + harmônicos)
-   *  • Cor = f(energia, centroid espectral, fluxo espectral)
-   *  • Fase instantânea → deslocamento horizontal (onda viajante)
-   *  • Fluxo espectral → "brilho" e velocidade de propagação
-   *  ================================================================ */
-
-  /* ===== Constantes matemáticas ===== */
-  const SPECTRUM = {
-    N_BARS: 48,                    // barras visuais
-    N_BARK_BANDS: 10,              // bandas bark (psicoacústica)
-    SMOOTH_ATTACK: 0.35,           // ataque da mola (energia alta)
-    SMOOTH_RELEASE: 0.12,          // release da mola (energia baixa)
-    ENERGY_SMOOTH: 0.08,           // suavização da energia global
-    PERLIN_OCTAVES: 4,             // oitavas do ruído de Perlin
-    PERLIN_PERSISTENCE: 0.5,       // persistência do ruído
-    HARMONIC_MAX: 8,               // harmônicos visualizados
-    PHASE_SPEED_BASE: 0.02,        // velocidade base da fase
-    ENERGY_FLOOR: 0.001,           // piso de energia (evita zero)
-    CENTROID_WEIGHT: 0.6,          // peso do centroid espectral na cor
-    FLUX_WEIGHT: 0.4               // peso do fluxo espectral na cor
-  };
-
-  /* ===== Estado do visualizador ===== */
+  /* ===== Decorative live spectrum (moves with site + player audio) ===== */
   var _waveBars = [];
-  var _waveN = SPECTRUM.N_BARS;
-  var _waveSmooth = new Array(_waveN).fill(0);
-  var _waveSmoothPrev = new Array(_waveN).fill(0);
-  var _waveVelocity = new Array(_waveN).fill(0);        // velocidade para molas
-  var _waveT = 0;                                        // tempo global
-  var _waveLastLive = 0;
-  var _waveLastFrame = performance.now();
-  var _waveLastLive = 0;
-  var _energyGlobal = 0;
-  var _energyPrev = 0;
-  var _phaseAccum = 0;
-  var _phaseVelocity = 0;
-  var _beatCooldown = 0;
-  var _beatFlash = 0;
-  var _beatFlashDecay = 0;
-  var _lastPeak = 0;
-  var _beatCooldown = 0;
-  var _beatFlashDecay = 0;
-  var _waveSmooth = new Array(SPECTRUM.N_BARS).fill(0);
-  var _waveSmoothPrev = new Array(SPECTRUM.N_BARS).fill(0);
-  var _waveVelocity = new Array(SPECTRUM.N_BARS).fill(0);
-  var _eqAnimRunning = false;                            // flag de animação rodando
-  var _eqDragging = false;                               // flag de arraste em controles
-  var _trackEl = null;                                   // referência ao track element
-  var _energyGlobal = 0;           // energia global suavizada (0..1)
-  var _energyPrev = 0;             // frame anterior
-  var _spectralCentroid = 0;       // centroid espectral normalizado (0..1)
-  var _spectralFlux = 0;           // fluxo espectral (mudança entre frames)
-  var _spectralFlatness = 0;       // planicidade espectral (tonal vs ruído)
-  var _harmonicProfile = new Array(SPECTRUM.HARMONIC_MAX).fill(0); // perfil harmônico
-  var _phaseAccum = 0;             // acumulador de fase global
-  var _phaseVelocity = 0;          // velocidade de fase instantânea
-  var _lastSpectrum = null;        // espectro do frame anterior
+  var _waveN = 48;
 
-  /* Ruído de Perlin 1D para movimento orgânico */
-  var _perlinPerm = [];
-  var _perlinGrad = [];
-  (function initPerlin() {
-    for (var i = 0; i < 256; i++) _perlinPerm[i] = i;
-    for (var i = 255; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var t = _perlinPerm[i]; _perlinPerm[i] = _perlinPerm[j]; _perlinPerm[j] = t;
-    }
-    for (var i = 0; i < 256; i++) {
-      var angle = Math.random() * Math.PI * 2;
-      _perlinGrad[i] = { x: Math.cos(angle), y: Math.sin(angle) };
-    }
-    _perlinPerm = _perlinPerm.concat(_perlinPerm);
-    _perlinGrad = _perlinGrad.concat(_perlinGrad);
-  })();
+  /* Config das linhas moles: cores, espessura e personalidade de onda */
+  var _softCfg = [
+    { color: "rgba(30,110,255,0.85)", w: 3.5, step: 4, speed: 1.9,  freq: 0.42, wob: 7,  amp: 1.0,  yoff: -3 },
+    { color: "rgba(255,130,20,0.70)", w: 2.5, step: 6, speed: -2.6, freq: 0.27, wob: 11, amp: 0.62, yoff: -9 },
+    { color: "rgba(40,185,90,0.60)",  w: 2,   step: 8, speed: 3.4,  freq: 0.60, wob: 5,  amp: 0.38, yoff: -15 }
+  ];
+  var _softPts = null;   // pontos suavizados por linha (mola)
+  var _softEnergy = 0;   /* energia global suavizada (0..1) — dá o quique */
 
-  function perlin1D(x) {
-    var xi = Math.floor(x) & 255;
-    var xf = x - Math.floor(x);
-    var u = xf * xf * (3 - 2 * xf); // smoothstep
-    var g0 = _perlinGrad[_perlinPerm[xi]];
-    var g1 = _perlinGrad[_perlinPerm[(xi + 1) & 255]];
-    var n0 = g0.x * xf;
-    var n1 = g1.x * (xf - 1);
-    return n0 * (1 - u) + n1 * u;
-  }
-
-  function fractalPerlin(x, octaves, persistence) {
-    var total = 0, amplitude = 1, frequency = 1, maxValue = 0;
-    for (var i = 0; i < octaves; i++) {
-      total += perlin1D(x * frequency) * amplitude;
-      maxValue += amplitude;
-      amplitude *= persistence;
-      frequency *= 2;
-    }
-    return total / maxValue;
-  }
-
-  /* ===== Interpolação suave (catmull-rom) ===== */
-  function catmullRom(points, tension) {
-    if (!points || points.length < 2) return '';
-    var d = 'M ' + points[0].x.toFixed(2) + ' ' + points[0].y.toFixed(2);
-    for (var i = 0; i < points.length - 1; i++) {
-      var p0 = points[i > 0 ? i - 1 : 0];
-      var p1 = points[i];
-      var p2 = points[i + 1];
-      var p3 = points[i + 2 < points.length ? i + 2 : points.length - 1];
-      var cp1x = p1.x + (p2.x - p0.x) / 6 * tension;
-      var cp1y = p1.y + (p2.y - p0.y) / 6 * tension;
-      var cp2x = p2.x - (p3.x - p1.x) / 6 * tension;
-      var cp2y = p2.y - (p3.y - p1.y) / 6 * tension;
-      d += ' C ' + cp1x.toFixed(2) + ' ' + cp1y.toFixed(2) +
-           ' ' + cp2x.toFixed(2) + ' ' + cp2y.toFixed(2) +
-           ' ' + p2.x.toFixed(2) + ' ' + p2.y.toFixed(2);
-    }
-    return d;
-  }
-
-  /* ===== Mapeamento bark → frequência (psicoacústica) ===== */
-  var BARK_CENTERS = [50, 150, 250, 350, 450, 570, 700, 840, 1000, 1170]; // Hz aproximados
-
-  function hzToBark(hz) {
-    return 13 * Math.atan(0.00076 * hz) + 3.5 * Math.atan(Math.pow(hz / 7500, 2));
-  }
-
-  function barkToHz(bark) {
-    return 1960 * (bark + 0.53) / (26.28 - bark);
-  }
-
-  /* ===== Análise espectral avançada ===== */
-  function analyzeSpectrum(levels) {
-    if (!levels || !levels.length) return null;
-
-    var n = levels.length;
-    var totalEnergy = 0, weightedSum = 0, flux = 0;
-
-    /* Energia total e centroid */
-    for (var i = 0; i < n; i++) {
-      var mag = levels[i];
-      totalEnergy += mag * mag;
-      weightedSum += mag * mag * (i / (n - 1));
-    }
-
-    var energy = Math.sqrt(totalEnergy / n);
-    var centroid = totalEnergy > 1e-10 ? weightedSum / totalEnergy : 0;
-
-    /* Fluxo espectral (diferença do frame anterior) */
-    if (_lastSpectrum) {
-      var fluxSum = 0;
-      for (var i = 0; i < n; i++) {
-        var diff = levels[i] - _lastSpectrum[i];
-        if (diff > 0) fluxSum += diff * diff; // half-wave rectified flux
-      }
-      flux = Math.sqrt(fluxSum / n);
-    }
-
-    /* Planicidade espectral (tonalidade) */
-    var geoMean = 0, arithMean = 0;
-    var validCount = 0;
-    for (var i = 0; i < n; i++) {
-      if (levels[i] > 1e-10) {
-        geoMean += Math.log(levels[i]);
-        arithMean += levels[i];
-        validCount++;
-      }
-    }
-    var flatness = validCount > 0 ? Math.exp(geoMean / validCount) / (arithMean / validCount) : 0;
-
-    /* Detecção harmônica simples (autocorrelação simplificada) */
-    var harmonicProfile = new Array(SPECTRUM.HARMONIC_MAX).fill(0);
-    var peakIdx = 0, peakVal = 0;
-    for (var i = 1; i < n - 1; i++) {
-      if (levels[i] > levels[i-1] && levels[i] > levels[i+1] && levels[i] > peakVal) {
-        peakVal = levels[i];
-        peakIdx = i;
-      }
-    }
-    if (peakVal > 0.1) {
-      var fundFreq = peakIdx / (n - 1);
-      for (var h = 1; h <= SPECTRUM.HARMONIC_MAX; h++) {
-        var hIdx = Math.round(h * peakIdx);
-        if (hIdx < n) harmonicProfile[h-1] = levels[hIdx] / peakVal;
-      }
-    }
-
-    return {
-      energy: energy,
-      centroid: centroid,           // 0..1 (grave → agudo)
-      flux: flux,                   // 0..1 (mudança espectral)
-      flatness: flatness,           // 0..1 (tonal=0, ruído=1)
-      harmonicProfile: harmonicProfile,
-      peakIdx: peakIdx,
-      peakVal: peakVal
-    };
-  }
-
-  /* ===== Conversão energia → parâmetros visuais ===== */
-  function energyToVisualParams(analysis) {
-    if (!analysis) return { brightness: 0.1, saturation: 0.3, hue: 220, speed: 0.5, turbulence: 0.1 };
-
-    var e = Math.max(SPECTRUM.ENERGY_FLOOR, Math.min(1, analysis.energy * 3)); // escala energia
-    var c = analysis.centroid;
-    var f = Math.min(1, analysis.flux * 5);
-    var flat = analysis.flatness;
-
-    /* Brightness: energia + fluxo (ataques brilham mais) */
-    var brightness = Math.min(1, e * 0.7 + f * 0.3);
-
-    /* Saturation: inversa da planicidade (tons puros = mais saturado) */
-    var saturation = Math.min(1, 0.3 + (1 - flat) * 0.7);
-
-    /* Hue: centroid espectral (grave=azul 220°, médio=verde 120°, agudo=vermelho 0°/360°) */
-    var hue = (220 - c * 220) % 360; // 220 (azul) → 0 (vermelho)
-
-    /* Speed: energia + fluxo (mais energia = movimento mais rápido) */
-    var speed = 0.3 + e * 0.7 + f * 0.5;
-
-    /* Turbulence: planicidade (ruído = mais turbulento) */
-    var turbulence = 0.1 + flat * 0.8 + f * 0.3;
-
-    return { brightness, saturation, hue, speed, turbulence, energy: e, centroid: c, flux: f };
-  }
-
-  /* ===== Mola adaptativa (física de segunda ordem) ===== */
-  function adaptiveSpring(current, target, velocity, dt, energy) {
-    var attack = SPECTRUM.SMOOTH_ATTACK;
-    var release = SPECTRUM.SMOOTH_RELEASE;
-    var stiffness = 80 + energy * 120;        // mais energia = mola mais rígida
-    var damping = energy > 0.5 ? 0.85 : 0.95; // mais energia = menos amortecimento
-
-    var force = stiffness * (target - current);
-    var accel = force - damping * velocity;
-    velocity += accel * dt;
-    current += velocity * dt;
-    return { pos: current, vel: velocity };
-  }
-
-  /* ===== Cor HSL → CSS ===== */
-  function hslToCss(h, s, l, a) {
-    return 'hsla(' + Math.round(h) + ', ' + Math.round(s * 100) + '%, ' + Math.round(l * 100) + '%, ' + a.toFixed(2) + ')';
-  }
-
-  /* ===== Gradiente de energia para barras ===== */
-  function barColor(i, n, params, phase) {
-    var pos = i / (n - 1);
-    var h = (params.hue + pos * 30) % 360;
-    var s = params.saturation * (0.7 + 0.3 * Math.sin(i * 0.5 + (params.phase || 0)));
-    var l = 35 + params.brightness * 45 + 15 * Math.sin(i * 0.3 + (params.phase || 0) * 2);
-    var a = 0.6 + params.brightness * 0.4;
-    return hslToCss(h, s, l, a);
-  }
-
-  /* ================================================================
-   *  buildEqWave — Construtor da visualização multi-camadas
-   *  ================================================================ */
   function buildEqWave() {
     var track = document.getElementById("eqWaveTrack");
-    if (!track) return;
-    _trackEl = track;
-
-    /* Limpa e reconstrói */
-    track.innerHTML = '';
-    _waveBars = [];
-    _waveSmooth = new Array(_waveN).fill(0);
-    _waveSmoothPrev = new Array(_waveN).fill(0);
-    _waveVelocity = new Array(_waveN).fill(0);
-
-    /* Camada 1: Barras espectrais (base) */
-    var barsContainer = document.createElement('div');
-    barsContainer.className = 'eq-bars-layer';
-    barsContainer.style.cssText = 'position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:space-between; gap:1px; padding:4px 4px 0; pointer-events:none;';
+    if (!track || _waveBars.length) return;
     for (var i = 0; i < _waveN; i++) {
       var bar = document.createElement("div");
       bar.className = "eq-wave-bar";
-      bar.dataset.idx = i;
       bar.style.height = "4%";
-      bar.style.flex = '1 1 0';
-      bar.style.minWidth = '1px';
-      bar.style.maxWidth = '100%';
-      bar.style.transition = 'height 0.02s linear, background-color 0.04s ease, box-shadow 0.04s ease';
-      bar.style.borderRadius = '1px 1px 0 0';
-      bar.style.boxShadow = 'inset 0 -1px 0 rgba(0,0,0,0.2)';
-      barsContainer.appendChild(bar);
+      track.appendChild(bar);
+      _waveBars.push(bar);
     }
-    var barsContainer = document.createElement('div');
-    barsContainer.className = 'eq-bars-layer';
-    barsContainer.style.cssText = 'position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:space-between; gap:1px; padding:4px 4px 0; pointer-events:none;';
-    for (var i = 0; i < _waveN; i++) {
-      var bar = document.createElement("div");
-      bar.className = "eq-wave-bar";
-      bar.dataset.idx = i;
-      bar.style.height = "4%";
-      bar.style.flex = '1 1 0';
-      bar.style.minWidth = '1px';
-      bar.style.maxWidth = '100%';
-      bar.style.transition = 'height 0.02s linear, background-color 0.04s ease, box-shadow 0.04s ease';
-      bar.style.borderRadius = '1px 1px 0 0';
-      bar.style.boxShadow = 'inset 0 -1px 0 rgba(0,0,0,0.2)';
-      barsContainer.appendChild(bar);
-    }
-    track.appendChild(barsContainer);
-
-    /* Camada 2: Linhas harmônicas (SVG) */
+    // linhas moles: curvas SVG que ondulam com o som por cima das barras
     var NS = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.id = "eqHarmonicLines";
+    var svg = document.createElementNS(NS, "svg");
+    svg.id = "eqSoftLines";
     svg.setAttribute("viewBox", "0 0 100 100");
     svg.setAttribute("preserveAspectRatio", "none");
-    svg.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible;';
-
-    var lineConfigs = [
-      { id: 'fundamental', stroke: 'hsl(220, 80%, 55%)', width: 3, opacity: 0.9, z: 10 },
-      { id: 'harmonic2', stroke: 'hsl(180, 70%, 50%)', width: 2, opacity: 0.6, z: 8 },
-      { id: 'harmonic3', stroke: 'hsl(120, 70%, 50%)', width: 1.5, opacity: 0.5, z: 7 },
-      { id: 'envelope', stroke: 'hsl(45, 90%, 60%)', width: 2.5, opacity: 0.7, z: 9, dash: '8 4' },
-      { id: 'noise', stroke: 'hsl(320, 60%, 55%)', width: 1, opacity: 0.35, z: 5 },
-      { id: 'phase', stroke: 'hsl(30, 80%, 60%)', width: 1.5, opacity: 0.5, z: 6, dash: '4 6' }
-    ];
-
-    var lineElements = {};
-    lineConfigs.forEach(function (cfg) {
-      var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      p.setAttribute("class", "eq-spectral-line eq-line-" + cfg.id);
+    _softCfg.forEach(function (cfg, li) {
+      var p = document.createElementNS(NS, "path");
+      p.setAttribute("class", "eq-soft-line eq-soft-line-" + li);
       p.setAttribute("vector-effect", "non-scaling-stroke");
-      p.setAttribute("stroke-linecap", "round");
-      p.setAttribute("stroke-linejoin", "round");
-      p.style.stroke = cfg.stroke;
-      p.style.strokeWidth = cfg.width + "px";
-      p.style.opacity = cfg.opacity;
-      if (cfg.dash) p.setAttribute("stroke-dasharray", cfg.dash);
+      p.style.stroke = cfg.color;
+      p.style.strokeWidth = cfg.w + "px";
       svg.appendChild(p);
-      lineElements[cfg.id] = p;
     });
-
-    svg.style.position = 'absolute';
-    svg.style.inset = '0';
-    svg.style.width = '100%';
-    svg.style.height = '100%';
-    svg.style.pointerEvents = 'none';
-    svg.style.overflow = 'visible';
     track.appendChild(svg);
-
-    /* Camada 3: Partículas de energia (canvas) */
-    var canvas = document.createElement('canvas');
-    canvas.id = 'eqParticles';
-    canvas.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; pointer-events:none;';
-    track.appendChild(canvas);
-
-    /* Camada 4: Brilho espectral (radial gradient overlay) */
-    var glow = document.createElement('div');
-    glow.id = 'eqSpectralGlow';
-    glow.style.cssText = 'position:absolute; inset:0; pointer-events:none; opacity:0; border-radius:inherit; background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%);';
-    track.appendChild(glow);
-
-    /* Barras DOM atualizadas (re-selecionadas após rebuild) */
-    _waveBars = Array.from(track.querySelectorAll('.eq-wave-bar'));
-
     function sizeTrack() {
       if (!track || !win || win.offsetParent === null) return;
       var h = Math.max(72, Math.min(260, Math.round(win.offsetHeight * 0.4)));
@@ -795,15 +469,13 @@
     }
   }
 
-  /* ================================================================
-   *  _waveHeights — Interpolação bark → barras visuais
-   *  ================================================================ */
+  /* Combine player spectrum + site-sound spectrum into N bar heights (0..1) */
   function _waveHeights() {
     var music = typeof window._eqGetLevels === "function" ? window._eqGetLevels() : null;
     var site = typeof window._eqGetSiteLevels === "function" ? window._eqGetSiteLevels() : null;
     var bands = null;
     if (music || site) {
-      var len = SPECTRUM.N_BARK_BANDS;
+      var len = 10;
       var merged = new Array(len).fill(0);
       if (music) for (var i = 0; i < len && i < music.length; i++) merged[i] = Math.max(merged[i], music[i]);
       if (site) for (var j = 0; j < len && j < site.length; j++) merged[j] = Math.max(merged[j], site[j]);
@@ -820,233 +492,19 @@
     return out;
   }
 
-  /* ================================================================
-   *  Cor HSL → CSS
-   *  ================================================================ */
-  function hslToCss(h, s, l, a) {
-    return 'hsla(' + Math.round(h) + ', ' + Math.round(s * 100) + '%, ' + Math.round(l * 100) + '%, ' + a.toFixed(2) + ')';
-  }
+  /* ===== Live equalizer animation (moves with the music) ===== */
+  var _eqAnimRunning = false;
+  var _eqDragging = false;
+  var _waveSmooth = [];
+  var _waveT = 0;
+  var _waveLastLive = 0;
 
-  /* ================================================================
-   *  Gradiente de energia para barras
-   *  ================================================================ */
-  function barColor(i, n, params, phase) {
-    var pos = i / (n - 1);
-    var h = (params.hue + pos * 30) % 360;
-    var s = params.saturation * (0.7 + 0.3 * Math.sin(i * 0.5 + (params.phase || 0)));
-    var l = 35 + params.brightness * 45 + 15 * Math.sin(i * 0.3 + (params.phase || 0) * 2);
-    var a = 0.6 + params.brightness * 0.4;
-    return hslToCss(h, s, l, a);
-  }
-
-  /* ================================================================
-   *  updateEqWave — Loop principal de animação matemática
-   *  ================================================================ */
-  function updateEqWave(peak) {
-    var now = performance.now();
-    var dt = Math.min(0.05, (now - _waveLastFrame) / 1000); // dt em segundos, clamp 50ms
-    _waveLastFrame = now;
-
-    /* Debug counter */
-    if (!window._eqDebug) window._eqDebug = { updates: 0, lastHeights: null, lastParams: null };
-    window._eqDebug.updates++;
-
-    var heights = _waveHeights();
-    var live = document.getElementById("eqWaveLive");
-
-    /* Análise espectral completa */
-    var analysis = analyzeSpectrum(heights);
-    var params = energyToVisualParams(analysis);
-
-    /* Estado live/idle */
-    var combinedPeak = peak;
-    for (var k = 0; k < heights.length; k++) if (heights[k] > combinedPeak) combinedPeak = heights[k];
-    var rawLive = combinedPeak >= 0.015;
-    if (rawLive) _waveLastLive = Date.now();
-    var liveOn = rawLive || (Date.now() - _waveLastLive < 3000);
-
-    /* Atualiza energia global suavizada */
-    _energyPrev = _energyGlobal;
-    _energyGlobal += (params.energy - _energyGlobal) * SPECTRUM.ENERGY_SMOOTH;
-
-    /* Fluxo espectral → velocidade de fase */
-    _phaseVelocity = params.flux * 0.5 + params.energy * 0.3;
-    _phaseAccum += _phaseVelocity * SPECTRUM.PHASE_SPEED_BASE * 60 * dt; // 60 = fps normalizado
-
-    /* --- Atualização das barras (mola adaptativa) --- */
-    var barsContainer = document.querySelector('.eq-bars-layer');
-    var svg = document.getElementById('eqHarmonicLines');
-    var canvas = document.getElementById('eqParticles');
-    var glow = document.getElementById('eqSpectralGlow');
-    var harmonicLines = svg ? svg.querySelectorAll('.eq-spectral-line') : null;
-
-    if (!_waveSmooth.length) {
-      for (var i = 0; i < _waveN; i++) {
-        _waveSmooth[i] = 0;
-        _waveSmoothPrev[i] = 0;
-        _waveVelocity[i] = 0;
-      }
-    }
-
-    /* Acumula fase global para ondas viajantes */
-    _waveT += dt * 60 * params.speed;
-
-    for (var i = 0; i < _waveN; i++) {
-      var h = heights[i] || 0;
-
-      /* Target height com curva psicoacústica (pow 0.8 = percepção loudness) */
-      var target;
-      if (liveOn) {
-        target = 0.05 + Math.pow(h, 0.8) * 0.9;
-      } else {
-        /* Idle: ripple suave baseado em Perlin + harmônicos sutis */
-        var idleBase = 0.04 + 0.03 * fractalPerlin(i * 0.15 + _waveT * 0.02, 3, 0.5);
-        var idleHarm = 0.015 * Math.sin(_waveT * 1.7 + i * 0.4) * Math.sin(_waveT * 2.3 + i * 0.7);
-        target = idleBase + idleHarm;
-      }
-
-      /* Mola adaptativa (física de 2ª ordem) */
-      var spring = adaptiveSpring(_waveSmooth[i], target, _waveVelocity[i], dt, params.energy);
-      _waveSmooth[i] = spring.pos;
-      _waveVelocity[i] = spring.vel;
-
-      /* Clamp e aplicação */
-      var hPct = Math.max(3, Math.min(100, _waveSmooth[i] * 100));
-      var bar = _waveBars[i];
-      if (bar) {
-        bar.style.height = hPct.toFixed(1) + "%";
-
-        /* Cor dinâmica baseada em energia local + fase */
-        var localEnergy = Math.min(1, h * 2);
-        var colorParams = {
-          brightness: params.brightness * (0.5 + localEnergy * 0.5),
-          saturation: params.saturation,
-          hue: (params.hue + i * 2) % 360,
-          saturation: params.saturation * (0.6 + 0.4 * Math.sin(i * 0.3 + _waveT * 0.5)),
-          phase: _phaseAccum
-        };
-        bar.style.backgroundColor = barColor(i, _waveN, colorParams, _phaseAccum);
-        bar.style.boxShadow = '0 0 ' + Math.round(params.brightness * 8 + localEnergy * 12) + 'px ' + hslToCss(colorParams.hue, colorParams.saturation, 60, 0.4);
-      }
-    }
-
-    /* Atualiza energia global no Live indicator */
-    if (live) {
-      if (liveOn) live.classList.add("active");
-      else live.classList.remove("active");
-    }
-
-    /* --- Linhas harmônicas SVG --- */
-    if (svg) {
-      var lines = {
-        fundamental: svg.querySelector('.eq-line-fundamental'),
-        harmonic2: svg.querySelector('.eq-line-harmonic2'),
-        harmonic3: svg.querySelector('.eq-line-harmonic3'),
-        envelope: svg.querySelector('.eq-line-envelope'),
-        noise: svg.querySelector('.eq-line-noise'),
-        phase: svg.querySelector('.eq-line-phase')
-      };
-
-      /* Gera pontos para cada linha */
-      var generateLine = function (type, amp, freqMul, phaseOffset, step, heightScale) {
-        var pts = [];
-        for (var i = 0; i < _waveN; i += step) {
-          var x = (i / (_waveN - 1)) * 100;
-          var baseH = _waveSmooth[i] || 0;
-          var harmonic = 0;
-
-          if (type === 'fundamental') {
-            harmonic = Math.sin(_waveT * 0.8 + i * 0.15 + _phaseAccum) * 3 * params.brightness;
-          } else if (type === 'harmonic2') {
-            harmonic = Math.sin(_waveT * 1.6 + i * 0.3 + _phaseAccum * 2) * 2 * params.brightness * params.flux;
-          } else if (type === 'harmonic3') {
-            harmonic = Math.sin(_waveT * 2.4 + i * 0.45 + _phaseAccum * 3) * 1.5 * params.brightness * params.turbulence;
-          } else if (type === 'envelope') {
-            harmonic = Math.abs(Math.sin(_waveT * 0.4 + i * 0.08 + _phaseAccum * 0.5)) * 4 * params.energy;
-          } else if (type === 'noise') {
-            harmonic = fractalPerlin(i * 0.3 + _waveT * 1.2, 3, 0.5) * 2.5 * params.turbulence;
-          } else if (type === 'phase') {
-            harmonic = Math.sin(_waveT * 2.0 + i * 0.25 + _phaseAccum * 1.5) * 2.5 * params.brightness;
-          }
-
-          var y = 100 - (baseH * heightScale + harmonic * amp + fractalPerlin(i * 0.2 + _waveT * 0.15, 2, 0.5) * 1.5);
-          pts.push({ x: x, y: Math.max(5, Math.min(95, y)) });
-        }
-        if ((_waveN - 1) % step !== 0) {
-          var i = _waveN - 1;
-          var x = 100;
-          var baseH = _waveSmooth[i] || 0;
-          var y = 100 - baseH * heightScale;
-          pts.push({ x: x, y: Math.max(5, Math.min(95, y)) });
-        }
-        return catmullRom(pts, 0.5);
-      };
-
-      if (lines.fundamental) lines.fundamental.setAttribute('d', generateLine('fundamental', 1, 1, 0, 2, 1.0));
-      if (lines.harmonic2) lines.harmonic2.setAttribute('d', generateLine('harmonic2', 0.7, 2, 0, 3, 0.9));
-      if (lines.harmonic3) lines.harmonic3.setAttribute('d', generateLine('harmonic3', 0.5, 3, 0, 4, 0.8));
-      if (lines.envelope) lines.envelope.setAttribute('d', generateLine('envelope', 1.2, 0.5, 0, 2, 1.1));
-      if (lines.noise) lines.noise.setAttribute('d', generateLine('noise', 0.6, 1.5, 0, 1, 0.7));
-      if (lines.phase) lines.phase.setAttribute('d', generateLine('phase', 0.8, 2, 0, 3, 0.9));
-    }
-
-    /* --- Canvas: Partículas de energia --- */
-    if (canvas) {
-      var ctx = canvas.getContext('2d');
-      var rect = _trackEl.getBoundingClientRect();
-      if (canvas.width !== rect.width || canvas.height !== rect.height) {
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-      }
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (params.energy > 0.15) {
-        var particleCount = Math.round(8 + params.energy * 25 + params.flux * 15);
-        for (var p = 0; p < particleCount; p++) {
-          var px = Math.random() * canvas.width;
-          var py = canvas.height - (Math.random() * canvas.height * 0.7 + canvas.height * 0.15);
-          var size = 1 + Math.random() * 3 * params.brightness;
-          var alpha = 0.15 + Math.random() * 0.35 * params.brightness;
-          var hue = (params.hue + Math.random() * 60 - 30) % 360;
-          ctx.beginPath();
-          ctx.arc(px, py, size, 0, Math.PI * 2);
-          ctx.fillStyle = hslToCss(hue, 0.7, 60, alpha);
-          ctx.fill();
-        }
-      }
-    }
-
-    /* --- Glow espectral --- */
-    if (glow && params.energy > 0.3) {
-      glow.style.opacity = Math.min(1, (params.energy - 0.3) * 1.5);
-      var glowHue = (params.hue + 30) % 360;
-      glow.style.background = 'radial-gradient(ellipse at center, ' +
-        hslToCss(glowHue, params.saturation, 60, 0) + ' 0%, ' +
-        hslToCss(glowHue, params.saturation * 0.8, 40, params.energy * 0.15) + ' 40%, ' +
-        'transparent 70%)';
-    }
-
-    /* Atualiza espectro anterior para fluxo no próximo frame */
-    _lastSpectrum = heights.slice();
-
-    /* Debug: expõe contadores globalmente */
-    if (window._eqDebug) {
-      window._eqDebug.lastHeights = heights.slice(0, 5);
-      window._eqDebug.lastParams = params ? { energy: params.energy, brightness: params.brightness, saturation: params.saturation, hue: params.hue, speed: params.speed, turbulence: params.turbulence } : null;
-    }
-  }
-
-  /* ================================================================
-   *  startEqAnimation — Inicia loop de animação
-   *  ================================================================ */
   function startEqAnimation() {
-    console.log('[EQ] startEqAnimation called');
     if (_eqAnimRunning) return;
     _eqAnimRunning = true;
 
     var w = eqWrap;
     if (!w) return;
-
     w.addEventListener("mousedown", function (e) {
       if (e.target && e.target.tagName === "INPUT") _eqDragging = true;
     });
@@ -1056,21 +514,15 @@
     document.addEventListener("mouseup", function () { _eqDragging = false; });
     document.addEventListener("touchend", function () { _eqDragging = false; });
 
-    _waveLastFrame = performance.now();
-    _waveT = 0;
-
     (function loop() {
       requestAnimationFrame(loop);
       if (_eqDragging) return;
       if (!win || win.offsetParent === null) return;
-
       var levels = typeof window._eqGetLevels === "function" ? window._eqGetLevels() : null;
       var peak = 0;
       if (levels) {
         for (var i = 0; i < levels.length; i++) if (levels[i] > peak) peak = levels[i];
       }
-
-      /* Atualiza sliders do EQ */
       for (var i = 0; i < 10; i++) {
         var slider = document.getElementById("eqSlider" + i);
         if (!slider) continue;
@@ -1086,9 +538,126 @@
         var vl = document.getElementById("eqVal" + i);
         if (vl) vl.textContent = (val > 0 ? "+" : "") + val.toFixed(1) + "dB";
       }
-
       updateEqWave(peak);
     })();
+  }
+
+  function updateEqWave(peak) {
+    var heights = _waveHeights();
+    var live = document.getElementById("eqWaveLive");
+    var combinedPeak = peak;
+    for (var k = 0; k < heights.length; k++) if (heights[k] > combinedPeak) combinedPeak = heights[k];
+    var rawLive = combinedPeak >= 0.015;
+    if (rawLive) _waveLastLive = Date.now();
+    var liveOn = rawLive || (Date.now() - _waveLastLive < 3000);
+    if (!_waveSmooth.length) {
+      for (var i = 0; i < _waveN; i++) _waveSmooth[i] = 0;
+    }
+    for (var i = 0; i < _waveBars.length; i++) {
+      var target;
+      if (liveOn) {
+        target = 0.06 + Math.pow(heights[i], 0.8) * 0.94;
+      } else {
+        /* Gentle idle ripple — halved height, after 3s delay */
+        target = 0.03 + 0.08 * (0.5 + 0.5 * Math.sin(_waveT * 2.4 + i * 0.55)) *
+                 (0.5 + 0.5 * Math.sin(_waveT * 3.1 + i * 0.9));
+      }
+      _waveSmooth[i] += (target - _waveSmooth[i]) * 0.62;
+      var h = Math.max(4, Math.min(100, _waveSmooth[i] * 100));
+      var bar = _waveBars[i];
+      if (bar) bar.style.height = h.toFixed(1) + "%";
+    }
+    _waveT += 0.03;
+
+    /* ---- linhas moles ---- */
+    var svg = document.getElementById("eqSoftLines");
+    if (svg && svg.childNodes.length === _softCfg.length) {
+      _softEnergy += (combinedPeak - _softEnergy) * 0.14;
+      if (!_softPts) {
+        _softPts = _softCfg.map(function () {
+          return new Array(_waveN).fill(60);
+        });
+      }
+      _softCfg.forEach(function (cfg, li) {
+        var pts = _softPts[li];
+        // alvo: altura suavizada da banda + senoide viajante divertida
+        for (var i = 0; i < _waveN; i++) {
+          var band = 4 + Math.pow(_waveSmooth[i] || 0, 0.9) * 88 * cfg.amp;
+          var wob = Math.sin(_waveT * cfg.speed + i * cfg.freq) *
+                    cfg.wob * (0.35 + _softEnergy * 2.2);
+          var target = 100 - band + wob + cfg.yoff;
+          pts[i] += (target - pts[i]) * 0.16; // mola macia
+        }
+        // amostra esparsa e traça curva suave por pontos médios
+        var sx = [], sy = [];
+        for (var j = 0; j < _waveN; j += cfg.step) {
+          sx.push((j / (_waveN - 1)) * 100);
+          sy.push(pts[j]);
+        }
+        if ((_waveN - 1) % cfg.step !== 0) { sx.push(100); sy.push(pts[_waveN - 1]); }
+        var d = "M " + sx[0].toFixed(1) + " " + sy[0].toFixed(1);
+        for (var q = 1; q < sx.length - 1; q++) {
+          d += " Q " + sx[q].toFixed(1) + " " + sy[q].toFixed(1) +
+               " " + ((sx[q] + sx[q + 1]) / 2).toFixed(1) +
+               " " + ((sy[q] + sy[q + 1]) / 2).toFixed(1);
+        }
+        d += " L " + sx[sx.length - 1].toFixed(1) + " " + sy[sy.length - 1].toFixed(1);
+        svg.childNodes[li].setAttribute("d", d);
+      });
+    }
+
+    var dbEl = document.getElementById("eqWaveDb");
+    var fillEl = document.getElementById("eqWaveDbFill");
+    if (dbEl && fillEl) {
+      var musicDb = typeof window._eqGetDb === "function" ? window._eqGetDb() : null;
+      var siteDb = typeof window._eqGetSiteDb === "function" ? window._eqGetSiteDb() : null;
+      var db = null;
+      if (musicDb && siteDb) db = musicDb.rms >= siteDb.rms ? musicDb : siteDb;
+      else db = musicDb || siteDb;
+      var audioEl = document.querySelector("audio");
+      var musicActive = !!audioEl && !audioEl.paused && !audioEl.ended;
+      var siteActive = !!siteDb && siteDb.peak >= -28;
+      var original = musicActive || siteActive;
+      var hasEqData = !!(musicDb && musicDb.rms > -60);
+      // Custom EQ ativo quando algum ganho != 0
+      var isCustomEq = false;
+      if (typeof window._eqGetBands === "function") {
+        var _bands = window._eqGetBands();
+        for (var _i = 0; _i < _bands.length; _i++) if (_bands[_i] !== 0) { isCustomEq = true; break; }
+      }
+      var originalNow = original || hasEqData || (isCustomEq && liveOn);
+      var liveNow = liveOn && originalNow;
+      if (live) {
+        if (liveNow) live.classList.add("active");
+        else live.classList.remove("active");
+      }
+      if (originalNow && db) {
+        var rms = db.rms;
+        var peak = db.peak;
+        var pct = Math.max(0, Math.min(1, (rms + 60) / 60));
+        var now = Date.now();
+        if (!window._eqLastDbUpdate || now - window._eqLastDbUpdate > 140) {
+          window._eqLastDbUpdate = now;
+          // Mostra 0-100 (0 silencio, 100 max) com valor real dB como tooltip
+          var level = Math.round(pct * 100);
+          dbEl.textContent = level;
+          dbEl.title = rms.toFixed(1) + " dBFS (0 max, maior = mais alto)";
+          var healthy = rms >= -30 && rms <= -6 && peak < -1 && peak > -60;
+          dbEl.classList.toggle("ok", healthy);
+          dbEl.classList.toggle("bad", !healthy);
+          fillEl.classList.toggle("bad", !healthy);
+        }
+        fillEl.style.width = (pct * 100).toFixed(1) + "%";
+        if (window._volumeLiveUpdate) window._volumeLiveUpdate(pct);
+      } else {
+        dbEl.textContent = "--";
+        dbEl.title = "";
+        dbEl.classList.remove("ok", "bad");
+        fillEl.classList.remove("bad");
+        fillEl.style.width = "0%";
+        if (window._volumeLiveUpdate) window._volumeLiveUpdate(0);
+      }
+    }
   }
 
   function syncEqUI() {

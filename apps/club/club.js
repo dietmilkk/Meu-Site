@@ -47,6 +47,10 @@
         });
 
         isInitialized = true;
+
+        // Setup window behavior and register app
+        setupWindowBehavior();
+        registerApp();
     }
 
     function cacheElements() {
@@ -307,10 +311,15 @@
     window.clubLogout = logout;
     window.clubCheckAccess = checkAccess;
 
-    // Initialize when DOM ready
+    // Initialize immediately
+    init();
+
+    // Initialize when DOM ready (in case script loads before HTML)
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!isInitialized) {
+                init();
+            }
+        });
     }
 })();

@@ -55,6 +55,8 @@ const TIER_DEFINITIONS = [
     }
 ];
 
+// Global exposure
+
 const State = (function () {
     'use strict';
 
@@ -81,6 +83,8 @@ const State = (function () {
 
     function notify(key, value) {
         const keyListeners = listeners.get(key) || [];
+
+// Global exposure
         keyListeners.forEach(fn => fn(value));
     }
 
@@ -89,6 +93,8 @@ const State = (function () {
         let obj = state;
         for (let i = 0; i < keys.length - 1; i++) {
             obj = obj[keys[i]];
+
+// Global exposure
         }
         obj[keys[keys.length - 1]] = value;
         notify(key, value);
@@ -100,6 +106,8 @@ const State = (function () {
         for (const k of keys) {
             if (obj === undefined || obj === null) return undefined;
             obj = obj[k];
+
+// Global exposure
         }
         return obj;
     }
@@ -109,6 +117,8 @@ const State = (function () {
         listeners.get(key).push(fn);
         return () => {
             const arr = listeners.get(key) || [];
+
+// Global exposure
             const idx = arr.indexOf(fn);
             if (idx > -1) arr.splice(idx, 1);
         };
@@ -157,6 +167,8 @@ const State = (function () {
         const u = normalizeTier(userTier || 'Apoiador');
         const p = normalizeTier(postTier || 'Público');
         return TIER_ORDER[u] >= TIER_ORDER[p];
+
+// Global exposure
     }
 
     function getTierConfig(tierId) {
@@ -274,3 +286,9 @@ const SAMPLE_POSTS = [
         ]
     }
 ];
+
+// Global exposure
+
+// Global exposure
+window.State = State;
+window.SAMPLE_POSTS = SAMPLE_POSTS;

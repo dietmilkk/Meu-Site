@@ -151,4 +151,5 @@ const Auth = (function () {
 })();
 
 // Expose for global access (legacy compatibility)
+window.Auth = Auth;
 window.clubAuth = Auth;

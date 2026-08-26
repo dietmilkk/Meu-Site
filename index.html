@@ -174,7 +174,7 @@
                             />
                         </span>
                         <span class="di-label" data-i18n="desktop.club"
-                            >Clube NSUM</span
+                            >+ midia</span
                         >
                     </div>
 
@@ -888,7 +888,7 @@
                 </div>
 
                 <!-- ===== CLUB (Patreon-style content with Hotmart payment) ===== -->
-                <div class="window" id="clubWindow" style="display: none; width: 640px; height: 720px;">
+                <div class="window club-window" id="clubWindow" style="display: none; width: 100vw; height: 100vh; max-width: none; max-height: none; border-radius: 0; border: none;">
                     <div class="title-bar" id="clubDragHandle">
                         <span class="title-bar-text">
                             <span class="icon">
@@ -899,11 +899,16 @@
                                     height="14"
                                 />
                             </span>
-                            <span data-i18n="club.title">Clube NSUM</span>
+                            <span data-i18n="club.title">+ midia</span>
                         </span>
-                        <script>
-                            document.write(createWindowButtons("club"));
-                        </script>
+                        <div class="title-bar-buttons">
+                            <span class="win-btn club-fullscreen-btn" id="clubFullscreenBtn" title="Sair de tela cheia" style="display:none;">
+                                <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3 3h4v4H3V3zm8 0h4v4h-4V3zm0 8H3v4h4v-4zm8 0h4v4h-4v-4" fill="currentColor"/></svg>
+                            </span>
+                            <span class="win-btn" id="clubBtnMinimize" data-wbtn="minimize"><svg viewBox="0 0 16 16" width="14" height="14"><rect x="2" y="11" width="12" height="2" fill="currentColor"/></svg></span>
+                            <span class="win-btn" id="clubBtnMaximize" data-wbtn="maximize"><svg viewBox="0 0 16 16" width="14" height="14"><rect x="2" y="2" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+                            <span class="win-btn" id="clubBtnClose" data-wbtn="close"><svg viewBox="0 0 16 16" width="14" height="14"><line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="13" y1="3" x2="3" y2="13" stroke="currentColor" stroke-width="1.5"/></svg></span>
+                        </div>
                     </div>
                     <div class="window-body" id="clubBody">
                         <!-- Header com info do usuário (quando logado) -->
@@ -1083,7 +1088,7 @@
                                         </div>
                                         <div class="start-menu-item" data-action="club">
                                             <img src="system/assets/icons/tango2kde/16x16/apps/korganizer.png" alt="" width="16" height="16" />
-                                            <span data-i18n="start.club">Clube NSUM</span>
+                                            <span data-i18n="start.club">+ midia</span>
                                         </div>
                                         <div class="start-menu-item" data-action="games">
                                             <img src="system/assets/icons/tango2kde/16x16/categories/applications-games.png" alt="" width="16" height="16" />

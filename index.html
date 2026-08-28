@@ -954,11 +954,60 @@
                         <!-- Tela de conteúdo (após pagamento) -->
                         <div class="club-content" id="clubContentScreen" style="display: none;">
                             <div class="club-nav">
-                                <button class="club-nav-btn active" id="clubNavPosts" data-i18n="club.navPosts">📝 Posts</button>
+                                <button class="club-nav-btn active" id="clubNavPosts" data-i18n="club.navPosts">🖼 Posts</button>
                                 <button class="club-nav-btn" id="clubNavTiers" data-i18n="club.navTiers">💎 Meu Plano</button>
-                                <button class="club-nav-btn" id="clubNavCommunity" data-i18n="club.navCommunity">👥 Comunidade</button>
+                                <button class="club-nav-btn" id="clubNavProfile" data-i18n="club.navProfile">👤 Perfil</button>
+                                <button class="club-nav-btn" id="clubNavMessages" data-i18n="club.navMessages">✉ Mensagens</button>
                             </div>
-                            <div class="club-feed" id="clubFeed"></div>
+
+                            <!-- Painel de posts -->
+                            <div class="club-panel" id="clubPostsPanel">
+                                <div class="club-feed" id="clubFeed"></div>
+                            </div>
+
+                            <!-- Painel de perfil (edição de foto e nome) -->
+                            <div class="club-profile-screen" id="clubProfileScreen" style="display:none;">
+                                <div class="club-panel-scroll">
+                                    <h3 class="club-panel-title" data-i18n="club.profileTitle">Meu Perfil</h3>
+                                    <div class="club-profile-body">
+                                        <div class="club-profile-card">
+                                            <div class="club-avatar-preview" id="clubAvatarPreview"></div>
+                                            <div class="club-profile-fields">
+                                                <label class="club-field-label" data-i18n="club.profileName">Nome de exibição</label>
+                                                <input type="text" class="club-text-input" id="clubProfileName" maxlength="40" placeholder="Seu nome aqui">
+                                                <label class="club-field-label" data-i18n="club.profilePhoto">Foto de perfil</label>
+                                                <div class="club-photo-actions">
+                                                    <button class="club-action-btn club-btn-3d" id="clubPhotoUploadBtn" data-i18n="club.profileUpload">📁 Enviar foto</button>
+                                                    <button class="club-action-btn club-btn-3d" id="clubPhotoResetBtn" data-i18n="club.profileReset">↺ Padrão</button>
+                                                </div>
+                                                <input type="file" id="clubPhotoInput" accept="image/*" style="display:none;">
+                                                <div class="club-avatar-presets">
+                                                    <span data-i18n="club.profilePresets">Ou escolha uma cor:</span>
+                                                    <div class="club-avatar-preset-row" id="clubAvatarPresets"></div>
+                                                </div>
+                                                <div class="club-profile-actions">
+                                                    <button class="club-btn-3d club-btn-primary" id="clubProfileSave" data-i18n="club.profileSave">💾 Salvar perfil</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Painel de mensagens privadas para o criador -->
+                            <div class="club-messages-screen" id="clubMessagesScreen" style="display:none;">
+                                <div class="club-panel-scroll">
+                                    <h3 class="club-panel-title" data-i18n="club.messagesTitle">Mensagens para o criador</h3>
+                                    <div class="club-messages-body">
+                                        <div class="club-messages-thread" id="clubMessagesThread"></div>
+                                        <div class="club-messages-compose">
+                                            <textarea class="club-messages-input" id="clubMessagesInput" rows="3" data-i18n="club.messagesPlaceholder"></textarea>
+                                            <button class="club-btn-3d club-btn-primary" id="clubMessagesSend" data-i18n="club.messagesSend">➤ Enviar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="club-status" id="clubStatus">Verificando acesso...</div>
                         </div>
 
@@ -1194,6 +1243,8 @@
         <script src="apps/club/components/feed.js"></script>
         <script src="apps/club/components/modal.js"></script>
         <script src="apps/club/components/userbar.js"></script>
+        <script src="apps/club/components/profile.js"></script>
+        <script src="apps/club/components/messages.js"></script>
         <script src="apps/club/api/hotmart.js"></script>
         <!-- <script src="apps/feed/feed.js"></script> -->
 

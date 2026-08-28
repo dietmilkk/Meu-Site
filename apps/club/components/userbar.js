@@ -33,11 +33,25 @@ const UserBar = (function () {
         if (!barEl) return;
         barEl.style.display = 'flex';
 
-        if (avatarEl && user) {
-            const tierConfig = State.getTierConfig(user.tier);
-            avatarEl.style.background = tierConfig?.color || '#95a5a6';
+        if (avatarEl) {
+            avatarEl.innerHTML = '';
+            avatarEl.style.background = '';
+            const photo = user.photo;
+            if (photo) {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.alt = '';
+                img.className = 'club-avatar-img';
+                avatarEl.appendChild(img);
+            } else if (typeof Profile !== 'undefined') {
+                Profile.applyAvatar(avatarEl);
+            } else {
+                const tierConfig = State.getTierConfig(user.tier);
+                avatarEl.style.background = tierConfig?.color || '#95a5a6';
+            }
         }
-        if (nameEl && user) nameEl.textContent = user.tierName || user.tier || 'Membro';
+        const displayName = user.name || user.tierName || user.tier || 'Membro';
+        if (nameEl) nameEl.textContent = displayName;
         if (tierEl && user) {
             const expiry = Auth.formatExpiry();
             tierEl.textContent = (user.tier || 'Membro') + (expiry ? ' • expira em ' + expiry : '');

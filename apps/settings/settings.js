@@ -422,11 +422,13 @@
   var _waveBars = [];
   var _waveN = 48;
 
-  /* Config das linhas moles: cores, espessura e personalidade de onda */
+  /* Config das linhas: cores retrô VGA e personalidade de onda */
   var _softCfg = [
-    { color: "rgba(30,110,255,0.85)", w: 3.5, step: 4, speed: 1.9,  freq: 0.42, wob: 7,  amp: 1.0,  yoff: -3 },
-    { color: "rgba(255,130,20,0.70)", w: 2.5, step: 6, speed: -2.6, freq: 0.27, wob: 11, amp: 0.62, yoff: -9 },
-    { color: "rgba(40,185,90,0.60)",  w: 2,   step: 8, speed: 3.4,  freq: 0.60, wob: 5,  amp: 0.38, yoff: -15 }
+    { color: "rgba(255,64,32,0.95)",  w: 1.6, amp: 1.00, base: 90, step: 4, shift: 0 },
+    { color: "rgba(255,208,0,0.9)",   w: 1.6, amp: 0.78, base: 70, step: 4, shift: 6 },
+    { color: "rgba(0,224,96,0.9)",    w: 1.6, amp: 0.60, base: 50, step: 4, shift: 12 },
+    { color: "rgba(0,192,255,0.9)",   w: 1.6, amp: 0.44, base: 30, step: 4, shift: 18 },
+    { color: "rgba(140,96,255,0.95)", w: 1.8, amp: 0.30, base: 10, step: 4, shift: 24 }
   ];
   var _softPts = null;   // pontos suavizados por linha (mola)
   var _softEnergy = 0;   /* energia global suavizada (0..1) — dá o quique */
@@ -453,6 +455,7 @@
       p.setAttribute("vector-effect", "non-scaling-stroke");
       p.style.stroke = cfg.color;
       p.style.strokeWidth = cfg.w + "px";
+      p.style.filter = "drop-shadow(0 0 1.5px " + cfg.color + ")";
       svg.appendChild(p);
     });
     track.appendChild(svg);
@@ -569,26 +572,33 @@
     }
     _waveT += 0.03;
 
-    /* ---- linhas moles ---- */
+    /* ---- linhas: espectro retrô instantâneo (lê o áudio na hora) ---- */
     var svg = document.getElementById("eqSoftLines");
     if (svg && svg.childNodes.length === _softCfg.length) {
-      _softEnergy += (combinedPeak - _softEnergy) * 0.14;
+      // ataque rápido quando há som; retorno lento e delicado no silêncio
+      _softEnergy += (combinedPeak - _softEnergy) * (liveOn ? 0.5 : 0.08);
       if (!_softPts) {
-        _softPts = _softCfg.map(function () {
-          return new Array(_waveN).fill(60);
-        });
+        _softPts = _softCfg.map(function (cfg) { return new Array(_waveN).fill(cfg.base); });
       }
+      var liveK = 0.62;   // resposta quase instantânea ao som
+      var idleK = 0.08;   // descida macia quando em repouso
       _softCfg.forEach(function (cfg, li) {
         var pts = _softPts[li];
-        // alvo: altura suavizada da banda + senoide viajante divertida
         for (var i = 0; i < _waveN; i++) {
-          var band = 4 + Math.pow(_waveSmooth[i] || 0, 0.9) * 88 * cfg.amp;
-          var wob = Math.sin(_waveT * cfg.speed + i * cfg.freq) *
-                    cfg.wob * (0.35 + _softEnergy * 2.2);
-          var target = 100 - band + wob + cfg.yoff;
-          pts[i] += (target - pts[i]) * 0.16; // mola macia
+          var h = heights[(i + cfg.shift) % _waveN] || 0;
+          h = Math.pow(h, 0.8);               // pulso quente nos transientes
+          var disp = h * 100 * cfg.amp;
+          var target;
+          if (liveOn) {
+            target = cfg.base - disp;
+          } else {
+            target = cfg.base -
+              4 * cfg.amp *
+              (0.5 + 0.5 * Math.sin(_waveT * 1.7 + i * 0.35 + li * 1.3));
+          }
+          pts[i] += (target - pts[i]) * (liveOn ? liveK : idleK);
         }
-        // amostra esparsa e traça curva suave por pontos médios
+        // trecho suave por pontos médios (curva contínua)
         var sx = [], sy = [];
         for (var j = 0; j < _waveN; j += cfg.step) {
           sx.push((j / (_waveN - 1)) * 100);

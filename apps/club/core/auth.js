@@ -11,12 +11,31 @@ const Auth = (function () {
     let currentUser = null;
     let accessCheckTimer = null;
 
+    function loadProfile() {
+        try {
+            const stored = JSON.parse(localStorage.getItem('clubUserProfile') || 'null');
+            if (stored && typeof stored === 'object') return stored;
+        } catch (e) {}
+        return null;
+    }
+
+    function mergeProfile(user) {
+        if (!user) return user;
+        const p = loadProfile();
+        if (p) {
+            if (p.name) user.name = p.name;
+            if (p.photo) user.photo = p.photo;
+            user.photoPreset = typeof p.preset === 'number' ? p.preset : 0;
+        }
+        return user;
+    }
+
     function generateAccessData(tierId) {
         const tier = State.getTierConfig(tierId);
         if (!tier) return null;
 
         const now = Date.now();
-        return {
+        const data = {
             tier: tier.id,
             tierName: tier.name,
             tierColor: tier.color,
@@ -24,6 +43,7 @@ const Auth = (function () {
             email: 'usuario@exemplo.com',
             purchaseDate: Date.now()
         };
+        return mergeProfile(data);
     }
 
     function loadFromStorage() {
@@ -32,7 +52,7 @@ const Auth = (function () {
             if (stored) {
                 const data = JSON.parse(stored);
                 if (data.expires && data.expires > Date.now()) {
-                    return data;
+                    return mergeProfile(data);
                 }
             }
         } catch (e) {}
@@ -52,9 +72,9 @@ const Auth = (function () {
     }
 
     function setUser(data) {
-        currentUser = data;
-        if (data) {
-            saveToStorage(data);
+        currentUser = mergeProfile(data);
+        if (currentUser) {
+            saveToStorage(currentUser);
         } else {
             clearStorage();
         }
@@ -63,6 +83,9 @@ const Auth = (function () {
     function getUser() {
         if (!currentUser) {
             currentUser = loadFromStorage();
+        }
+        if (currentUser) {
+            currentUser = mergeProfile(currentUser);
         }
         return currentUser;
     }

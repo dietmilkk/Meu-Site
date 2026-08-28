@@ -43,9 +43,9 @@ const Feed = (function () {
         let html = '<div class="club-post-media">';
         media.forEach(m => {
             if (m.type === 'image') {
-                html += `<img src="${escHtml(m.url)}" alt="${escHtml(m.alt || '')}" loading="lazy">`;
+                html += `<figure class="club-media-item"><img src="${escHtml(m.url)}" alt="${escHtml(m.alt || '')}" loading="lazy"><figcaption>${escHtml(m.alt || '')}</figcaption></figure>`;
             } else if (m.type === 'video') {
-                html += `<video controls src="${escHtml(m.url)}"></video>`;
+                html += `<video controls src="${escHtml(m.url)}" preload="metadata"></video>`;
             } else if (m.type === 'audio') {
                 html += `<audio controls src="${escHtml(m.url)}"><span>${escHtml(m.title)}</span></audio>`;
             }
@@ -117,10 +117,7 @@ const Feed = (function () {
             '<div class="club-post-body">' + escHtml(post.body) + '</div>' +
             mediaHtml +
             '<div class="club-post-actions">' +
-            '<button class="club-action-btn' + (post.liked ? ' liked' : '') + '" onclick="Feed.toggleLike(' + post.id + ')" data-post-id="' + post.id + '">' +
-            (post.liked ? '♥ ' : '♡ ') + post.likes +
-            '</button>' +
-            '<button class="club-action-btn" onclick="Feed.toggleComments(' + post.id + ')">💬 ' + (post.comments ? post.comments.length : 0) + '</button>' +
+            '<button class="club-action-btn" onclick="Feed.toggleComments(' + post.id + ')">💬 ' + (post.comments ? post.comments.length : 0) + ' comentários</button>' +
             '<span style="flex:1"></span>' +
             '<button class="club-action-btn" onclick="Feed.sharePost(' + post.id + ')">↗ Compartilhar</button>' +
             '</div>' +
@@ -163,18 +160,6 @@ const Feed = (function () {
     }
 
     // Interaction handlers
-    function toggleLike(postId) {
-        const user = Auth.getUser();
-        if (!user) { Club.openTierModal(); return; }
-
-        const post = FeedCore.getAllPosts().find(p => p.id === postId);
-        if (!post) return;
-
-        post.liked = !post.liked;
-        post.likes += post.liked ? 1 : -1;
-        refreshPost(postId);
-    }
-
     function toggleComments(postId) {
         const postEl = feedEl?.querySelector('[data-post-id="' + postId + '"]');
         if (!postEl) return;
@@ -245,7 +230,6 @@ const Feed = (function () {
         init,
         render,
         renderEmpty,
-        toggleLike,
         toggleComments,
         submitComment,
         sharePost,

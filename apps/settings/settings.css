@@ -362,7 +362,14 @@
     gap: 1px;
     height: 72px;
     padding: 4px 4px 0;
-    background: #c0c0c0;
+    background-color: #070b16;
+    background-image:
+        repeating-linear-gradient(0deg,
+            rgba(32, 48, 96, 0.35) 0 1px,
+            transparent 1px 3px),
+        repeating-linear-gradient(90deg,
+            rgba(32, 48, 96, 0.18) 0 1px,
+            transparent 1px 4px);
     border: 2px solid;
     border-color: var(--clr-border-dark) var(--clr-border-light) var(--clr-border-light) var(--clr-border-dark);
     box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
@@ -374,26 +381,27 @@
     min-width: 1px;
     max-width: 100%;
     height: 4%;
-    background: linear-gradient(180deg, #1010d0 0%, var(--clr-highlight) 55%, #000040 100%);
+    background: linear-gradient(180deg, #88a8ff 0%, var(--clr-highlight) 55%, #000040 100%);
     border: 1px solid rgba(0, 0, 0, 0.45);
-    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25), 0 0 4px rgba(40, 120, 255, 0.35);
     transform-origin: bottom;
     transition: height 0.045s linear;
 }
 
-/* linhas moles que ondulam com o som */
+/* linhas quel escaneiam o espectro em tempo real */
 #eqSoftLines {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
+    overflow: visible;
 }
 
 .eq-soft-line {
     fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
 }
 
 .eq-wave-caption {

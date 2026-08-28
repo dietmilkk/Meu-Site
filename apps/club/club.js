@@ -14,6 +14,9 @@
     let statusEl = null;
     let tierModal = null;
     let hotmartContainer = null;
+    let postsPanel = null;
+    let profileScreen = null;
+    let messagesScreen = null;
 
     // State
     let currentTab = 'posts';
@@ -61,17 +64,59 @@
         statusEl = document.getElementById('clubStatus');
         tierModal = document.getElementById('clubTierModal');
         hotmartContainer = document.getElementById('clubHotmartContainer');
+        postsPanel = document.getElementById('clubPostsPanel');
+        profileScreen = document.getElementById('clubProfileScreen');
+        messagesScreen = document.getElementById('clubMessagesScreen');
     }
 
     function bindEvents() {
         // Navigation tabs
         const navPosts = document.getElementById('clubNavPosts');
         const navTiers = document.getElementById('clubNavTiers');
-        const navCommunity = document.getElementById('clubNavCommunity');
+        const navProfile = document.getElementById('clubNavProfile');
+        const navMessages = document.getElementById('clubNavMessages');
 
         if (navPosts) navPosts.addEventListener('click', () => switchTab('posts'));
         if (navTiers) navTiers.addEventListener('click', () => switchTab('tiers'));
-        if (navCommunity) navCommunity.addEventListener('click', () => switchTab('community'));
+        if (navProfile) navProfile.addEventListener('click', () => switchTab('profile'));
+        if (navMessages) navMessages.addEventListener('click', () => switchTab('messages'));
+
+        // Profile panel buttons
+        const photoUpload = document.getElementById('clubPhotoUploadBtn');
+        const photoReset = document.getElementById('clubPhotoResetBtn');
+        const photoInput = document.getElementById('clubPhotoInput');
+        const profileSave = document.getElementById('clubProfileSave');
+
+        if (photoUpload && photoInput) {
+            photoUpload.addEventListener('click', () => photoInput.click());
+        }
+        if (photoInput) {
+            photoInput.addEventListener('change', handlePhotoChange);
+        }
+        if (photoReset) {
+            photoReset.addEventListener('click', resetPhoto);
+        }
+        if (profileSave) {
+            profileSave.addEventListener('click', saveProfile);
+        }
+        if (typeof Profile !== 'undefined') {
+            Profile.initPresets();
+        }
+
+        // Messages panel buttons
+        const messagesSend = document.getElementById('clubMessagesSend');
+        const messagesInput = document.getElementById('clubMessagesInput');
+        if (messagesSend) {
+            messagesSend.addEventListener('click', sendMessage);
+        }
+        if (messagesInput) {
+            messagesInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
 
         // Gate button
         const gateBtn = document.getElementById('clubGateBtn');
@@ -167,32 +212,55 @@
         const tabs = {
             posts: document.getElementById('clubNavPosts'),
             tiers: document.getElementById('clubNavTiers'),
-            community: document.getElementById('clubNavCommunity')
+            profile: document.getElementById('clubNavProfile'),
+            messages: document.getElementById('clubNavMessages')
         };
 
         Object.entries(tabs).forEach(([key, el]) => {
             if (el) el.classList.toggle('active', key === tab);
         });
 
+        // Show/hide panels
+        if (postsPanel) postsPanel.style.display = tab === 'posts' ? 'flex' : 'none';
+        if (profileScreen) profileScreen.style.display = tab === 'profile' ? 'flex' : 'none';
+        if (messagesScreen) messagesScreen.style.display = tab === 'messages' ? 'flex' : 'none';
+
         // Handle tab content
         if (tab === 'posts') {
             Feed.render(Auth.getUser());
         } else if (tab === 'tiers') {
             TierModal.open();
-        } else if (tab === 'community') {
-            showCommunityPlaceholder();
+        } else if (tab === 'profile') {
+            if (typeof Profile !== 'undefined') Profile.render();
+        } else if (tab === 'messages') {
+            if (typeof Messages !== 'undefined') Messages.render();
         }
     }
 
-    function showCommunityPlaceholder() {
-        const feedEl = document.getElementById('clubFeed');
-        if (!feedEl) return;
-        feedEl.innerHTML =
-            '<div class="club-empty">' +
-            '<div class="club-empty-icon">👥</div>' +
-            '<p>Comunidade</p>' +
-            '<p style="font-size:11px;color:#808080">Em breve: fórum, diretório de membros, eventos ao vivo</p>' +
-            '</div>';
+    // ===== Profile handlers =====
+    function handlePhotoChange(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+            if (typeof Profile !== 'undefined') {
+                Profile.setPhoto(ev.target.result);
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function resetPhoto() {
+        if (typeof Profile !== 'undefined') Profile.resetPhoto();
+    }
+
+    function saveProfile() {
+        if (typeof Profile !== 'undefined') Profile.save();
+    }
+
+    // ===== Messages handlers =====
+    function sendMessage() {
+        if (typeof Messages !== 'undefined') Messages.send();
     }
 
     // ===== Public API =====

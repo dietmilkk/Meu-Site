@@ -57,13 +57,32 @@ const Feed = (function () {
     function renderComments(comments) {
         if (!comments || !comments.length) return '';
 
+        let html = '<div class="club-post-comments">';
         comments.forEach(c => {
             html +=
+                '<div class="club-comment">' +
+                '<div class="club-comment-header">' +
+                '<div class="club-comment-avatar" style="background:' + escHtml(c.avatar) + '"></div>' +
+                '<span class="club-comment-author">' + escHtml(c.author) + '</span>' +
+                '<span class="club-comment-time">' + escHtml(c.time) + '</span>' +
                 '</div>' +
+                '<div class="club-comment-text">' + escHtml(c.text) + '</div>' +
                 '</div>';
         });
         html += '</div>';
         return html;
+    }
+
+    function renderCommentForm(postId) {
+        const user = Auth.getUser();
+        if (!user) return '';
+
+        return (
+            '<div class="club-comment-form">' +
+            '<input type="text" class="club-comment-input" placeholder="Adicionar comentário..." data-post-id="' + postId + '">' +
+            '<button class="club-action-btn" onclick="Feed.submitComment(' + postId + ')">Enviar</button>' +
+            '</div>'
+        );
     }
 
 
@@ -101,9 +120,9 @@ const Feed = (function () {
             '<button class="club-action-btn' + (post.liked ? ' liked' : '') + '" onclick="Feed.toggleLike(' + post.id + ')" data-post-id="' + post.id + '">' +
             (post.liked ? '♥ ' : '♡ ') + post.likes +
             '</button>' +
-            '' +
+            '<button class="club-action-btn" onclick="Feed.toggleComments(' + post.id + ')">💬 ' + (post.comments ? post.comments.length : 0) + '</button>' +
             '<span style="flex:1"></span>' +
-            '' +
+            '<button class="club-action-btn" onclick="Feed.sharePost(' + post.id + ')">↗ Compartilhar</button>' +
             '</div>' +
             commentsHtml +
             commentFormHtml;
@@ -148,7 +167,7 @@ const Feed = (function () {
         const user = Auth.getUser();
         if (!user) { Club.openTierModal(); return; }
 
-        const post = postsData.find(p => p.id === postId);
+        const post = FeedCore.getAllPosts().find(p => p.id === postId);
         if (!post) return;
 
         post.liked = !post.liked;
@@ -160,6 +179,8 @@ const Feed = (function () {
         const postEl = feedEl?.querySelector('[data-post-id="' + postId + '"]');
         if (!postEl) return;
 
+        const comments = postEl.querySelector('.club-post-comments');
+        const form = postEl.querySelector('.club-comment-form');
 
         if (comments) comments.style.display = comments.style.display === 'none' ? 'block' : 'none';
         if (form) form.style.display = form.style.display === 'none' ? 'flex' : 'none';
@@ -172,9 +193,10 @@ const Feed = (function () {
         const postEl = feedEl?.querySelector('[data-post-id="' + postId + '"]');
         if (!postEl) return;
 
+        const input = postEl.querySelector('.club-comment-input');
         if (!input || !input.value.trim()) return;
 
-        const post = postsData.find(p => p.id === postId);
+        const post = FeedCore.getAllPosts().find(p => p.id === postId);
         if (!post) return;
 
         const newComment = {
@@ -191,7 +213,7 @@ const Feed = (function () {
     }
 
     function sharePost(postId) {
-        const post = postsData.find(p => p.id === postId);
+        const post = FeedCore.getAllPosts().find(p => p.id === postId);
         if (!post) return;
 
         const url = window.location.origin + window.location.pathname + '#club/post/' + postId;
@@ -211,7 +233,7 @@ const Feed = (function () {
         const postEl = feedEl.querySelector('[data-post-id="' + postId + '"]');
         if (!postEl) return;
 
-        const post = postsData.find(p => p.id === postId);
+        const post = FeedCore.getAllPosts().find(p => p.id === postId);
         if (!post) return;
 
         const user = Auth.getUser();

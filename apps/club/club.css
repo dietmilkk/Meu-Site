@@ -1,174 +1,206 @@
-/* ===== CLUB APP — Patreon-style content with payment gate ===== */
+/* ===== CLUB APP (\"+ midia\") — member content / paywall, styled to match the system =====
+   The app follows Patreon's *behavior*: a locked gate, membership tiers, member feed.
+   It is styled with the same Win2000 design tokens as the rest of the OS so it
+   blends in and follows the active theme. */
 
 .club-window {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--clr-window-bg, #c0c0c0);
-    font-family: var(--ff-ui, "Tahoma", "MS Sans Serif", sans-serif);
-    font-size: 13px;
-    color: var(--clr-text, #000);
-}
-
-.club-header {
-    flex-shrink: 0;
-    padding: 8px 12px;
-    background: linear-gradient(180deg, var(--clr-title-bar, #000080) 0%, #000060 100%);
-    border-bottom: 2px solid;
-    border-color: var(--clr-hilight) var(--clr-shadow);
-    color: var(--clr-title-text, #fff);
-    font-weight: bold;
+    background: var(--clr-window-bg);
+    font-family: var(--ff-body);
     font-size: 14px;
-    letter-spacing: 0.5px;
+    color: var(--clr-text);
 }
 
-.club-header-content {
+.window-body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#clubBody {
+    flex: 1;
+    min-height: 0;
+}
+
+/* ===== User bar (logged in) ===== */
+.club-user-bar {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: linear-gradient(180deg, #d4d0c8, var(--clr-panel-bg));
+    border-bottom: 2px solid var(--clr-border-dark);
+    border-top: 2px solid var(--clr-border-light);
     gap: 10px;
 }
 
-.club-logo {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
-    background: radial-gradient(circle at 30% 30%, #ff6b9d, #c44569);
-    box-shadow: inset 1px 1px 0 #ffb3c6, inset -1px -1px 0 #803040;
-    flex-shrink: 0;
-}
-
-.club-title-group {
-    flex: 1;
+.club-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     min-width: 0;
 }
 
-.club-name {
-    font-size: 15px;
-    font-weight: bold;
+.club-user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 2px;
+    border: 2px solid;
+    border-color: var(--clr-border-light) #8a8a8a #8a8a8a var(--clr-border-light);
+    background: linear-gradient(135deg, var(--clr-highlight), var(--clr-highlight-hover));
+    flex-shrink: 0;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+}
+
+.club-user-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--clr-text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.club-subtitle {
-    font-size: 11px;
-    font-weight: normal;
-    opacity: 0.85;
-    margin-top: 1px;
+.club-user-tier {
+    font-size: 12px;
+    color: var(--clr-highlight);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
-.club-tier-badge {
-    padding: 2px 8px;
-    font-size: 10px;
-    font-weight: bold;
-    border: 1px solid;
-    border-radius: 3px;
-    background: var(--clr-btn-bg, #c0c0c0);
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
-    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
-    white-space: nowrap;
+.club-user-logout {
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--ff-body);
+    color: var(--clr-text);
+    background: var(--btn-bg);
+    border: 2px solid;
+    border-color: var(--btn-bd);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
+    cursor: pointer;
 }
 
-.club-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
+.club-user-logout:active {
+    border-color: var(--btn-bd-active);
+    box-shadow: inset 1px 1px 0 var(--clr-shadow), inset -1px -1px 0 var(--clr-hilight);
 }
 
-/* Payment gate screen */
+/* ===== Payment gate / locked screen ===== */
 .club-gate {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex: 1;
-    padding: 24px;
+    padding: 32px 20px;
     text-align: center;
-    gap: 16px;
+    gap: 12px;
+    overflow-y: auto;
+    background: var(--clr-panel-bg);
 }
 
 .club-gate-icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid;
-    border-color: var(--clr-hilight) var(--clr-shadow) var(--clr-shadow) var(--clr-hilight);
-    background: radial-gradient(circle at 30% 30%, #ffeaa7, #fdcb6e);
-    box-shadow: inset 2px 2px 0 #fff9c4, inset -2px -2px 0 #e6c050;
+    width: 72px;
+    height: 72px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
+    font-size: 30px;
+    background: linear-gradient(135deg, var(--clr-highlight), var(--clr-highlight-hover));
+    color: var(--clr-text-on-highlight);
+    border: 3px solid;
+    border-color: var(--clr-border-light) #6a6a6a #6a6a6a var(--clr-border-light);
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.25);
+    margin-bottom: 4px;
 }
 
 .club-gate-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--clr-text, #000);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--clr-text);
+    margin: 0;
+    letter-spacing: 0.2px;
 }
 
 .club-gate-desc {
     font-size: 13px;
     line-height: 1.5;
-    color: var(--clr-text-dim, #404040);
-    max-width: 380px;
+    color: var(--clr-text-secondary);
+    max-width: 480px;
+    margin: 0;
 }
 
 .club-gate-benefits {
-    background: var(--clr-panel-bg, #c0c0c0);
-    border: 2px solid;
-    border-color: var(--clr-border-dark) var(--clr-border-light) var(--clr-border-light) var(--clr-border-dark);
-    padding: 16px;
+    background: var(--clr-surface);
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
+    padding: 16px 20px;
     width: 100%;
-    max-width: 400px;
+    max-width: 460px;
     text-align: left;
+    margin-top: 4px;
 }
 
 .club-gate-benefits h4 {
     margin: 0 0 8px;
     font-size: 13px;
-    font-weight: bold;
-    border-bottom: 1px solid var(--clr-border-dark);
-    padding-bottom: 4px;
+    font-weight: 700;
+    color: var(--clr-text);
 }
 
 .club-gate-benefits ul {
     margin: 0;
-    padding-left: 20px;
-    font-size: 12px;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
     line-height: 1.8;
-    color: var(--clr-text, #000);
+    color: var(--clr-text-secondary);
+}
+
+.club-gate-benefits li {
+    position: relative;
+    padding-left: 18px;
+}
+
+.club-gate-benefits li::before {
+    content: "\25A0";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--clr-highlight);
+    font-size: 12px;
 }
 
 .club-gate-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    padding: 10px 24px;
-    font-size: 13px;
-    font-weight: bold;
-    font-family: inherit;
-    color: #fff;
-    background: linear-gradient(180deg, #e74c3c, #c0392b);
+    padding: 10px 28px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--ff-body);
+    color: var(--clr-text-on-highlight);
+    background: linear-gradient(180deg, var(--clr-highlight-hover), var(--clr-highlight));
     border: 2px solid;
-    border-color: #f5a9a9 #8b2d2d #8b2d2d #f5a9a9;
+    border-color: var(--clr-title-text) #000033 #000033 var(--clr-title-text);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.25), inset -1px -1px 0 rgba(0,0,0,0.3), 2px 2px 5px rgba(0,0,0,0.2);
     cursor: pointer;
-    box-shadow: inset 1px 1px 0 #fadbd8, inset -1px -1px 0 #7b2424;
-    transition: all 0.08s;
-}
-
-.club-gate-btn:hover {
-    background: linear-gradient(180deg, #ec7063, #e74c3c);
+    margin-top: 10px;
 }
 
 .club-gate-btn:active {
-    background: linear-gradient(180deg, #c0392b, #962d1e);
-    border-color: #8b2d2d #f5a9a9 #f5a9a9 #8b2d2d;
-    transform: scale(0.98);
+    border-color: #000033 #fff #fff #000033;
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,0.4);
+    transform: translateY(1px);
 }
 
 .club-gate-btn:disabled {
@@ -178,72 +210,82 @@
 
 .club-gate-note {
     font-size: 11px;
-    color: var(--clr-text-dim, #606060);
-    max-width: 400px;
+    color: var(--clr-text-secondary);
+    max-width: 460px;
+    line-height: 1.4;
+    margin: 0;
 }
 
-/* Content area (after payment) */
+/* ===== Content area (after payment) ===== */
 .club-content {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    overflow: hidden;
+    min-height: 0;
+    background: var(--clr-window-bg);
 }
 
+/* Navigation tabs */
 .club-nav {
     flex-shrink: 0;
     display: flex;
-    background: var(--clr-panel-bg, #c0c0c0);
-    border-bottom: 2px solid;
-    border-color: var(--clr-border-dark) var(--clr-border-light);
-    padding: 4px 8px;
-    gap: 4px;
+    gap: 6px;
+    padding: 8px 10px;
+    background: linear-gradient(180deg, #d8d4cc, var(--clr-panel-bg));
+    border-bottom: 2px solid var(--clr-border-dark);
+    border-top: 2px solid var(--clr-border-light);
 }
 
 .club-nav-btn {
-    flex: 1;
-    padding: 6px 8px;
-    font-size: 12px;
-    font-weight: bold;
-    font-family: inherit;
-    color: var(--clr-text, #000);
-    background: var(--clr-btn-bg, #c0c0c0);
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--ff-body);
+    color: var(--clr-text);
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
+    border-color: var(--btn-bd);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
     cursor: pointer;
-    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
-    transition: all 0.06s;
 }
 
 .club-nav-btn:hover {
-    background: var(--clr-hilight, #000080);
-    color: var(--clr-text-on-highlight, #fff);
-    border-color: var(--clr-hilight) var(--clr-hilight) var(--clr-hilight) var(--clr-hilight);
+    background: var(--clr-highlight-bg);
 }
 
 .club-nav-btn.active {
-    background: var(--clr-hilight, #000080);
-    color: var(--clr-text-on-highlight, #fff);
-    border-color: var(--clr-border-dark) var(--clr-border-light) var(--clr-border-light) var(--clr-border-dark);
-    box-shadow: inset 1px 1px 0 #000060, inset -1px -1px 0 #000040;
+    background: var(--clr-highlight);
+    border-color: #000033 #fff #fff #000033;
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,0.4);
+    color: var(--clr-text-on-highlight);
 }
 
+/* Feed */
 .club-feed {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 12px;
-    background: var(--clr-window-bg, #c0c0c0);
+    background: var(--clr-window-bg);
 }
 
+/* Post cards */
 .club-post {
-    background: #fff;
-    border: 2px solid;
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
-    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #c0c0c0;
+    background: var(--clr-surface);
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
     margin-bottom: 12px;
     padding: 12px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.club-post:hover {
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow), 2px 2px 8px rgba(0,0,0,0.1);
 }
 
 .club-post-header {
@@ -256,10 +298,9 @@
 .club-post-avatar {
     width: 36px;
     height: 36px;
-    border-radius: 50%;
     border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
-    background: radial-gradient(circle at 30% 30%, #ff6b9d, #c44569);
+    border-color: var(--clr-border-light) #8a8a8a #8a8a8a var(--clr-border-light);
+    background: linear-gradient(135deg, var(--clr-highlight), var(--clr-highlight-hover));
     flex-shrink: 0;
 }
 
@@ -269,176 +310,195 @@
 }
 
 .club-post-name {
-    font-weight: bold;
-    font-size: 13px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--clr-text);
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis.
+    text-overflow: ellipsis;
 }
 
 .club-post-meta {
-    font-size: 10px;
-    color: var(--clr-text-dim, #606060);
+    font-size: 11px;
+    color: var(--clr-text-secondary);
 }
 
 .club-post-tier-tag {
-    padding: 1px 6px;
-    font-size: 9px;
-    font-weight: bold;
-    border-radius: 2px;
-    background: var(--clr-hilight, #000080);
-    color: var(--clr-text-on-highlight, #fff);
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--clr-text-on-highlight);
+    background: var(--clr-highlight);
+    border: 1px solid;
+    border-color: var(--clr-border-light) #000033 #000033 var(--clr-border-light);
     white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
 .club-post-body {
     font-size: 13px;
-    line-height: 1.5;
-    color: var(--clr-text, #000);
+    line-height: 1.55;
+    color: var(--clr-text);
     white-space: pre-wrap;
-    word-wrap: break-word.
+    word-wrap: break-word;
 }
 
 .club-post-media {
     margin-top: 10px;
     border-top: 1px solid var(--clr-border-dark);
-    padding-top: 10px.
+    padding-top: 10px;
+    background: var(--clr-panel-bg);
+    padding: 10px;
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
 }
 
 .club-post-media img,
 .club-post-media video,
 .club-post-media audio {
     max-width: 100%;
-    border: 1px solid var(--clr-border-dark).
     background: #000;
-    display: block.
+    display: block;
+}
+
+.club-post-media video,
+.club-post-media img {
+    margin: 0 auto;
 }
 
 .club-post-media audio {
     width: 100%;
-    height: 32px.
+    height: 40px;
 }
 
 .club-post-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px solid var(--clr-border-dark).
+    padding-top: 10px;
+    border-top: 1px solid var(--clr-border-dark);
 }
 
 .club-action-btn {
-    padding: 4px 10px;
-    font-size: 11px;
-    font-weight: bold;
-    font-family: inherit;
-    background: var(--clr-btn-bg, #c0c0c0);
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--ff-body);
+    color: var(--clr-text);
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light).
-    cursor: pointer.
-    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080.
-    color: var(--clr-text, #000).
-    transition: all 0.06s.
+    border-color: var(--btn-bd);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
+    cursor: pointer;
 }
 
 .club-action-btn:hover {
-    background: var(--clr-hilight, #000080);
-    color: var(--clr-text-on-highlight, #fff).
+    background: var(--clr-highlight-bg);
 }
 
+.club-action-btn:active,
 .club-action-btn.liked {
-    background: #e74c3c.
-    color: #fff.
-    border-color: #c0392b #f5a9a9 #f5a9a9 #c0392b.
+    border-color: var(--btn-bd-active);
+    background: var(--clr-highlight);
+    color: var(--clr-text-on-highlight);
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,0.4);
 }
 
+/* Comments */
 .club-post-comments {
     margin-top: 10px;
-    padding-top: 10px.
-    border-top: 1px dashed var(--clr-border-dark).
+    padding-top: 10px;
+    border-top: 1px solid var(--clr-border-dark);
 }
 
 .club-comment {
-    padding: 6px 0.
-    border-bottom: 1px solid var(--clr-border-dark).
-    font-size: 12px.
-    line-height: 1.4.
+    padding: 6px 0;
+    border-bottom: 1px dotted var(--clr-border-dark);
+    font-size: 13px;
+    line-height: 1.5;
 }
 
 .club-comment:last-child {
-    border-bottom: none.
+    border-bottom: none;
 }
 
 .club-comment-header {
     display: flex;
-    gap: 6px.
-    margin-bottom: 2px.
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
 }
 
 .club-comment-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 1px solid var(--clr-border-dark).
-    background: radial-gradient(circle at 30% 30%, #74b9ff, #0984e3).
-    flex-shrink: 0.
+    width: 22px;
+    height: 22px;
+    border: 1px solid;
+    border-color: #fff #6a6a6a #6a6a6a #fff;
+    background: linear-gradient(135deg, #7eb0e8, var(--clr-highlight));
+    flex-shrink: 0;
 }
 
 .club-comment-author {
-    font-weight: bold;
-    font-size: 11px.
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--clr-text);
 }
 
 .club-comment-time {
-    font-size: 10px.
-    color: var(--clr-text-dim, #808080).
-    margin-left: auto.
+    font-size: 11px;
+    color: var(--clr-text-secondary);
+    margin-left: auto;
 }
 
 .club-comment-text {
-    margin-left: 30px.
-    color: var(--clr-text, #000).
+    margin-left: 28px;
+    color: var(--clr-text);
 }
 
 .club-comment-form {
-    display: flex.
-    gap: 6px.
-    margin-top: 10px.
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
 }
 
 .club-comment-input {
-    flex: 1.
-    padding: 6px 8px.
-    font-size: 12px.
-    font-family: inherit.
-    border: 2px solid.
-    border-color: var(--clr-border-dark) var(--clr-border-light) var(--clr-border-light) var(--clr-border-dark).
-    background: #fff.
-    box-shadow: inset 1px 1px 0 #c0c0c0.
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-family: var(--ff-body);
+    color: var(--clr-text);
+    background: var(--clr-surface);
+    border-top: 2px solid var(--clr-border-dark);
+    border-left: 2px solid var(--clr-border-dark);
+    border-right: 2px solid var(--clr-border-light);
+    border-bottom: 2px solid var(--clr-border-light);
 }
 
 .club-comment-input:focus {
-    outline: none.
-    border-color: var(--clr-hilight).
+    outline: 1px dotted #000;
+    outline-offset: -2px;
 }
 
+/* Loading / empty states */
 .club-loading {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center.
-    flex: 1.
-    gap: 12px.
-    color: var(--clr-text-dim, #606060).
+    justify-content: center;
+    flex: 1;
+    gap: 10px;
+    color: var(--clr-text-secondary);
 }
 
 .club-loading-spinner {
-    width: 24px.
-    height: 24px.
-    border: 3px solid var(--clr-border-dark).
-    border-top-color: var(--clr-hilight, #000080).
-    border-radius: 50%.
-    animation: clubSpin 0.8s linear infinite.
+    width: 26px;
+    height: 26px;
+    border: 3px solid var(--clr-border-dark);
+    border-top-color: var(--clr-highlight);
+    animation: clubSpin 0.8s linear infinite;
 }
 
 @keyframes clubSpin {
@@ -447,29 +507,29 @@
 
 .club-empty {
     display: flex;
-    flex-direction: column.
-    align-items: center.
-    justify-content: center.
-    flex: 1.
-    text-align: center.
-    padding: 24px.
-    color: var(--clr-text-dim, #606060).
-    gap: 8px.
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 30px;
+    color: var(--clr-text-secondary);
+    gap: 8px;
 }
 
 .club-empty-icon {
-    font-size: 48px.
-    opacity: 0.4.
+    font-size: 40px;
+    opacity: 0.5;
 }
 
-/* Tier selector modal (for payment flow) */
+/* ===== Tier selector modal ===== */
 .club-tier-modal {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--dialog-overlay);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -482,250 +542,179 @@
 }
 
 .club-tier-box {
-    background: var(--clr-window-bg, #c0c0c0);
-    border: 3px solid;
-    border-color: var(--clr-hilight) var(--clr-shadow) var(--clr-shadow) var(--clr-hilight);
-    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
-    max-width: 480px;
+    background: var(--clr-window-bg);
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.35);
+    max-width: 560px;
     width: 100%;
-    max-height: 80vh;
-    overflow-y: auto.
+    max-height: 86vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .club-tier-header {
-    padding: 10px 14px;
-    background: linear-gradient(180deg, var(--clr-title-bar, #000080) 0%, #000060 100%);
-    color: var(--clr-title-text, #fff);
-    font-weight: bold;
-    font-size: 14px;
+    position: sticky;
+    top: 0;
     display: flex;
     justify-content: space-between;
-    align-items: center.
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--clr-start-menu-header);
+    color: var(--clr-title-text);
+    font-weight: 700;
+    font-size: 15px;
 }
 
 .club-tier-header [data-i18n] {
     flex: 1;
-    text-align: center.
+    text-align: center;
 }
 
 .club-tier-close {
-    width: 20px.
-    height: 20px.
-    border: 2px solid.
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light).
-    background: var(--clr-btn-bg, #c0c0c0).
-    font-size: 14px.
-    line-height: 16px.
-    cursor: pointer.
-    color: var(--clr-title-text, #fff).
+    width: 22px;
+    height: 22px;
+    border: 2px solid;
+    border-color: var(--btn-bd);
+    background: var(--btn-bg);
+    color: var(--clr-text);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
 }
 
-.club-tier-close:hover {
-    background: #e74c3c.
-    border-color: #8b2d2d #f5a9a9 #f5a9a9 #8b2d2d.
+.club-tier-close:active {
+    border-color: var(--btn-bd-active);
 }
 
 .club-tier-list {
-    padding: 12px.
-    display: flex.
-    flex-direction: column.
-    gap: 10px.
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
+/* Tier cards (membership pricing) */
 .club-tier-card {
-    background: var(--clr-panel-bg, #c0c0c0).
-    border: 2px solid.
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light).
-    padding: 14px.
-    cursor: pointer.
-    transition: all 0.06s.
-    position: relative.
+    background: var(--clr-surface);
+    border-top: 2px solid var(--clr-border-light);
+    border-left: 2px solid var(--clr-border-light);
+    border-right: 2px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow);
+    padding: 14px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .club-tier-card:hover {
-    border-color: var(--clr-hilight).
-    box-shadow: inset 1px 1px 0 var(--clr-hilight).
+    box-shadow: inset 1px 1px 0 var(--clr-hilight), inset -1px -1px 0 var(--clr-shadow), 2px 2px 8px rgba(0,0,0,0.12);
 }
 
 .club-tier-card.featured {
-    border-color: #f39c12.
-    box-shadow: inset 1px 1px 0 #fef9e7, inset -1px -1px 0 #b7950b.
+    background: var(--clr-highlight-bg);
+    border: 2px solid var(--clr-highlight);
 }
 
 .club-tier-card.featured::before {
-    content: "✦ RECOMENDADO".
-    position: absolute.
-    top: -8px.
-    left: 14px.
-    font-size: 9px.
-    font-weight: bold.
-    color: #b7950b.
-    background: var(--clr-panel-bg, #c0c0c0).
-    padding: 0 6px.
+    content: "\2605 RECOMENDADO";
+    position: absolute;
+    top: -12px;
+    right: 12px;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--clr-text-on-highlight);
+    background: var(--clr-highlight);
+    border: 1px solid;
+    border-color: var(--clr-border-light) #000033 #000033 var(--clr-border-light);
+    padding: 2px 8px;
+    letter-spacing: 0.5px;
 }
 
 .club-tier-name {
-    font-weight: bold.
-    font-size: 14px.
-    margin-bottom: 4px.
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--clr-text);
+    margin-bottom: 2px;
 }
 
 .club-tier-price {
-    font-size: 18px.
-    font-weight: bold.
-    color: var(--clr-hilight, #000080).
-    margin-bottom: 8px.
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--clr-highlight);
+    margin-bottom: 8px;
 }
 
 .club-tier-features {
-    font-size: 11px.
-    line-height: 1.7.
-    color: var(--clr-text, #000).
-    margin-bottom: 10px.
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--clr-text-secondary);
+    margin-bottom: 10px;
+    flex: 1;
 }
 
 .club-tier-select {
-    width: 100%.
-    padding: 8px.
-    font-size: 12px.
-    font-weight: bold.
-    font-family: inherit.
-    background: linear-gradient(180deg, #27ae60, #1e8c49).
-    color: #fff.
-    border: 2px solid.
-    border-color: #7dcea0 #145a32 #145a32 #7dcea0.
-    cursor: pointer.
-    box-shadow: inset 1px 1px 0 #a9dfbf, inset -1px -1px 0 #145a32.
+    width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--ff-body);
+    color: var(--clr-text-on-highlight);
+    background: var(--clr-highlight);
+    border: 2px solid;
+    border-color: var(--clr-border-light) #000033 #000033 var(--clr-border-light);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2), inset -1px -1px 0 rgba(0,0,0,0.3);
+    cursor: pointer;
 }
 
-.club-tier-select:hover {
-    background: linear-gradient(180deg, #2ecc71, #27ae60).
+.club-tier-select:active {
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,0.4);
+    transform: translateY(1px);
 }
 
-/* Hotmart iframe container (placeholder) */
+/* ===== Hotmart iframe container (placeholder) ===== */
 .club-hotmart-frame {
-    width: 100%.
-    height: 100%.
-    border: none.
-    background: #fff.
-    display: block.
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: var(--clr-surface);
+    display: block;
 }
 
 .club-hotmart-container {
-    position: relative.
-    width: 100%.
-    height: 100%.
-    min-height: 500px.
-    background: #fff.
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    background: var(--clr-surface);
 }
 
 .club-hotmart-overlay {
-    position: absolute.
-    top: 0.
-    left: 0.
-    right: 0.
-    bottom: 0.
-    background: rgba(0, 0, 0, 0.03).
-    pointer-events: none.
-    z-index: 1.
-}
-
-/* Scrollbar styling for club feed */
-.club-feed::-webkit-scrollbar {
-    width: 14px;
-}
-
-.club-feed::-webkit-scrollbar-track {
-    background: var(--clr-btn-bg, #c0c0c0);
-    border: 1px solid var(--clr-border-dark).
-}
-
-.club-feed::-webkit-scrollbar-thumb {
-    background: var(--clr-btn-bg, #c0c0c0).
-    border: 2px solid.
-    border-color: var(--clr-hilight) var(--clr-shadow) var(--clr-shadow) var(--clr-hilight).
-    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080.
-}
-
-.club-feed::-webkit-scrollbar-thumb:hover {
-    background: var(--clr-hilight, #000080).
-}
-
-.club-feed::-webkit-scrollbar-corner {
-    background: var(--clr-btn-bg, #c0c0c0).
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.03);
+    pointer-events: none;
+    z-index: 1;
 }
 
 /* Status bar */
 .club-status {
-    flex-shrink: 0.
-    padding: 3px 8px.
-    font-size: 11px.
-    color: var(--clr-text-dim, #606060).
-    background: var(--clr-panel-bg, #c0c0c0).
-    border-top: 1px solid var(--clr-border-light).
-    border-bottom: 1px solid var(--clr-border-dark).
+    flex-shrink: 0;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: var(--clr-text-secondary);
+    background: linear-gradient(180deg, #d8d4cc, var(--clr-panel-bg));
+    border-top: 2px solid var(--clr-border-dark);
 }
 
-/* User bar (when logged in) */
-.club-user-bar {
-    flex-shrink: 0.
-    display: flex.
-    align-items: center.
-    justify-content: space-between.
-    padding: 6px 10px.
-    background: var(--clr-panel-bg, #c0c0c0).
-    border-bottom: 2px solid.
-    border-color: var(--clr-border-dark) var(--clr-border-light).
-}
-
-.club-user-info {
-    display: flex.
-    align-items: center.
-    gap: 10px.
-}
-
-.club-user-avatar {
-    width: 28px.
-    height: 28px.
-    border-radius: 50%.
-    border: 2px solid.
-    border-color: #fff #808080 #808080 #fff.
-}
-
-.club-user-name {
-    font-weight: bold.
-    font-size: 12px.
-    white-space: nowrap.
-    overflow: hidden.
-    text-overflow: ellipsis.
-}
-
-.club-user-tier {
-    font-size: 10px.
-    color: var(--clr-text-dim, #606060).
-}
-
-.club-user-logout {
-    padding: 3px 10px.
-    font-size: 11px.
-    font-weight: bold.
-    font-family: inherit.
-    background: var(--clr-btn-bg, #c0c0c0).
-    border: 2px solid.
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light).
-    cursor: pointer.
-    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080.
-    color: var(--clr-text, #000).
-    transition: all 0.06s.
-}
-
-.club-user-logout:hover {
-    background: #e74c3c.
-    color: #fff.
-    border-color: #8b2d2d #f5a9a9 #f5a9a9 #8b2d2d.
-}
-
-/* Fullscreen mode - app appears as a full-screen site */
+/* ===== Fullscreen mode (app appears as full-screen site) ===== */
 .club-window.club-fullscreen {
     width: 100vw !important;
     height: 100vh !important;
@@ -738,21 +727,17 @@
 
 .club-window.club-fullscreen .title-bar {
     border-radius: 0;
-    border-bottom: 1px solid var(--clr-border-dark);
+    border-bottom: 2px solid var(--clr-border-dark);
 }
 
 .club-window.club-fullscreen .window-body {
-    height: calc(100vh - 22px); /* title bar height */
+    height: calc(100vh - 22px);
 }
 
-.club-fullscreen .club-user-bar {
+.club-window.club-fullscreen .club-user-bar {
     position: sticky;
-    top: 22px; /* title bar height */
+    top: 22px;
     z-index: 10;
-    background: var(--clr-panel-bg, #c0c0c0);
-    border-bottom: 2px solid;
-    border-color: var(--clr-border-dark) var(--clr-border-light);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Fullscreen exit button - hidden by default, shown in fullscreen mode */
@@ -760,84 +745,21 @@
     display: none !important;
     align-items: center;
     justify-content: center;
-    width: 28px;
+    width: 26px;
     height: 22px;
     margin-right: 4px;
-    background: var(--clr-btn-bg, #c0c0c0);
+    background: var(--btn-bg);
     border: 2px solid;
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
+    border-color: var(--btn-bd);
     cursor: pointer;
-    color: var(--clr-text, #000);
-    transition: all 0.06s;
-    border-radius: 2px;
-    opacity: 0.7;
+    color: var(--clr-text);
 }
 
-.club-fullscreen-btn:hover {
-    opacity: 1;
-    background: var(--clr-hilight, #000080);
-    color: var(--clr-text-on-highlight, #fff);
-    border-color: var(--clr-hilight);
+.club-fullscreen-btn:active {
+    border-color: var(--btn-bd-active);
 }
 
-/* Touch-friendly improvements */
-@media (pointer: coarse) {
-    .club-nav-btn {
-        min-height: 44px;
-    }
-    
-    .club-action-btn {
-        min-height: 40px;
-    }
-    
-    .club-gate-btn {
-        min-height: 48px;
-    }
-    
-    .club-tier-select {
-        min-height: 44px;
-    }
-    
-    .club-gate-btn {
-        min-height: 48px;
-    }
-    
-    .club-tier-card {
-        min-height: 44px;
-    }
-}
-
-/* Safe area for notched devices */
-@supports (padding: max(0px)) {
-    .club-window {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    
-    .club-feed {
-        padding-bottom: max(12px, env(safe-area-inset-bottom));
-    }
-}
-
-/* Scrollbar styling for mobile */
-.club-feed::-webkit-scrollbar {
-    width: 8px;
-}
-
-.club-feed::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.club-feed::-webkit-scrollbar-thumb {
-    background: var(--clr-highlight);
-    border-radius: 4px;
-    opacity: 0.5;
-}
-
-.club-feed::-webkit-scrollbar-thumb:hover {
-    opacity: 0.8;
-}
-
-/* ===== Mobile Responsive ===== */
+/* ===== Mobile responsive ===== */
 @media (max-width: 768px) {
     .club-window {
         width: 100vw !important;
@@ -847,261 +769,130 @@
         border-radius: 0;
         border: none;
     }
-    
+
     .club-user-bar {
-        padding: 8px 12px;
+        padding: 10px 12px;
     }
-    
+
     .club-user-name {
         font-size: 14px;
     }
-    
-    .club-user-tier {
-        font-size: 12px;
-    }
-    
+
     .club-nav {
-        padding: 8px 4px;
+        padding: 8px;
         gap: 4px;
+        overflow-x: auto;
     }
-    
+
     .club-nav-btn {
-        padding: 10px 8px;
+        padding: 8px 14px;
         font-size: 13px;
+        white-space: nowrap;
+        flex: 1;
     }
-    
+
     .club-feed {
         padding: 8px;
     }
-    
+
     .club-post {
-        padding: 12px;
-        margin-bottom: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
     }
-    
-    .club-post-header {
-        gap: 10px;
-    }
-    
+
     .club-post-avatar {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
     }
-    
+
     .club-post-body {
         font-size: 14px;
-        line-height: 1.6;
+        line-height: 1.55;
     }
-    
-    .club-post-media img,
-    .club-post-media video {
-        border-radius: 4px;
-    }
-    
+
     .club-post-actions {
-        gap: 12px;
-        padding-top: 8px;
+        gap: 8px;
+        flex-wrap: wrap;
     }
-    
+
     .club-action-btn {
-        padding: 8px 14px;
+        padding: 7px 14px;
         font-size: 13px;
+        flex: 1;
+        min-height: 40px;
     }
-    
+
     .club-gate {
-        padding: 20px 16px;
+        padding: 20px 14px;
+        align-items: stretch;
     }
-    
+
     .club-gate-icon {
-        width: 70px;
-        height: 70px;
-        font-size: 32px;
+        width: 64px;
+        height: 64px;
+        font-size: 26px;
+        align-self: center;
     }
-    
+
     .club-gate-title {
-        font-size: 18px;
+        font-size: 20px;
+        text-align: center;
     }
-    
+
     .club-gate-desc {
+        font-size: 13px;
+        text-align: left;
+    }
+
+    .club-gate-benefits {
+        padding: 12px 14px;
+    }
+
+    .club-gate-btn {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+
+    .club-tier-box {
+        margin: 8px;
+        max-height: 88vh;
+    }
+
+    .club-tier-card {
+        padding: 12px;
+    }
+
+    .club-tier-name {
         font-size: 14px;
     }
-    
-    .club-gate-benefits {
-        padding: 14px;
+
+    .club-tier-price {
+        font-size: 17px;
     }
-    
-    .club-gate-benefits li {
+
+    .club-tier-features {
         font-size: 13px;
         line-height: 1.7;
     }
-    
-    .club-gate-btn {
-        padding: 12px 24px;
-        font-size: 14px;
-    }
-    
-    .club-tier-modal .club-tier-box {
-        margin: 16px;
-        max-height: 85vh;
-    }
-    
-    .club-tier-card {
-        padding: 16px;
-    }
-    
-    .club-tier-name {
-        font-size: 15px;
-    }
-    
-    .club-tier-price {
-        font-size: 18px;
-    }
-    
-    .club-tier-features {
-        font-size: 12px;
-        line-height: 1.8;
-    }
-    
-    .club-status {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
-}
 
-/* Touch-friendly improvements */
-@media (pointer: coarse) {
-    .club-nav-btn {
-        min-height: 44px;
-    }
-    
-    .club-action-btn {
+    .club-tier-select {
         min-height: 40px;
     }
-    
-    .club-gate-btn {
-        min-height: 48px;
-    }
-    
-    .club-tier-select {
-        min-height: 44px;
-    }
-    
-    .club-gate-btn {
-        min-height: 48px;
-    }
-    
-    .club-tier_card {
-        min-height: 44px;
-    }
 }
 
-/* Safe area for notched devices */
-@supports (padding: max(0px)) {
-    .club-window {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    
-    .club-feed {
-        padding-bottom: max(12px, env(safe-area-inset-bottom));
-    }
-}
-
-/* Scrollbar styling for mobile */
-.club-feed::-webkit-scrollbar {
-    width: 8px;
-}
-
-.club-feed::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.club-feed::-webkit-scrollbar-thumb {
-    background: var(--clr-highlight);
-    border-radius: 4px;
-    opacity: 0.5;
-}
-
-.club-feed::-webkit-scrollbar-thumb:hover {
-    opacity: 0.8;
-}
-
-/* Fullscreen mode - app appears as a full-screen site */
-.club-window.club-fullscreen {
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: none !important;
-    max-height: none !important;
-    border-radius: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.club-window.club-fullscreen .title-bar {
-    border-radius: 0;
-    border-bottom: 1px solid var(--clr-border-dark);
-}
-
-.club-window.club-fullscreen .window-body {
-    height: calc(100vh - 22px); /* title bar height */
-}
-
-.club-fullscreen .club-user-bar {
-    position: sticky;
-    top: 22px; /* title bar height */
-    z-index: 10;
-    background: var(--clr-panel-bg, #c0c0c0);
-    border-bottom: 2px solid;
-    border-color: var(--clr-border-dark) var(--clr-border-light);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Fullscreen exit button - hidden by default, shown in fullscreen mode */
-.club-fullscreen-btn {
-    display: none !important;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 22px;
-    margin-right: 4px;
-    background: var(--clr-btn-bg, #c0c0c0);
-    border: 2px solid;
-    border-color: var(--clr-border-light) var(--clr-border-dark) var(--clr-border-dark) var(--clr-border-light);
-    cursor: pointer;
-    color: var(--clr-text, #000);
-    transition: all 0.06s;
-    border-radius: 2px;
-    opacity: 0.7;
-}
-
-.club-fullscreen-btn:hover {
-    opacity: 1;
-    background: var(--clr-hilight, #000080);
-    color: var(--clr-text-on-highlight, #fff);
-    border-color: var(--clr-hilight);
-}
-
-/* Touch-friendly improvements */
+/* Touch-friendly targets */
 @media (pointer: coarse) {
-    .club-nav-btn {
+    .club-nav-btn,
+    .club-action-btn,
+    .club-tier-select,
+    .club-gate-btn,
+    .club-user-logout {
         min-height: 44px;
     }
-    
-    .club-action-btn {
-        min-height: 40px;
-    }
-    
-    .club-gate-btn {
-        min-height: 48px;
-    }
-    
-    .club-tier-select {
-        min-height: 44px;
-    }
-    
-    .club-gate-btn {
-        min-height: 48px;
-    }
-    
+
+    .club-comment-input,
     .club-tier-card {
         min-height: 44px;
     }
@@ -1109,30 +900,11 @@
 
 /* Safe area for notched devices */
 @supports (padding: max(0px)) {
-    .club-window {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    
     .club-feed {
         padding-bottom: max(12px, env(safe-area-inset-bottom));
     }
-}
 
-/* Scrollbar styling for mobile */
-.club-feed::-webkit-scrollbar {
-    width: 8px;
-}
-
-.club-feed::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.club-feed::-webkit-scrollbar-thumb {
-    background: var(--clr-highlight);
-    border-radius: 4px;
-    opacity: 0.5;
-}
-
-.club-feed::-webkit-scrollbar-thumb:hover {
-    opacity: 0.8;
+    .club-user-bar {
+        padding-top: max(8px, env(safe-area-inset-top));
+    }
 }
